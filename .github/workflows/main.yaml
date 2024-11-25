@@ -3,7 +3,7 @@ name: Docker
 on:
   workflow_dispatch:
   push:
-    # Publish `master` as Docker `latest` image.
+    # Publish `main` as Docker `latest` image.
     branches:
       - main
 
@@ -19,7 +19,7 @@ jobs:
       - name: Build image
         run: |
           source .env
-          docker build . --file Dockerfile --tag service-$SERVICE_NAME
+          docker build . --file Dockerfile --tag service-${SERVICE_NAME}
 
       - name: Log into registry
         run: echo "${{ secrets.PAT }}" | docker login ghcr.io -u compsoc-service --password-stdin
@@ -27,11 +27,11 @@ jobs:
       - name: Push image
         run: |
           source .env
-          IMAGE_ID=ghcr.io/compsoc-edinburgh/service-$SERVICE_NAME
-          docker tag service-$SERVICE_NAME $IMAGE_ID:latest
-          docker tag service-$SERVICE_NAME $IMAGE_ID:${{ github.sha }}
+          IMAGE_ID=ghcr.io/compsoc-edinburgh/service-${SERVICE_NAME}
+          docker tag service-${SERVICE_NAME} $IMAGE_ID:latest
+          docker tag service-${SERVICE_NAME} $IMAGE_ID:${{ github.sha }}
           docker push $IMAGE_ID:${{ github.sha }}
           docker push $IMAGE_ID:latest
       - name: Trigger update
         run: |
-          curl -H "Token: ${{ secrets.WATCHTOWER_TOKEN }}" https://watchtower.dev.comp-soc.com/v1/update
+          curl -H "Authorization: Bearer ${{ secrets.WATCHTOWER_TOKEN }}" https://watchtower.dev.comp-soc.com/v1/update
