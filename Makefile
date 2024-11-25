@@ -46,11 +46,10 @@ start:
 	ssh ${REMOTE} 'docker run -d --name service-${SERVICE_NAME} \
 		--network traefik-net \
 		--label "traefik.enable=true" \
-		-p ${PORT}:${PORT} \
+		-p ${PORT}:8080 \
 		--volume /deployment/service-${SERVICE_NAME}:/etc/${SERVICE_NAME} \
 		--label "com.centurylinklabs.watchtower.enable=true" \
 		--label "traefik.http.routers.service-${SERVICE_NAME}.rule=Host(\`${SUBDOMAIN}.dev.comp-soc.com\`)" \
-		--label "traefik.http.routers.service-${SERVICE_NAME}.middlewares=traefik-forward-auth-gh" \
 		ghcr.io/compsoc-edinburgh/service-${SERVICE_NAME}'
 
 # Most used command, restarts the service after syncing secrets (i.e. new
