@@ -5,6 +5,7 @@ $txt = $_POST["email"] . "\n";
 fwrite($myfile, $txt);
 fclose($myfile);
 
-echo "We'll let you know when we're launching!! Latest 1/12/2024.";
+echo "We'll let you know when we're launching!! Latest 1/12/2024.\n";
+echo "You can also keep an eye on CompSoc social media for updates!";
 
 ?>
