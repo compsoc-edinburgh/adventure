@@ -23,7 +23,7 @@ sync-secrets-confirm:
 
 # After cloning this repo locally, you can run this to set up the .secrets
 # directory both locally and remotely. Harmless even if run multiple times.
-initialise: initialise-confirm
+initialise: initialise-confirm generate-port
 	rsync -r ${REMOTE}:/secrets/service-${SERVICE_NAME}/ ./.secrets/
 
 generate-port:
@@ -47,7 +47,6 @@ start:
 		--network traefik-net \
 		--label "traefik.enable=true" \
 		-p ${PORT}:${PORT} \
-		--env-file /secrets/service-${SERVICE_NAME}/.env \
 		--volume /deployment/service-${SERVICE_NAME}:/etc/${SERVICE_NAME} \
 		--label "com.centurylinklabs.watchtower.enable=true" \
 		--label "traefik.http.routers.service-${SERVICE_NAME}.rule=Host(\`${SUBDOMAIN}.dev.comp-soc.com\`)" \
