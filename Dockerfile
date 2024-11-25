@@ -8,4 +8,7 @@ COPY compiled.css /var/www/html/compiled.css
 RUN rm /var/www/html/index.php
 RUN rm /var/www/html/test.html
 
+RUN mkdir /etc/aoc
+RUN chown -R www-data:www-data /etc/aoc
+
 EXPOSE 8080
