@@ -1,6 +1,6 @@
 <?php
 # Append the email to the file emails.txt
-$myfile = fopen("/etc/aoc/emails.txt", "a") or die("Unable to open file!");
+$myfile = fopen("/etc/adventure/emails.txt", "a") or die("Unable to open file!");
 $txt = $_POST["email"] . "\n";
 fwrite($myfile, $txt);
 fclose($myfile);
