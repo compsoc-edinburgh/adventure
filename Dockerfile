@@ -8,11 +8,13 @@ COPY compiled.css /var/www/html/compiled.css
 RUN rm /var/www/html/index.php
 RUN rm /var/www/html/test.html
 
+# Temporarily become root since the trafek/php-nginx image sets the user to nobody
+# which can't create or chown files
 USER root
 
 RUN mkdir -p /etc/adventure
 RUN touch /etc/adventure/emails.txt
-RUN chown nobody:nobody /etc/adventure/emails.txt
+RUN chmod 0777 /etc/adventure/emails.txt
 
 USER nobody
 
