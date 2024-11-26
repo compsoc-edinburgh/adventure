@@ -11,7 +11,8 @@ RUN rm /var/www/html/test.html
 USER root
 
 RUN mkdir -p /etc/adventure
-RUN chown -R nobody:nobody /etc/adventure
+RUN touch /etc/adventure/emails.txt
+RUN chown nobody:nobody /etc/adventure/emails.txt
 
 USER nobody
 
