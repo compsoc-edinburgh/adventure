@@ -10,8 +10,8 @@ RUN rm /var/www/html/test.html
 
 USER root
 
-RUN mkdir -p /etc/aoc
-RUN chown -R nobody:nobody /etc/aoc
+RUN mkdir -p /etc/adventure
+RUN chown -R nobody:nobody /etc/adventure
 
 USER nobody
 
