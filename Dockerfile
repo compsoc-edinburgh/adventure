@@ -1,5 +1,8 @@
-FROM trafex/php-nginx:3.6.0
+FROM node:23
 
-COPY index.html /var/www/html/index.html
-COPY keep_me_updated.php /var/www/html/keep_me_updated.php
-COPY compiled.css /var/www/html/compiled.css
+COPY . /app
+WORKDIR /app
+
+RUN npx remix vite:build
+
+CMD ["npx", "remix-serve", "build/server/index.js"]
