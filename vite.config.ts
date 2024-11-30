@@ -1,6 +1,14 @@
 import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig } from "vite";
 
+declare module "@remix-run/server-runtime" {
+  // or cloudflare, deno, etc.
+  // eslint-disable-next-line no-unused-vars
+  interface Future {
+    v3_singleFetch: true;
+  }
+}
+
 export default defineConfig({
   // Development server port
   server: {

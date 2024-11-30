@@ -1,3 +1,6 @@
 node_modules
 build
 .cache
+database.db
+database.db-shm
+database.db-wal

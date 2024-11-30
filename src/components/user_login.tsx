@@ -1,22 +1,27 @@
-import { Link } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import type { FunctionComponent } from "react";
 
 type UserLoginProps = {
-  name?: string;
   aoc_id?: number;
 };
 
-const UserLogin: FunctionComponent<UserLoginProps> = ({ name }) => {
+const UserLogin: FunctionComponent<UserLoginProps> = ({ aoc_id }) => {
   return (
     <div>
-      {name === undefined
+      {aoc_id === undefined
         ? <Link to="/login">Login</Link>
         : (
-            <span>
-              Hi
-              {name}
-              !
-            </span>
+            <>
+              <span>
+                Hi
+                {aoc_id}
+                !
+              </span>
+
+              <Form action="logout" method="post">
+                <button type="submit">Logout</button>
+              </Form>
+            </>
           )}
     </div>
   );
