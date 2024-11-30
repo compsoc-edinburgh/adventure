@@ -9,7 +9,7 @@ export default function LoginForm() {
     <div>
       {error && <p>{error}</p>}
       <Form method="post">
-        <input type="text" name="aoc_id" placeholder="AoC ID" />
+        <input type="text" name="aoc_id" placeholder="AoC ID" className="text-black" />
         <button type="submit">Access Shop</button>
       </Form>
     </div>

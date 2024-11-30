@@ -93,3 +93,11 @@ export function createUser(aoc_id: number): User {
   const inserted_id = db.prepare("INSERT INTO users (aoc_id) VALUES (?)").run(aoc_id).lastInsertRowid;
   return db.prepare("SELECT * FROM users WHERE id = ?").get(inserted_id) as User;
 }
+
+export function getShopItems(): ShopItem[] {
+  return db.prepare("SELECT * FROM shop_items").all() as ShopItem[];
+}
+
+export function getTransactionsByUserId(user_id: number): ShopTransaction[] {
+  return db.prepare("SELECT * FROM shop_transactions WHERE user_id = ?").all(user_id) as ShopTransaction[];
+}
