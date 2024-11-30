@@ -15,12 +15,12 @@ export const links: LinksFunction = () => [
   {
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Fredericka+the+Great&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Rye&display=swap",
-  }
+  },
 ];
 
 export default function App() {
   return (
-    <html>
+    <html lang="en-us">
       <head>
         <link
           rel="icon"
@@ -30,8 +30,6 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-[#516152] text-white">
-        <h1 className="text-8xl font-display bg-clip-text text-transparent bg-gradient-to-t from-white to-green-50">Advent of Code</h1>
-        <p>asd</p>
         <Outlet />
         <Scripts />
       </body>
