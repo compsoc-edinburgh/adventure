@@ -76,7 +76,7 @@ export type ShopTransaction = {
   user_id: number;
   shop_item_id: number;
   transaction_time: number;
-  cancelled_at: number;
+  cancelled_at?: number;
 };
 
 export function runMigrations() {
