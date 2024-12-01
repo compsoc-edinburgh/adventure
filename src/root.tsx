@@ -2,6 +2,7 @@ import {
   Link,
   Links,
   Meta,
+  MetaFunction,
   Outlet,
   Scripts,
   useLoaderData,
@@ -17,6 +18,7 @@ import UserLogin from "./components/UserLogin";
 import { getSession } from "./sessions";
 import { getUserById, User } from "./sqlite.server";
 import { getNameForUser } from "./stars.server";
+import favicon from "./assets/favicon.ico";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -26,7 +28,24 @@ export const links: LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Fredericka+the+Great&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Rye&display=swap",
   },
+  { rel: "icon", href: favicon },
 ];
+
+export const meta: MetaFunction = () => {
+  return [
+    {
+      title: "Advent of Code Rewards - by CompSoc",
+    },
+    {
+      property: "og:title",
+      content: "Advent of Code Rewards - by CompSoc",
+    },
+    {
+      name: "description",
+      content: "Get rewards for completing Advent of Code challenges!",
+    },
+  ];
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(
