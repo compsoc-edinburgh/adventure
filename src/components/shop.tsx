@@ -19,10 +19,10 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
           <li key={item.id} className={"bg-christmasBeigeAccent transform-gpu transition-all duration-150 overflow-hidden rounded-xl group relative flex flex-col hover:scale-105 " + (i == 0 ? "row-span-2 col-span-2" : "row-span-1 col-span-1")}>
             <img src={item.image_url} alt={item.name} />
             <div className="flex transform-gpu flex-col gap-1 p-6 transition-all duration-150 group-hover:-translate-y-10">
-              <h3 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300">
+              <h3 className="text-xl font-semibold text-christmasDark dark:text-neutral-300">
                 {item.name}
               </h3>
-              <p className="max-w-lg text-neutral-400">{item.description}</p>
+              <p className="max-w-lg text-christmasDark opacity-50">{item.description}</p>
             </div>
             <div
               className="absolute bottom-0 w-full translate-y-10 transform-gpu flex justify-between items-center p-4 opacity-0 transition-all duration-150 group-hover:translate-y-0 group-hover:opacity-100"
@@ -30,7 +30,7 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
               <Stars amount={item.star_cost} />
               <fetcher.Form method="post" action="shop/purchase">
                 <input type="hidden" name="shop_item_id" value={item.id} />
-                <button type="submit" className="pointer-events-auto bg-christmasRed text-white rounded-md py-2 px-4">Exchange</button>
+                <button type="submit" className="pointer-events-auto bg-christmasRed text-white rounded-md py-2 px-4 active:scale-95 transition-all duration-75">Exchange</button>
               </fetcher.Form>
             </div>
             <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-150 group-hover:bg-black/[.03] group-hover:dark:bg-neutral-800/10" />
