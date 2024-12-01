@@ -54,7 +54,7 @@ export default function Index() {
 
   return (
     <div className="flex lg:flex-row flex-col-reverse gap-4">
-      <div className="md:block lg:w-96 md:w-16 hidden flex-grow" />
+      <div className="md:block xl:w-96 lg:w-16 hidden flex-grow" />
       <Shop shop_items={shop_items} />
       <MyTransactions user={user} remaining_stars={remaining_stars} shop_items={shop_items} transactions={transactions} />
       <div className="md:block hidden w-16" />
