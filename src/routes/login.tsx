@@ -76,6 +76,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
   }
 
+  // Admin bypasses all checks
+  if (aoc_id === process.env.ADMIN_LOGIN) {
+    session.set("user_id", "1");
+    return redirect("/", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+
   // Check that the AoC ID is a number
   if (!/^\d+$/.test(aoc_id)) {
     session.flash("error", "The AoC ID is supposed to be a number!");
