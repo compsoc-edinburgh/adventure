@@ -15,8 +15,12 @@ type MyTransactionsProps = {
 export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, remaining_stars, shop_items, transactions }) => {
   const fetcher = useFetcher<typeof shopCancelAction>();
   return (
-    <div className="md:self-start self-stretch mx-4 shadow-christmasBeigeAccent group">
-      <div className="bg-white shadow-sm min-w-96 md:max-w-md rounded-lg">
+    <div className="lg:self-start self-stretch mx-4 shadow-christmasBeigeAccent group">
+      <h2 className="text-4xl font-display mb-4 relative justify-self-start text-white">
+        <div className="w-full bg-christmasDark bg-opacity-70 backdrop-blur-md h-full absolute top-0 left-0 z-[-1] scale-110 -skew-x-12 -rotate-2 transform-gpu" />
+        My Purchases
+      </h2>
+      <div className="bg-white shadow-sm min-w-96 lg:max-w-md rounded-lg">
         <div className="p-6">
           <span className="text-sm opacity-50">
             Purchases
@@ -53,7 +57,7 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
         </div>
       </div>
 
-      <div className="bg-white shadow-sm rounded-lg group min-w-64 md:max-w-md border-t-2 border-christmasGreenAccent">
+      <div className="bg-white shadow-sm rounded-lg group min-w-64 lg:max-w-md border-t-2 border-christmasGreenAccent">
         <div className="px-6 pb-3 pt-3">
           {user && (
             <div className="flex flex-row justify-between">
