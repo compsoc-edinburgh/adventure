@@ -15,7 +15,7 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
   const fetcher = useFetcher<typeof shopCancelAction>();
   return (
     <div className="md:self-start self-stretch mx-4 shadow-christmasBeigeAccent">
-      <div className="bg-white shadow-sm min-w-64 rounded-lg">
+      <div className="bg-white shadow-sm min-w-64 max-w-md rounded-lg">
         <div className="p-6">
           <h1 className="text-3xl font-display mb-4">Santa, I would like...</h1>
           {fetcher.data && !fetcher.data["success"] && <p>{fetcher.data["message"]}</p>}
@@ -27,12 +27,12 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
               <React.Fragment key={transaction.id}>
                 {!transaction.cancelled_at && (
                   <li>
-                    <span className="block font-semibold">
-                      {shop_items.find(i => i.id === transaction.shop_item_id)?.name}
-                    </span>
-                    <span className="flex flex-row justifybetween">
-                      <Stars amount={shop_items.find(i => i.id === transaction.shop_item_id)?.star_cost || 0} />
-                    </span>
+                    <div className="flex flex-row items-center justify-between font-semibold relative before:top-1/2 before:absolute before:w-full before:h-1 before:border-t-2 before:border-christmasDark before:border-opacity-75 before:border-dotted">
+                      <span className="z-10 bg-white">
+                        {shop_items.find(i => i.id === transaction.shop_item_id)?.name}
+                      </span>
+                      <Stars className="z-10 bg-white pl-2" amount={shop_items.find(i => i.id === transaction.shop_item_id)?.star_cost || 0} />
+                    </div>
 
                     <fetcher.Form method="post" action="shop/cancel">
                       <input type="hidden" name="transaction_id" value={transaction.id} />
