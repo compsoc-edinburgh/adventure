@@ -5,6 +5,7 @@ import { useLoaderData } from "@remix-run/react";
 import { Shop } from "../components/shop";
 import { MyTransactions } from "../components/my_transactions";
 import { getShopItems, getTransactionsByUserId, ShopItem, ShopTransaction } from "../sqlite.server";
+import SnowParticles from "../components/snow";
 
 export async function loader({
   request,
@@ -40,6 +41,15 @@ export default function Index() {
         <Shop shop_items={shop_items} />
         <MyTransactions transactions={transactions} />
       </div>
+      <SnowParticles
+        className="absolute inset-0"
+        quantity={100}
+        ease={80}
+        color="#ffffff"
+        size={1.5}
+        staticity={60}
+        vy={1.1}
+      />
     </div>
   );
 }
