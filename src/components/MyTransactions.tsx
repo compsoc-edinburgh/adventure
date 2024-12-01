@@ -110,6 +110,14 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
                 </p>
               </div>
             )}
+            {user.gained_stars > 0 && (
+              <div className="pb-3">
+                <p><b>Don't know what to get?</b></p>
+                <p className="text-sm">
+                  Once you have exchanged your stars for a reward token, it'll be reserved for you. But you can also cancel it from this page to let someone else have it.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}
