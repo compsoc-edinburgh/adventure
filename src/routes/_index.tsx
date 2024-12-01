@@ -8,6 +8,7 @@ import { getShopItems, getTransactionsByUserId, getUserById, ShopItem, ShopTrans
 import SnowParticles from "../components/snow";
 import { getStarsForUser } from "../stars.server";
 import { Tree } from "../components/Tree";
+import { Ornament1 } from "../components/Ornament1";
 
 export async function loader({
   request,
@@ -58,7 +59,10 @@ export default function Index() {
       <div className="absolute inset-0 top-0 left-0 overflow-hidden -z-10">
         <Tree className="absolute h-full -left-12" />
       </div>
-      <h1 className="md:text-7xl text-4xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasDark to-christmasRed pt-4">Advent of Code</h1>
+      <div className="flex flex-col mt-8 mb-8">
+        <h1 className="md:text-7xl text-4xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasDark to-christmasRed">Advent of Code</h1>
+        <Ornament1 className="w-56 -mt-3" />
+      </div>
 
       <div className="flex md:flex-row flex-col">
         <div className="md:block hidden flex-grow" />
@@ -66,7 +70,7 @@ export default function Index() {
           <UserLogin user={user} />
           <Shop shop_items={shop_items} />
         </div>
-        <MyTransactions remaining_stars={remaining_stars} shop_items={shop_items} transactions={transactions} />
+        <MyTransactions user={user} remaining_stars={remaining_stars} shop_items={shop_items} transactions={transactions} />
         <div className="md:block hidden w-16" />
       </div>
       <SnowParticles
