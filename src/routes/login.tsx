@@ -3,6 +3,7 @@ import { Form, Link, redirect, useLoaderData } from "@remix-run/react";
 import { getUserByAoCId, createUser } from "../sqlite.server";
 import { getSession, commitSession } from "../sessions";
 import { isUserInLeaderboard } from "../stars.server";
+import Input from "../components/Input";
 
 export default function LoginForm() {
   const { error } = useLoaderData<typeof loader>();
@@ -11,10 +12,7 @@ export default function LoginForm() {
       <h2 className="text-3xl font-display mb-6">Login</h2>
       <span className="text-sm opacity-75">Please enter your AoC ID to access the reward exchange shop.</span>
       <Form method="post" className="mt-6">
-        <div className="min-w-64">
-          <label htmlFor="aoc_id" className="block mb-2 text-sm text-christmasDark">AoC ID Number</label>
-          <input type="text" name="aoc_id" placeholder="e.g. 1234512" id="aoc_id" className="bg-gray-50 border border-christmasBeigeAccent  text-sm rounded-lg focus:outline-double focus:outline-4 focus:outline-christmasRed box-border block w-72 p-3" required />
-        </div>
+        <Input className="min-w-64" type="text" name="aoc_id" placeholder="e.g. 1234512" label="AoC ID Number" required />
         <div className="min-w-64 mt-3 flex flex-row items-center">
           <input type="checkbox" name="mine" id="mine" className="mr-2" value="true" required />
           <label htmlFor="mine" className="block text-sm text-christmasDark w-0 min-w-full">

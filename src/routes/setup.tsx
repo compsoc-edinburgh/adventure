@@ -2,6 +2,7 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { data, Form, redirect, useLoaderData } from "@remix-run/react";
 import { commitSession, requireUserSession } from "../sessions";
 import { getUserById, updateUserDetails } from "../sqlite.server";
+import Input from "../components/Input";
 
 export default function SetupAccount() {
   const { error, email, is_physically_in_edinburgh } = useLoaderData<typeof loader>();
@@ -24,10 +25,8 @@ export default function SetupAccount() {
         since this event runs with Edinburgh CompSoc funds.
       </p>
       <Form method="post" className="mt-6">
-        <div className="min-w-64">
-          <label htmlFor="ed_ac_uk_email" className="block mb-2 text-sm text-christmasDark">Edinburgh Email Address</label>
-          <input type="text" name="ed_ac_uk_email" placeholder="e.g. s2100000@ed.ac.uk" id="ed_ac_uk_email" className="bg-gray-50 border border-christmasBeigeAccent  text-sm rounded-lg focus:outline-double focus:outline-4 focus:outline-christmasRed box-border block w-72 p-3" required defaultValue={email} />
-        </div>
+        <Input className="min-w-64" type="text" name="ed_ac_uk_email" placeholder="e.g. s2100000@ed.ac.uk" label="Edinburgh Email Address" required value={email} />
+
         <div className="min-w-64 mt-3 flex flex-row items-center">
           <input type="checkbox" name="physically_in_edinburgh" value="true" id="physically_in_edinburgh" className="text-christmasRedAccent mr-2" required defaultChecked={is_physically_in_edinburgh} />
           <label htmlFor="physically_in_edinburgh" className="w-0 min-w-full block text-sm text-christmasDark">I confirm I am physically available in Edinburgh in January to collect goods</label>

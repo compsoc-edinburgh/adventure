@@ -1,20 +1,22 @@
 import { FunctionComponent } from "react";
 
-type InputProps = {
+interface InputProps extends React.InputHTMLAttributes<HTMLDivElement> {
   type?: string;
   label: string;
   placeholder: string;
   name: string;
   value?: string;
+  required?: boolean;
+  defaultValue?: string;
   // eslint-disable-next-line no-unused-vars
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
+}
 
-const Input: FunctionComponent<InputProps> = ({ type, label, placeholder, name, value, onChange }) => {
+const Input: FunctionComponent<InputProps> = ({ type, label, placeholder, name, value, required, defaultValue, onChange, ...props }) => {
   return (
-    <div>
+    <div {...props}>
       <label htmlFor={name} className="block mb-2 text-sm text-christmasDark">{label}</label>
-      <input type={type ?? "text"} name={name} placeholder={placeholder} required className="bg-gray-50 border border-christmasBeigeAccent  text-sm rounded-lg focus:outline-double focus:outline-4 focus:outline-christmasRed box-border block w-72 p-3" value={value ?? ""} onChange={onChange ?? undefined} />
+      <input type={type ?? "text"} name={name} placeholder={placeholder} required={required} className="bg-gray-50 border border-christmasBeigeAccent  text-sm rounded-lg focus:outline-double focus:outline-4 focus:outline-christmasRed box-border block w-72 p-3" value={value} onChange={onChange} defaultValue={defaultValue} />
     </div>
   );
 };
