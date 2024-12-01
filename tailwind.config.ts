@@ -13,6 +13,15 @@ export default {
         christmasRedAccent: "#b53635",
         christmasDark: "#464646",
       },
+      keyframes: {
+        slidein: {
+          "0%": { transform: "scaleY(0)" },
+          "100%": { transform: "scaleY(1)" },
+        },
+      },
+      animation: {
+        slidein: "slidein 0.25s ease-in-out forwards",
+      },
     },
     fontFamily: {
       sans: ["\"Noto Sans\"", "sans-serif"],
