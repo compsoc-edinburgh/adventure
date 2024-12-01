@@ -47,6 +47,10 @@ const schema_updates = [
   `
   ALTER TABLE shop_items ADD COLUMN max_per_user INTEGER DEFAULT 1;
   `,
+
+  `
+  INSERT INTO users (is_admin, aoc_id, email, is_physically_in_edinburgh, gained_stars) VALUES (1, 0, "hello@comp-soc.com", 1, 999);
+  `,
 ];
 
 export type User = {
@@ -135,6 +139,10 @@ export function updateUserStars(user_id: number, stars: number) {
   db.prepare("UPDATE users SET gained_stars = ? WHERE id = ?").run(stars, user_id);
 }
 
+export function getUsers(): User[] {
+  return db.prepare("SELECT * FROM users").all() as User[];
+}
+
 export function getShopItems(): ShopItem[] {
   return db.prepare("SELECT * FROM shop_items").all() as ShopItem[];
 }
@@ -145,6 +153,10 @@ export function getTransactionsByUserId(user_id: number): ShopTransaction[] {
 
 export function getTransactionsByItemId(shop_item_id: number): ShopTransaction[] {
   return db.prepare("SELECT * FROM shop_transactions WHERE shop_item_id = ?").all(shop_item_id) as ShopTransaction[];
+}
+
+export function getTransactions(): ShopTransaction[] {
+  return db.prepare("SELECT * FROM shop_transactions").all() as ShopTransaction[];
 }
 
 export function createTransaction(user_id: number, shop_item_id: number): ShopTransaction {
