@@ -45,14 +45,15 @@ export default function Index() {
 
   return (
     <div className="w-full">
-      <h1 className="text-7xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasDark to-christmasRed pt-4">Advent of Code</h1>
+      <div className="absolute inset-0 top-0 left-0 overflow-hidden -z-10">
+        <Tree className="absolute h-full -left-12" />
+      </div>
+      <h1 className="md:text-7xl text-4xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasDark to-christmasRed pt-4">Advent of Code</h1>
       <UserLogin user={user} />
-      <div className="flex flex-row md:flex-col">
+      <div className="flex md:flex-row flex-col">
+        <div className="md:block hidden flex-grow" />
         <Shop shop_items={shop_items} />
         <MyTransactions transactions={transactions} />
-      </div>
-      <div className="absolute inset-0 top-0 left-0">
-        <Tree />
       </div>
       <SnowParticles
         className="absolute inset-0"
