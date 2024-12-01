@@ -1,5 +1,5 @@
 import { data, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, redirect, useLoaderData } from "@remix-run/react";
+import { Form, Link, redirect, useLoaderData } from "@remix-run/react";
 import { getUserByAoCId, createUser } from "../sqlite.server";
 import { getSession, commitSession } from "../sessions";
 import { isUserInLeaderboard } from "../stars.server";
@@ -20,7 +20,7 @@ export default function LoginForm() {
       </Form>
 
       <div className="mt-8">
-        <a href="/login/help" className="text-sm opacity-75">Click for Help</a>
+        <Link to="/login/help" className="text-sm opacity-75">Click for Help</Link>
       </div>
     </div>
   );
