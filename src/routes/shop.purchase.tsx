@@ -71,9 +71,9 @@ export async function action({ request }: ActionFunctionArgs) {
       return;
     }
 
-    // Finally, check that the user hasn't already purchased this item.
-    if (transactionsForItem.filter(t => !t.cancelled_at).some(t => t.user_id === user_id)) {
-      transactionFailureMessage = "You have already purchased this item.";
+    // Finally, check that we won't exceed the limit of max per user.
+    if (transactionsForItem.filter(t => !t.cancelled_at).filter(t => t.user_id === user_id).length >= item.max_per_user) {
+      transactionFailureMessage = `You can only buy max ${item.max_per_user} of this item.`;
       return;
     }
 
