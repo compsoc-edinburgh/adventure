@@ -94,6 +94,10 @@ export function createUser(aoc_id: number): User {
   return db.prepare("SELECT * FROM users WHERE id = ?").get(inserted_id) as User;
 }
 
+export function updateUserStars(user_id: number, stars: number) {
+  db.prepare("UPDATE users SET gained_stars = ? WHERE id = ?").run(stars, user_id);
+}
+
 export function getShopItems(): ShopItem[] {
   return db.prepare("SELECT * FROM shop_items").all() as ShopItem[];
 }
