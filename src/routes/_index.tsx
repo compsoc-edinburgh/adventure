@@ -24,12 +24,13 @@ export async function loader({
   };
 
   response.shop_items = getShopItems();
-  response.transactions = response.user ? getTransactionsByUserId(response.user.id) : [];
 
   if (session.has("user_id")) {
     const user_id = session.get("user_id");
     if (user_id) {
       response.user = getUserById(parseInt(user_id));
+      response.transactions = getTransactionsByUserId(response.user.id);
+
       const gained_stars = response.user.aoc_id && getStarsForUser(response.user.aoc_id);
       if (response.user.gained_stars !== gained_stars && gained_stars) {
         updateUserStars(parseInt(user_id), gained_stars);
@@ -37,7 +38,7 @@ export async function loader({
       }
 
       response.remaining_stars = response.user.gained_stars - response.transactions.reduce((acc, t) => {
-        const item = getShopItems().find(i => i.id === t.shop_item_id);
+        const item = response.shop_items.find(i => i.id === t.shop_item_id);
         if (!item || t.cancelled_at) {
           return acc;
         }
