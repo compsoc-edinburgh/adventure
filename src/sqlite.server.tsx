@@ -110,3 +110,7 @@ export function createTransaction(user_id: number, shop_item_id: number): ShopTr
   const inserted_id = db.prepare("INSERT INTO shop_transactions (user_id, shop_item_id) VALUES (?, ?)").run(user_id, shop_item_id).lastInsertRowid;
   return db.prepare("SELECT * FROM shop_transactions WHERE id = ?").get(inserted_id) as ShopTransaction;
 }
+
+export function cancelTransaction(transaction_id: number) {
+  db.prepare("UPDATE shop_transactions SET is_valid = 0 WHERE id = ?").run(transaction_id);
+}
