@@ -3,24 +3,26 @@ import { getSession } from "../sessions";
 import { useLoaderData } from "@remix-run/react";
 import { Shop } from "../components/Shop";
 import { MyTransactions } from "../components/MyTransactions";
-import { getShopItems, getTransactionsByUserId, getUserById, ShopItem, ShopTransaction, updateUserStars, User } from "../sqlite.server";
+import { getTransactionsByUserId, getUserById, ShopItemWithRemaining, ShopTransaction, updateUserStars, User } from "../sqlite.server";
 import { getStarsForUser } from "../stars.server";
+import { loader as shopItemWithRemainingLoader } from "./shop.items";
 
-export async function loader({
-  request,
-}: LoaderFunctionArgs) {
+export async function loader(args: LoaderFunctionArgs) {
+  const { request } = args;
+
   const session = await getSession(
     request.headers.get("Cookie"),
   );
 
-  const response: { user: User | undefined; remaining_stars: number; shop_items: ShopItem[]; transactions: ShopTransaction[] } = {
+  const response: { user: User | undefined; remaining_stars: number; shop_items: ShopItemWithRemaining[]; transactions: ShopTransaction[] } = {
     user: undefined,
     remaining_stars: 0,
     shop_items: [],
     transactions: [],
   };
 
-  response.shop_items = getShopItems();
+  // Call the loader for the public shop API, which has the remaining stock count
+  response.shop_items = await shopItemWithRemainingLoader(args);
 
   if (session.has("user_id")) {
     const user_id = session.get("user_id");

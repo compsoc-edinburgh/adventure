@@ -1,12 +1,12 @@
 import { useEffect, useState, type FunctionComponent } from "react";
-import { ShopItem } from "../sqlite.server";
+import { ShopItemWithRemaining } from "../sqlite.server";
 import { useFetcher } from "@remix-run/react";
 import { action as shopPurchaseAction } from "../routes/shop.purchase";
 import Stars from "./Stars";
 import { MdClose } from "react-icons/md";
 
 type ShopProps = {
-  shop_items: ShopItem[];
+  shop_items: ShopItemWithRemaining[];
 };
 
 export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
@@ -46,6 +46,11 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
         {shop_items.map((item, i) => (
           <li key={item.id} className={(i % 3 == 0 ? "bg-christmasGreen" : i % 3 == 1 ? "bg-christmasRed" : "bg-christmasDark") + " transform-gpu overflow-hidden rounded-xl group relative flex flex-col " + (i == 0 ? "row-span-2 col-span-2" : "row-span-1 col-span-1")}>
             <img src={item.image_url} alt={item.name} className="[mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] group-hover:scale-105 transition-all duration-150" />
+            <div className="absolute top-0 right-0 text-white p-2 bg-black bg-opacity-50 rounded-bl-xl">
+              {item.remaining_count}
+              {" "}
+              in stock
+            </div>
             <div className="absolute bottom-0 flex transform-gpu flex-col gap-1 p-6 transition-all duration-150 group-hover:-translate-y-10 w-full">
               <h3 className="text-xl font-semibold text-white">
                 {item.name}
