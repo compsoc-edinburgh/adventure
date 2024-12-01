@@ -1,7 +1,8 @@
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import aoc_id from "../assets/Screenshot 2024-12-01_17-08-36.png";
 
 export default function LoginHelp() {
+  const { compsoc_leaderboard_join_code, ccsig_leaderboard_join_code } = useLoaderData<typeof loader>();
   return (
     <div className="flex items-center justify-center w-full flex-col">
       <h2 className="text-3xl font-display mb-6">Help with Logging in</h2>
@@ -27,8 +28,12 @@ export default function LoginHelp() {
             <a href="https://adventofcode.com/2024/leaderboard/private" className="text-blue-500">the Leaderboard page</a>
             {" "}
             by using the code:
-            <pre className="w-full rounded-md p-2 mt-3 bg-gray-200">
-              <code>240997-5a33b18f</code>
+            <pre className="w-full rounded-md p-2 my-3 bg-gray-200">
+              <code>{compsoc_leaderboard_join_code}</code>
+            </pre>
+            If the above is full, CCSig is also running a verified leaderboard, which you can join with the code:
+            <pre className="w-full rounded-md p-2 my-3 bg-gray-200">
+              <code>{ccsig_leaderboard_join_code}</code>
             </pre>
           </p>
         </div>
@@ -49,3 +54,10 @@ export default function LoginHelp() {
     </div>
   );
 }
+
+export async function loader() {
+  return {
+    compsoc_leaderboard_join_code: process.env.COMPSOC_LEADERBOARD_JOIN_CODE,
+    ccsig_leaderboard_join_code: process.env.CCSIG_LEADERBOARD_JOIN_CODE,
+  };
+};

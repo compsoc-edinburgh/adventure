@@ -1,19 +1,39 @@
 import * as fs from "fs";
 
-// File containing the API response from AoC
-const AOC_DATA_FILE = "data/aoc_data.json";
+// Files containing the API response from AoC. These are split into several
+// since each leaderboard can only contain 200 members. There may be duplicate
+// members in each file, but they should contain the same info if so.
+const leaderboard_files = [
+  "data/aoc_data.json",
+  "data/aoc_ccsig_data.json",
+];
 
 export function getStarsForUser(aoc_user_id: number): number {
-  const data = JSON.parse(fs.readFileSync(AOC_DATA_FILE, "utf-8"));
-  return data.members[aoc_user_id.toString()]?.stars || 0;
+  for (const file of leaderboard_files) {
+    const data = JSON.parse(fs.readFileSync(file, "utf-8"));
+    if (data.members[aoc_user_id.toString()]) {
+      return data.members[aoc_user_id.toString()].stars;
+    }
+  }
+  return 0;
 }
 
 export function isUserInLeaderboard(aoc_user_id: number): boolean {
-  const data = JSON.parse(fs.readFileSync(AOC_DATA_FILE, "utf-8"));
-  return data.members[aoc_user_id.toString()] !== undefined;
+  for (const file of leaderboard_files) {
+    const data = JSON.parse(fs.readFileSync(file, "utf-8"));
+    if (data.members[aoc_user_id.toString()]) {
+      return true;
+    }
+  }
+  return false;
 }
 
 export function getNameForUser(aoc_user_id: number): string {
-  const data = JSON.parse(fs.readFileSync(AOC_DATA_FILE, "utf-8"));
-  return data.members[aoc_user_id.toString()]?.name || "Anonymous User #" + aoc_user_id;
+  for (const file of leaderboard_files) {
+    const data = JSON.parse(fs.readFileSync(file, "utf-8"));
+    if (data.members[aoc_user_id.toString()]) {
+      return data.members[aoc_user_id.toString()].name;
+    }
+  }
+  return "Anonymous User #" + aoc_user_id;
 }
