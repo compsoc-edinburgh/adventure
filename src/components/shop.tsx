@@ -9,7 +9,6 @@ type ShopProps = {
 
 export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
   const fetcher = useFetcher<typeof shopPurchaseAction>();
-  console.log(fetcher.data);
   return (
     <div>
       <h1>Shop</h1>

@@ -6,6 +6,5 @@ export async function loader({
   request,
 }: LoaderFunctionArgs) {
   const items = getShopItems();
-  console.log(items);
   return items;
 }

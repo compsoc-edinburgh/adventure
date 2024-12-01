@@ -1,5 +1,5 @@
 import Database from "better-sqlite3";
-export const db = new Database("database.db");
+export const db = new Database("data/database.db");
 db.pragma("journal_mode = WAL");
 
 const schema_updates = [
@@ -69,12 +69,12 @@ export type ShopTransaction = {
 };
 
 export function runMigrations() {
-  console.log("Running migrations if any...");
+  console.info("Running migrations if any...");
   let user_version: number = db.pragma("user_version", { simple: true }) as number;
 
   // Run schema updates until the user_version is up to date
   while (user_version < schema_updates.length) {
-    console.log(`Migrating schema to version ${user_version + 1}`);
+    console.info(`Migrating schema to version ${user_version + 1}`);
     db.exec(schema_updates[user_version]);
     db.pragma("user_version = " + (user_version + 1));
     user_version = db.pragma("user_version", { simple: true }) as number;
