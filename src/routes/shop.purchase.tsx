@@ -8,6 +8,8 @@ export async function action({ request }: ActionFunctionArgs) {
     return Response.json({
       success: false,
       message: "You must be logged in to purchase items.",
+    }, {
+      status: 401,
     });
   };
 
@@ -18,6 +20,8 @@ export async function action({ request }: ActionFunctionArgs) {
     return Response.json({
       success: false,
       message: "Invalid item ID format.",
+    }, {
+      status: 400,
     });
   }
 
@@ -27,6 +31,8 @@ export async function action({ request }: ActionFunctionArgs) {
     return Response.json({
       success: false,
       message: "Item ID does not exist.",
+    }, {
+      status: 404,
     });
   }
 
@@ -87,6 +93,8 @@ export async function action({ request }: ActionFunctionArgs) {
     return Response.json({
       success: false,
       message: "Failed to create transaction.",
+    }, {
+      status: 500,
     });
   }
 
