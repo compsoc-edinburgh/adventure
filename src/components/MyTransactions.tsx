@@ -90,8 +90,22 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
       && (
         <div className="bg-white transition-all opacity-0 group-hover:opacity-75 -mt-1 group-hover:mt-0 shadow-sm rounded-lg group min-w-64 md:max-w-md border-t-2 border-christmasGreenAccent">
           <div className="px-6 pb-3 pt-3">
-            <p><b>That's it!</b></p>
-            <p className="text-sm">Once you've chosen your rewards and they are listed above, you're good to go. Once January comes around, you'll be able to collect these physically.</p>
+            {transactions.filter(t => !t.cancelled_at).length > 0 && (
+              <>
+                <p><b>That's it!</b></p>
+                <p className="text-sm">Once you've chosen your rewards and they are listed above, you're good to go. Once January comes around, you'll be able to collect these physically.</p>
+              </>
+            )}
+            {user.gained_stars === 0 && (
+              <>
+                <p><b>Start Collecting!</b></p>
+                <p className="text-sm">
+                  You can start collecting stars by solving programming questions on Advent of Code! They will show up here if you've used the correct AoC ID to log in.
+                  <br />
+                  <a href="https://adventofcode.com" className="text-blue-500">https://adventofcode.com</a>
+                </p>
+              </>
+            )}
           </div>
         </div>
       )}
