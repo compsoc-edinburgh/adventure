@@ -59,7 +59,7 @@ export default function Index() {
       <div className="absolute inset-0 top-0 left-0 overflow-hidden -z-10">
         <Tree className="absolute h-full -left-12" />
       </div>
-      <div className="flex flex-col mt-8 mb-8">
+      <div className="flex flex-col mt-8 mb-8 items-center">
         <h1 className="md:text-7xl text-4xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasDark to-christmasRed">Advent of Code</h1>
         <Ornament1 className="w-56 -mt-3" />
       </div>
