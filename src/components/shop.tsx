@@ -30,7 +30,7 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
               <Stars amount={item.star_cost} />
               <fetcher.Form method="post" action="shop/purchase">
                 <input type="hidden" name="shop_item_id" value={item.id} />
-                <button type="submit" className="pointer-events-auto bg-christmasRed text-white rounded-md py-2 px-4 active:scale-95 transition-all duration-75">Exchange</button>
+                <button type="submit" className="pointer-events-auto bg-christmasRed text-white rounded-md py-2 px-4 active:scale-95 transition-all duration-75 focus:outline-4 focus:outline-christmasRed focus:outline-double">Exchange</button>
               </fetcher.Form>
             </div>
             <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-150 group-hover:bg-black/[.03] group-hover:dark:bg-neutral-800/10" />
