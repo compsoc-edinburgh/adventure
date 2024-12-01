@@ -1,0 +1,5 @@
+node_modules
+build
+.cache
+data
+.DS_Store
