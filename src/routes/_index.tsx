@@ -16,11 +16,15 @@ export async function loader({
     request.headers.get("Cookie"),
   );
 
-  const response: { user: User | undefined; shop_items: ShopItem[]; transactions: ShopTransaction[] } = {
+  const response: { user: User | undefined; remaining_stars: number; shop_items: ShopItem[]; transactions: ShopTransaction[] } = {
     user: undefined,
+    remaining_stars: 0,
     shop_items: [],
     transactions: [],
   };
+
+  response.shop_items = getShopItems();
+  response.transactions = response.user ? getTransactionsByUserId(response.user.id) : [];
 
   if (session.has("user_id")) {
     const user_id = session.get("user_id");
@@ -31,17 +35,22 @@ export async function loader({
         updateUserStars(parseInt(user_id), gained_stars);
         response.user = getUserById(parseInt(user_id));
       }
+
+      response.remaining_stars = response.user.gained_stars - response.transactions.reduce((acc, t) => {
+        const item = getShopItems().find(i => i.id === t.shop_item_id);
+        if (!item || t.cancelled_at) {
+          return acc;
+        }
+        return acc + item.star_cost;
+      }, 0);
     }
   }
-
-  response.shop_items = getShopItems();
-  response.transactions = response.user ? getTransactionsByUserId(response.user.id) : [];
 
   return response;
 }
 
 export default function Index() {
-  const { user, shop_items, transactions } = useLoaderData<typeof loader>();
+  const { user, remaining_stars, shop_items, transactions } = useLoaderData<typeof loader>();
 
   return (
     <div className="w-full">
@@ -49,11 +58,15 @@ export default function Index() {
         <Tree className="absolute h-full -left-12" />
       </div>
       <h1 className="md:text-7xl text-4xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasDark to-christmasRed pt-4">Advent of Code</h1>
-      <UserLogin user={user} />
+
       <div className="flex md:flex-row flex-col">
         <div className="md:block hidden flex-grow" />
-        <Shop shop_items={shop_items} />
-        <MyTransactions transactions={transactions} />
+        <div className="flex flex-col">
+          <UserLogin user={user} />
+          <Shop shop_items={shop_items} />
+        </div>
+        <MyTransactions remaining_stars={remaining_stars} shop_items={shop_items} transactions={transactions} />
+        <div className="md:block hidden w-16" />
       </div>
       <SnowParticles
         className="absolute inset-0"

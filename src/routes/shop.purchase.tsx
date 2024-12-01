@@ -48,10 +48,10 @@ export async function action({ request }: ActionFunctionArgs) {
     // First check that user's total stars minus the total cost of all their
     // past transactions still has enough stars to purchase the item.
     const user = getUserById(user_id);
-    const transactions = getTransactionsByUserId(user_id, true);
+    const transactions = getTransactionsByUserId(user_id);
     const total_cost = transactions.reduce((acc, t) => {
       const item = shop_items.find(i => i.id === t.shop_item_id);
-      if (!item) {
+      if (!item || t.cancelled_at) {
         return acc;
       }
       return acc + item.star_cost;

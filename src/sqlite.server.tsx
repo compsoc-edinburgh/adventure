@@ -115,9 +115,8 @@ export function getShopItems(): ShopItem[] {
   return db.prepare("SELECT * FROM shop_items").all() as ShopItem[];
 }
 
-export function getTransactionsByUserId(user_id: number, only_valid: boolean = false): ShopTransaction[] {
-  const query = only_valid ? "SELECT * FROM shop_transactions WHERE user_id = ? AND cancelled_at IS NULL" : "SELECT * FROM shop_transactions WHERE user_id = ?";
-  return db.prepare(query).all(user_id) as ShopTransaction[];
+export function getTransactionsByUserId(user_id: number): ShopTransaction[] {
+  return db.prepare("SELECT * FROM shop_transactions WHERE user_id = ?").all(user_id) as ShopTransaction[];
 }
 
 export function getTransactionsByItemId(shop_item_id: number): ShopTransaction[] {
