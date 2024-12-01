@@ -2,6 +2,7 @@ import type { FunctionComponent } from "react";
 import { ShopItem } from "../sqlite.server";
 import { useFetcher } from "@remix-run/react";
 import { action as shopPurchaseAction } from "../routes/shop.purchase";
+import { MdStarRate } from "react-icons/md";
 
 type ShopProps = {
   shop_items: ShopItem[];
@@ -27,7 +28,7 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
               className="absolute bottom-0 w-full translate-y-10 transform-gpu flex justify-between items-center p-4 opacity-0 transition-all duration-150 group-hover:translate-y-0 group-hover:opacity-100"
             >
               <span>
-                ⭐
+                <MdStarRate className="inline-block" />
                 {" "}
                 {item.star_cost}
               </span>

@@ -2,6 +2,7 @@ import React, { FunctionComponent } from "react";
 import { ShopItem, ShopTransaction } from "../sqlite.server";
 import { useFetcher } from "@remix-run/react";
 import { action as shopCancelAction } from "../routes/shop.cancel";
+import { MdStarRate } from "react-icons/md";
 
 type MyTransactionsProps = {
   remaining_stars: number;
@@ -49,7 +50,7 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ remaini
       <div className="px-6 pb-6 pt-3 flex flex-row justify-between">
         <span className="capitalize">Remaining</span>
         <span>
-          ⭐
+          <MdStarRate className="inline-block" />
           {remaining_stars}
         </span>
       </div>
