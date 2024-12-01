@@ -69,7 +69,7 @@ export default function Index() {
       <div className="flex md:flex-row flex-col">
         <div className="md:block hidden flex-grow" />
         <div className="flex flex-col">
-          <UserLogin user={user} />
+          <UserLogin user={user} className="absolute top-0 right-0" />
           <Shop shop_items={shop_items} />
         </div>
         <MyTransactions user={user} remaining_stars={remaining_stars} shop_items={shop_items} transactions={transactions} />

@@ -3,32 +3,28 @@ import type { FunctionComponent } from "react";
 import { User } from "src/sqlite.server";
 
 type UserLoginProps = {
+  className?: string;
   user?: User;
 };
 
-const UserLogin: FunctionComponent<UserLoginProps> = ({ user }) => {
+const UserLogin: FunctionComponent<UserLoginProps> = ({ className, user }) => {
   return (
-    <div>
+    <div className={`${className}`}>
       {user?.aoc_id === undefined
-        ? <Link to="/login">Login</Link>
+        ? <Link to="/login" className="block relative m-2 px-6 py-2 rounded-lg bg-christmasRed text-white active:scale-95 transition-all duration-75">Login</Link>
         : (
-            <>
+            <div className="flex flex-row items-center">
               <span>
                 Hi
+                {" "}
+                AoC#
                 {user.aoc_id}
                 !
               </span>
-              <br />
-              <span>
-                Stars:
-                {user.gained_stars}
-              </span>
-              <span>It may take up to 15 minutes for a newly gained star to show up here, due to AoC API limitations.</span>
-
               <Form action="logout" method="post">
-                <button type="submit">Logout</button>
+                <button type="submit" className="block relative m-2 px-6 py-2 rounded-lg bg-christmasRed text-white active:scale-95 transition-all duration-75">Logout</button>
               </Form>
-            </>
+            </div>
           )}
     </div>
   );
