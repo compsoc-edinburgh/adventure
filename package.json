@@ -36,9 +36,9 @@
     "globals": "14.0.0"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=development && remix vite:dev",
-    "build": "cross-env NODE_ENV=production && remix vite:build",
-    "serve": "remix serve",
+    "dev": "cross-env NODE_ENV=development remix vite:dev",
+    "build": "cross-env NODE_ENV=production remix vite:build",
+    "serve": "cross-env NODE_ENV=production remix-serve build/server/index.js",
     "lint": "eslint"
   }
 }
