@@ -19,6 +19,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "eslint": "^9.16.0",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-import": "^2.31.0",
@@ -35,8 +36,8 @@
     "globals": "14.0.0"
   },
   "scripts": {
-    "dev": "remix vite:dev",
-    "build": "remix vite:build",
+    "dev": "cross-env NODE_ENV=development && remix vite:dev",
+    "build": "cross-env NODE_ENV=production && remix vite:build",
     "serve": "remix serve",
     "lint": "eslint"
   }

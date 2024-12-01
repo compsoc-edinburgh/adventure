@@ -47,6 +47,10 @@ const schema_updates = [
   `
   ALTER TABLE shop_items ADD COLUMN max_per_user INTEGER DEFAULT 1;
   `,
+
+  `
+  INSERT INTO users (is_admin, aoc_id, email, is_physically_in_edinburgh, gained_stars) VALUES (1, 0, "hello@comp-soc.com", 1, 999);
+  `,
 ];
 
 export type User = {
@@ -95,11 +99,31 @@ export function runMigrations() {
 };
 
 export function getUserByAoCId(aoc_id: number): User {
-  return db.prepare("SELECT * FROM users WHERE aoc_id = ?").get(aoc_id) as User;
+  const userRow = db.prepare("SELECT * FROM users WHERE aoc_id = ?").get(aoc_id);
+
+  // SQLite3 does not support boolean types and thus we store booleans as numbers. Convert them back.
+  if (userRow) {
+    // @ts-ignore
+    userRow.is_admin = !!userRow.is_admin;
+    // @ts-ignore
+    userRow.is_physically_in_edinburgh = !!userRow.is_physically_in_edinburgh;
+  }
+
+  return userRow as User;
 }
 
 export function getUserById(id: number): User {
-  return db.prepare("SELECT * FROM users WHERE id = ?").get(id) as User;
+  const userRow = db.prepare("SELECT * FROM users WHERE id = ?").get(id) as User;
+
+  // SQLite3 does not support boolean types and thus we store booleans as numbers. Convert them back.
+  if (userRow) {
+    // @ts-ignore
+    userRow.is_admin = !!userRow.is_admin;
+    // @ts-ignore
+    userRow.is_physically_in_edinburgh = !!userRow.is_physically_in_edinburgh;
+  }
+
+  return userRow as User;
 }
 
 export function createUser(aoc_id: number): User {
@@ -107,12 +131,33 @@ export function createUser(aoc_id: number): User {
   return db.prepare("SELECT * FROM users WHERE id = ?").get(inserted_id) as User;
 }
 
+export function updateUserDetails(id: number, email: string, in_edinburgh: boolean) {
+  db.prepare("UPDATE users SET email = ?, is_physically_in_edinburgh = ? WHERE id = ?").run(email, in_edinburgh ? 1 : 0, id);
+}
+
 export function updateUserStars(user_id: number, stars: number) {
   db.prepare("UPDATE users SET gained_stars = ? WHERE id = ?").run(stars, user_id);
 }
 
+export function getUsers(): User[] {
+  return db.prepare("SELECT * FROM users").all() as User[];
+}
+
 export function getShopItems(): ShopItem[] {
   return db.prepare("SELECT * FROM shop_items").all() as ShopItem[];
+}
+
+export function getShopItemById(id: number): ShopItem {
+  return db.prepare("SELECT * FROM shop_items WHERE id = ?").get(id) as ShopItem;
+}
+
+export function createShopItem(image_url: string, name: string, description: string, star_cost: number, stock_count: number, max_per_user: number): ShopItem {
+  const inserted_id = db.prepare("INSERT INTO shop_items (image_url, name, description, star_cost, stock_count, max_per_user) VALUES (?, ?, ?, ?, ?, ?)").run(image_url, name, description, star_cost, stock_count, max_per_user).lastInsertRowid;
+  return db.prepare("SELECT * FROM shop_items WHERE id = ?").get(inserted_id) as ShopItem;
+}
+
+export function updateShopItem(id: number, image_url: string, name: string, description: string, star_cost: number, stock_count: number, max_per_user: number) {
+  db.prepare("UPDATE shop_items SET image_url = ?, name = ?, description = ?, star_cost = ?, stock_count = ?, max_per_user = ? WHERE id = ?").run(image_url, name, description, star_cost, stock_count, max_per_user, id);
 }
 
 export function getTransactionsByUserId(user_id: number): ShopTransaction[] {
@@ -121,6 +166,10 @@ export function getTransactionsByUserId(user_id: number): ShopTransaction[] {
 
 export function getTransactionsByItemId(shop_item_id: number): ShopTransaction[] {
   return db.prepare("SELECT * FROM shop_transactions WHERE shop_item_id = ?").all(shop_item_id) as ShopTransaction[];
+}
+
+export function getTransactions(): ShopTransaction[] {
+  return db.prepare("SELECT * FROM shop_transactions").all() as ShopTransaction[];
 }
 
 export function createTransaction(user_id: number, shop_item_id: number): ShopTransaction {

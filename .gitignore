@@ -3,3 +3,4 @@ build
 .cache
 data
 .DS_Store
+.env.production

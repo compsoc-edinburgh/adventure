@@ -3,6 +3,7 @@ import { Form, Link, redirect, useLoaderData } from "@remix-run/react";
 import { getUserByAoCId, createUser } from "../sqlite.server";
 import { getSession, commitSession } from "../sessions";
 import { isUserInLeaderboard } from "../stars.server";
+import Input from "../components/Input";
 
 export default function LoginForm() {
   const { error } = useLoaderData<typeof loader>();
@@ -11,9 +12,14 @@ export default function LoginForm() {
       <h2 className="text-3xl font-display mb-6">Login</h2>
       <span className="text-sm opacity-75">Please enter your AoC ID to access the reward exchange shop.</span>
       <Form method="post" className="mt-6">
-        <div className="min-w-64">
-          <label htmlFor="aoc_id" className="block mb-2 text-sm text-christmasDark">AoC ID Number</label>
-          <input type="text" name="aoc_id" placeholder="e.g. 1234512" id="aoc_id" className="bg-gray-50 border border-christmasBeigeAccent  text-sm rounded-lg focus:outline-double focus:outline-4 focus:outline-christmasRed box-border block w-72 p-3" required />
+        <Input className="min-w-64" type="text" name="aoc_id" placeholder="e.g. 1234512" label="AoC ID Number" required />
+        <div className="min-w-64 mt-3 flex flex-row items-center">
+          <input type="checkbox" name="mine" id="mine" className="mr-2" value="true" required />
+          <label htmlFor="mine" className="block text-sm text-christmasDark w-0 min-w-full">
+            I confirm this AoC ID is mine.
+            <br />
+            I understand that this event runs on trust and goodwill, and that going against it can risk the event being cancelled for everyone.
+          </label>
         </div>
         <button type="submit" className="block relative w-full mt-3 px-6 py-2 rounded-lg bg-christmasRed text-white active:scale-95 transition-all duration-75 focus:outline-4 focus:outline-christmasRed focus:outline-double">Access Shop</button>
         {error && <p className="text-christmasRedAccent text-sm mt-3 min-w-full w-0">{error}</p>}
@@ -52,8 +58,30 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const formData = await request.formData();
   const aoc_id = formData.get("aoc_id");
-  if (typeof aoc_id !== "string") {
+  const mine = formData.get("mine");
+  if (typeof aoc_id !== "string" || typeof mine !== "string") {
     return redirect("/login");
+  }
+
+  // Check that the user has confirmed the AoC ID is theirs
+  if (mine !== "true") {
+    session.flash("error", "You must confirm that the AoC ID is yours.");
+
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+
+  // Admin bypasses all checks
+  if (aoc_id === process.env.ADMIN_LOGIN) {
+    session.set("user_id", "1");
+    return redirect("/", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
   }
 
   // Check that the AoC ID is a number
@@ -81,12 +109,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   // Check if the user exists
   let user = getUserByAoCId(parseInt(aoc_id));
   if (!user) {
+    // Prompt for more information from the user
     // Create the user
     user = createUser(parseInt(aoc_id));
     if (!user) {
       session.flash("error", "Could not create a new login entry due to a database error.");
 
-      return redirect("/login", {
+      return redirect("/login/new", {
         headers: {
           "Set-Cookie": await commitSession(session),
         },
@@ -96,7 +125,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   session.set("user_id", user.id.toString());
 
-  return redirect("/", {
+  // We deem a user verified when they have checked that they are both in Edinburgh
+  // and have an email address.
+  let verified = user.is_physically_in_edinburgh && user.email !== null;
+
+  return redirect(verified ? "/" : "/setup", {
     headers: {
       "Set-Cookie": await commitSession(session),
     },
