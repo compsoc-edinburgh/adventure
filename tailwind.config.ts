@@ -10,7 +10,7 @@ export default {
         christmasBeige: "#f4ebdc",
         christmasBeigeAccent: "#e5d7c3",
         christmasRed: "#882626",
-        christmasRedAccent: "#b53635",
+        christmasRedAccent: "#962c2b",
         christmasDark: "#464646",
       },
       keyframes: {
