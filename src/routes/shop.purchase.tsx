@@ -48,7 +48,7 @@ export async function action({ request }: ActionFunctionArgs) {
     // First check that user's total stars minus the total cost of all their
     // past transactions still has enough stars to purchase the item.
     const user = getUserById(user_id);
-    const transactions = getTransactionsByUserId(user_id);
+    const transactions = getTransactionsByUserId(user_id, true);
     const total_cost = transactions.reduce((acc, t) => {
       const item = shop_items.find(i => i.id === t.shop_item_id);
       if (!item) {
@@ -65,14 +65,14 @@ export async function action({ request }: ActionFunctionArgs) {
     // Next check that the item is in stock by counting the number of
     // transactions for this item.
     const transactionsForItem = getTransactionsByItemId(item.id);
-    const bought_count = transactionsForItem.filter(t => t.is_valid).length;
+    const bought_count = transactionsForItem.filter(t => !t.cancelled_at).length;
     if (bought_count >= item.stock_count) {
       transactionFailureMessage = "This item is out of stock.";
       return;
     }
 
     // Finally, check that the user hasn't already purchased this item.
-    if (transactionsForItem.some(t => t.user_id === user_id)) {
+    if (transactionsForItem.filter(t => !t.cancelled_at).some(t => t.user_id === user_id)) {
       transactionFailureMessage = "You have already purchased this item.";
       return;
     }

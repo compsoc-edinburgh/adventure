@@ -37,6 +37,16 @@ const schema_updates = [
     is_valid BOOLEAN NOT NULL DEFAULT 1
   );
   `,
+
+  `
+  ALTER TABLE shop_transactions ADD COLUMN cancelled_at INTEGER DEFAULT NULL;
+  UPDATE shop_transactions SET cancelled_at = CURRENT_TIMESTAMP where is_valid = 0;
+  ALTER TABLE shop_transactions DROP COLUMN is_valid;
+  `,
+
+  `
+  ALTER TABLE shop_items ADD COLUMN max_per_user INTEGER DEFAULT 1;
+  `,
 ];
 
 export type User = {
@@ -58,6 +68,7 @@ export type ShopItem = {
   description: string;
   star_cost: number;
   stock_count: number;
+  max_per_user: number;
 };
 
 export type ShopTransaction = {
@@ -65,7 +76,7 @@ export type ShopTransaction = {
   user_id: number;
   shop_item_id: number;
   transaction_time: number;
-  is_valid: boolean;
+  cancelled_at: number;
 };
 
 export function runMigrations() {
@@ -75,8 +86,10 @@ export function runMigrations() {
   // Run schema updates until the user_version is up to date
   while (user_version < schema_updates.length) {
     console.info(`Migrating schema to version ${user_version + 1}`);
-    db.exec(schema_updates[user_version]);
-    db.pragma("user_version = " + (user_version + 1));
+    db.transaction(() => {
+      db.exec(schema_updates[user_version]);
+      db.pragma("user_version = " + (user_version + 1));
+    })();
     user_version = db.pragma("user_version", { simple: true }) as number;
   }
 };
@@ -102,8 +115,9 @@ export function getShopItems(): ShopItem[] {
   return db.prepare("SELECT * FROM shop_items").all() as ShopItem[];
 }
 
-export function getTransactionsByUserId(user_id: number): ShopTransaction[] {
-  return db.prepare("SELECT * FROM shop_transactions WHERE user_id = ?").all(user_id) as ShopTransaction[];
+export function getTransactionsByUserId(user_id: number, only_valid: boolean = false): ShopTransaction[] {
+  const query = only_valid ? "SELECT * FROM shop_transactions WHERE user_id = ? AND cancelled_at IS NULL" : "SELECT * FROM shop_transactions WHERE user_id = ?";
+  return db.prepare(query).all(user_id) as ShopTransaction[];
 }
 
 export function getTransactionsByItemId(shop_item_id: number): ShopTransaction[] {
@@ -116,5 +130,5 @@ export function createTransaction(user_id: number, shop_item_id: number): ShopTr
 }
 
 export function cancelTransaction(transaction_id: number) {
-  db.prepare("UPDATE shop_transactions SET is_valid = 0 WHERE id = ?").run(transaction_id);
+  db.prepare("UPDATE shop_transactions SET cancelled_at = CURRENT_TIMESTAMP WHERE id = ?").run(transaction_id);
 }

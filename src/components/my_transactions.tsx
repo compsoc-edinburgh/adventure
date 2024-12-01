@@ -24,7 +24,7 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ transac
             {" "}
             {transaction.user_id}
 
-            {transaction.is_valid ? "Valid" : "Invalid"}
+            {!transaction.cancelled_at ? "Valid" : "Invalid"}
             <fetcher.Form method="post" action="shop/cancel">
               <input type="hidden" name="transaction_id" value={transaction.id} />
               <button type="submit">X</button>

@@ -32,7 +32,7 @@ export async function action({ request }: ActionFunctionArgs) {
     }, { status: 404 });
   }
 
-  if (!valid.is_valid) {
+  if (valid.cancelled_at) {
     return Response.json({
       success: false,
       message: "Transaction is already cancelled",
