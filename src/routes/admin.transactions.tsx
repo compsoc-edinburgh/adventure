@@ -12,7 +12,7 @@ export default function Items() {
       <Table className="bg-white">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">ID</TableHead>
+            <TableHead>ID</TableHead>
             <TableHead>User ID</TableHead>
             <TableHead>Shop Item ID</TableHead>
             <TableHead>Cancelled At</TableHead>
