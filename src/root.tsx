@@ -1,4 +1,5 @@
 import {
+  Link,
   Links,
   Meta,
   Outlet,
@@ -65,7 +66,9 @@ export default function App() {
           </div>
           <div className="flex flex-col mt-8 mb-8 items-center">
             <CompSocLogo className="w-32 opacity-50 mb-4" />
-            <h1 className="md:text-7xl text-4xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasDark to-christmasRed">Advent of Code Rewards</h1>
+            <Link to="/">
+              <h1 className="md:text-7xl text-4xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasDark to-christmasRed">Advent of Code Rewards</h1>
+            </Link>
             <Ornament1 className="w-56 -mt-3" />
           </div>
           <UserLogin user={user} className="absolute top-0 right-0" />
