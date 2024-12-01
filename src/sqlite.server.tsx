@@ -107,6 +107,10 @@ export function createUser(aoc_id: number): User {
   return db.prepare("SELECT * FROM users WHERE id = ?").get(inserted_id) as User;
 }
 
+export function updateUserDetails(id: number, email: string, in_edinburgh: boolean) {
+  db.prepare("UPDATE users SET email = ?, is_physically_in_edinburgh = ? WHERE id = ?").run(email, in_edinburgh ? 1 : 0, id);
+}
+
 export function updateUserStars(user_id: number, stars: number) {
   db.prepare("UPDATE users SET gained_stars = ? WHERE id = ?").run(stars, user_id);
 }

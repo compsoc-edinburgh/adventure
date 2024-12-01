@@ -81,12 +81,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   // Check if the user exists
   let user = getUserByAoCId(parseInt(aoc_id));
   if (!user) {
+    // Prompt for more information from the user
     // Create the user
     user = createUser(parseInt(aoc_id));
     if (!user) {
       session.flash("error", "Could not create a new login entry due to a database error.");
 
-      return redirect("/login", {
+      return redirect("/login/new", {
         headers: {
           "Set-Cookie": await commitSession(session),
         },
@@ -96,7 +97,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   session.set("user_id", user.id.toString());
 
-  return redirect("/", {
+  // We deem a user verified when they have checked that they are both in Edinburgh
+  // and have an email address.
+  let verified = user.is_physically_in_edinburgh && user.email !== null;
+
+  return redirect(verified ? "/" : "/setup", {
     headers: {
       "Set-Cookie": await commitSession(session),
     },
