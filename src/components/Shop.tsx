@@ -34,9 +34,9 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
       </h2>
       {fetcherData && !fetcherData["success"] && (
         <div
-          className="bg-christmasRedAccent text-white p-4 rounded-lg mb-4 flex flex-row justify-between animate-slidein origin-top"
+          className="text-white p-4 rounded-lg mb-4 flex flex-row justify-between animate-slidein origin-top bg-[repeating-linear-gradient(-45deg,var(--tw-gradient-stops))] from-christmasRed from-[length:0_10px] to-christmasRedAccent to-[length:10px_20px]"
         >
-          <p>{fetcher.data["message"]}</p>
+          <p className="font-semibold text-lg">{fetcher.data["message"]}</p>
           <button onClick={() => setFetcherData(undefined)}>
             <MdClose />
           </button>
