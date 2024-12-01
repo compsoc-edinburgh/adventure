@@ -23,12 +23,6 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
             <p className="opacity-50">Nothing. That's fine too.</p>
           )}
           <ul>
-            {transactions.filter(t => !t.cancelled_at).length > 0 && user && (
-              <li>
-                <span className="block font-semibold">AoC Stars Collected</span>
-                <Stars amount={user.gained_stars} />
-              </li>
-            )}
             {transactions.map(transaction => (
               <React.Fragment key={transaction.id}>
                 {!transaction.cancelled_at && (
@@ -54,8 +48,27 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
 
       <div className="bg-white shadow-sm rounded-lg group min-w-64 border-t-2 border-christmasGreenAccent">
         <div className="px-6 pb-3 pt-3">
-          <div className=" flex flex-row justify-between">
-            <span className="capitalize">Available To Spend</span>
+          {user && (
+            <div className="flex flex-row justify-between">
+              <span>AoC Stars Collected</span>
+              <Stars amount={user.gained_stars} />
+            </div>
+          )}
+          {user && (
+            <div className="flex flex-row justify-between">
+              <span>Stars Spent</span>
+              <Stars amount={-1 * transactions.reduce((acc, t) => {
+                const item = shop_items.find(i => i.id === t.shop_item_id);
+                if (!item || t.cancelled_at) {
+                  return acc;
+                }
+                return acc + item.star_cost;
+              }, 0)}
+              />
+            </div>
+          )}
+          <div className="flex flex-row justify-between font-bold">
+            <span>Available to Spend</span>
             <Stars amount={remaining_stars} />
           </div>
           {!user && (
