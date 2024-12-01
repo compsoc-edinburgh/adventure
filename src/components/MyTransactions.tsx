@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { User, ShopItem, ShopTransaction } from "../sqlite.server";
 import { useFetcher } from "@remix-run/react";
 import { action as shopCancelAction } from "../routes/shop.cancel";
-import Stars from "./stars";
+import Stars from "./Stars";
 
 type MyTransactionsProps = {
   user?: User;

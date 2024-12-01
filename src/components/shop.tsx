@@ -2,7 +2,7 @@ import type { FunctionComponent } from "react";
 import { ShopItem } from "../sqlite.server";
 import { useFetcher } from "@remix-run/react";
 import { action as shopPurchaseAction } from "../routes/shop.purchase";
-import Stars from "./stars";
+import Stars from "./Stars";
 
 type ShopProps = {
   shop_items: ShopItem[];

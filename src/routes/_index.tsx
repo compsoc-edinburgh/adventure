@@ -1,11 +1,11 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import UserLogin from "../components/user_login";
+import UserLogin from "../components/UserLogin";
 import { getSession } from "../sessions";
 import { useLoaderData } from "@remix-run/react";
-import { Shop } from "../components/shop";
-import { MyTransactions } from "../components/my_transactions";
+import { Shop } from "../components/Shop";
+import { MyTransactions } from "../components/MyTransactions";
 import { getShopItems, getTransactionsByUserId, getUserById, ShopItem, ShopTransaction, updateUserStars, User } from "../sqlite.server";
-import SnowParticles from "../components/snow";
+import SnowParticles from "../components/Particles";
 import { getStarsForUser } from "../stars.server";
 import { Tree } from "../components/Tree";
 import { Ornament1 } from "../components/Ornament1";
