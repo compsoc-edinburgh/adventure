@@ -12,7 +12,10 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
   const fetcher = useFetcher<typeof shopPurchaseAction>();
   return (
     <div>
-      <h2 className="text-3xl font-display mb-4">Reward Shop</h2>
+      <h2 className="text-3xl font-display mb-4 relative justify-self-start">
+        <div className="w-full bg-christmasBeige h-full absolute top-0 left-0 z-[-1] scale-110 -skew-x-12 -rotate-2 transform-gpu" />
+        Reward Shop
+      </h2>
       {fetcher.data && !fetcher.data["success"] && <p>{fetcher.data["message"]}</p>}
       <ul className="grid grid-cols-2 grid-rows-3 lg:grid-cols-3 lg:grid-rows-2 gap-4">
         {shop_items.map((item, i) => (
