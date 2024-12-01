@@ -95,11 +95,31 @@ export function runMigrations() {
 };
 
 export function getUserByAoCId(aoc_id: number): User {
-  return db.prepare("SELECT * FROM users WHERE aoc_id = ?").get(aoc_id) as User;
+  const userRow = db.prepare("SELECT * FROM users WHERE aoc_id = ?").get(aoc_id);
+
+  // SQLite3 does not support boolean types and thus we store booleans as numbers. Convert them back.
+  if (userRow) {
+    // @ts-ignore
+    userRow.is_admin = !!userRow.is_admin;
+    // @ts-ignore
+    userRow.is_physically_in_edinburgh = !!userRow.is_physically_in_edinburgh;
+  }
+
+  return userRow as User;
 }
 
 export function getUserById(id: number): User {
-  return db.prepare("SELECT * FROM users WHERE id = ?").get(id) as User;
+  const userRow = db.prepare("SELECT * FROM users WHERE id = ?").get(id) as User;
+
+  // SQLite3 does not support boolean types and thus we store booleans as numbers. Convert them back.
+  if (userRow) {
+    // @ts-ignore
+    userRow.is_admin = !!userRow.is_admin;
+    // @ts-ignore
+    userRow.is_physically_in_edinburgh = !!userRow.is_physically_in_edinburgh;
+  }
+
+  return userRow as User;
 }
 
 export function createUser(aoc_id: number): User {
