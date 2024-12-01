@@ -15,6 +15,14 @@ export default function LoginForm() {
           <label htmlFor="aoc_id" className="block mb-2 text-sm text-christmasDark">AoC ID Number</label>
           <input type="text" name="aoc_id" placeholder="e.g. 1234512" id="aoc_id" className="bg-gray-50 border border-christmasBeigeAccent  text-sm rounded-lg focus:outline-double focus:outline-4 focus:outline-christmasRed box-border block w-72 p-3" required />
         </div>
+        <div className="min-w-64 mt-3 flex flex-row items-center">
+          <input type="checkbox" name="mine" id="mine" className="mr-2" value="true" required />
+          <label htmlFor="mine" className="block text-sm text-christmasDark w-0 min-w-full">
+            I confirm this AoC ID is mine.
+            <br />
+            I understand that this event runs on trust and goodwill, and that going against it can risk the event being cancelled for everyone.
+          </label>
+        </div>
         <button type="submit" className="block relative w-full mt-3 px-6 py-2 rounded-lg bg-christmasRed text-white active:scale-95 transition-all duration-75 focus:outline-4 focus:outline-christmasRed focus:outline-double">Access Shop</button>
         {error && <p className="text-christmasRedAccent text-sm mt-3 min-w-full w-0">{error}</p>}
       </Form>
@@ -52,8 +60,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const formData = await request.formData();
   const aoc_id = formData.get("aoc_id");
-  if (typeof aoc_id !== "string") {
+  const mine = formData.get("mine");
+  if (typeof aoc_id !== "string" || typeof mine !== "string") {
     return redirect("/login");
+  }
+
+  // Check that the user has confirmed the AoC ID is theirs
+  if (mine !== "true") {
+    session.flash("error", "You must confirm that the AoC ID is yours.");
+
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
   }
 
   // Check that the AoC ID is a number
