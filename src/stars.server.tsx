@@ -7,3 +7,8 @@ export function getStarsForUser(aoc_user_id: number): number {
   const data = JSON.parse(fs.readFileSync(AOC_DATA_FILE, "utf-8"));
   return data.members[aoc_user_id.toString()]?.stars || 0;
 }
+
+export function isUserInLeaderboard(aoc_user_id: number): boolean {
+  const data = JSON.parse(fs.readFileSync(AOC_DATA_FILE, "utf-8"));
+  return data.members[aoc_user_id.toString()] !== undefined;
+}
