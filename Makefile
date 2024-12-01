@@ -23,7 +23,7 @@ sync-secrets-confirm:
 
 # After cloning this repo locally, you can run this to set up the .secrets
 # directory both locally and remotely. Harmless even if run multiple times.
-initialise: initialise-confirm
+initialise: initialise-confirm generate-port
 	rsync -r ${REMOTE}:/secrets/service-${SERVICE_NAME}/ ./.secrets/
 
 generate-port:
@@ -46,12 +46,10 @@ start:
 	ssh ${REMOTE} 'docker run -d --name service-${SERVICE_NAME} \
 		--network traefik-net \
 		--label "traefik.enable=true" \
-		-p ${PORT}:${PORT} \
-		--env-file /secrets/service-${SERVICE_NAME}/.env \
+		-p ${PORT}:8080 \
 		--volume /deployment/service-${SERVICE_NAME}:/etc/${SERVICE_NAME} \
 		--label "com.centurylinklabs.watchtower.enable=true" \
 		--label "traefik.http.routers.service-${SERVICE_NAME}.rule=Host(\`${SUBDOMAIN}.dev.comp-soc.com\`)" \
-		--label "traefik.http.routers.service-${SERVICE_NAME}.middlewares=traefik-forward-auth-gh" \
 		ghcr.io/compsoc-edinburgh/service-${SERVICE_NAME}'
 
 # Most used command, restarts the service after syncing secrets (i.e. new
