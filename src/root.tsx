@@ -16,6 +16,7 @@ import { Tree } from "./components/Tree";
 import UserLogin from "./components/UserLogin";
 import { getSession } from "./sessions";
 import { getUserById, User } from "./sqlite.server";
+import { getNameForUser } from "./stars.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -32,14 +33,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
     request.headers.get("Cookie"),
   );
 
-  const response: { user: User | undefined } = {
+  const response: { user: User | undefined; aoc_name: string | undefined } = {
     user: undefined,
+    aoc_name: "",
   };
 
   if (session.has("user_id")) {
     const user_id = session.get("user_id");
     if (user_id) {
       response.user = getUserById(parseInt(user_id));
+      response.aoc_name = response.user.aoc_id ? getNameForUser(response.user.aoc_id) : undefined;
     };
   }
 
@@ -47,7 +50,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 };
 
 export default function App() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, aoc_name } = useLoaderData<typeof loader>();
   return (
     <html lang="en-us">
       <head>
@@ -71,7 +74,7 @@ export default function App() {
             </Link>
             <Ornament1 className="w-56 -mt-3" />
           </div>
-          <UserLogin user={user} className="absolute top-0 right-0" />
+          <UserLogin user={user} className="absolute top-0 right-0" aoc_name={aoc_name} />
 
           <Outlet />
         </div>

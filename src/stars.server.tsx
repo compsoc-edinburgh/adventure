@@ -12,3 +12,8 @@ export function isUserInLeaderboard(aoc_user_id: number): boolean {
   const data = JSON.parse(fs.readFileSync(AOC_DATA_FILE, "utf-8"));
   return data.members[aoc_user_id.toString()] !== undefined;
 }
+
+export function getNameForUser(aoc_user_id: number): string {
+  const data = JSON.parse(fs.readFileSync(AOC_DATA_FILE, "utf-8"));
+  return data.members[aoc_user_id.toString()]?.name || "Anonymous User #" + aoc_user_id;
+}
