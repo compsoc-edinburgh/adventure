@@ -2,7 +2,7 @@ import type { FunctionComponent } from "react";
 import { ShopItem } from "../sqlite.server";
 import { useFetcher } from "@remix-run/react";
 import { action as shopPurchaseAction } from "../routes/shop.purchase";
-import { MdStarRate } from "react-icons/md";
+import Stars from "./stars";
 
 type ShopProps = {
   shop_items: ShopItem[];
@@ -14,7 +14,7 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
     <div>
       <h2 className="text-3xl font-display mb-4">Reward Shop</h2>
       {fetcher.data && !fetcher.data["success"] && <p>{fetcher.data["message"]}</p>}
-      <ul className="grid grid-cols-3 grid-rows-2 gap-4">
+      <ul className="grid grid-cols-2 grid-rows-3 lg:grid-cols-3 lg:grid-rows-2 gap-4">
         {shop_items.map((item, i) => (
           <li key={item.id} className={"bg-christmasBeigeAccent transform-gpu transition-all duration-150 overflow-hidden rounded-xl group relative flex flex-col hover:scale-105 " + (i == 0 ? "row-span-2 col-span-2" : "row-span-1 col-span-1")}>
             <img src={item.image_url} alt={item.name} />
@@ -27,11 +27,7 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
             <div
               className="absolute bottom-0 w-full translate-y-10 transform-gpu flex justify-between items-center p-4 opacity-0 transition-all duration-150 group-hover:translate-y-0 group-hover:opacity-100"
             >
-              <span>
-                <MdStarRate className="inline-block" />
-                {" "}
-                {item.star_cost}
-              </span>
+              <Stars amount={item.star_cost} />
               <fetcher.Form method="post" action="shop/purchase">
                 <input type="hidden" name="shop_item_id" value={item.id} />
                 <button type="submit" className="pointer-events-auto bg-christmasRed text-white rounded-md py-2 px-4">Exchange</button>
