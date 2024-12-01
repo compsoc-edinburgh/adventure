@@ -29,7 +29,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="bg-[#516152] text-white">
+      <body className="bg-christmasBeige text-christmasDark">
         <Outlet />
         <Scripts />
       </body>
