@@ -1,21 +1,16 @@
-FROM trafex/php-nginx:3.6.0
+FROM node:23 AS build
+WORKDIR /app
 
-COPY index.html /var/www/html/index.html
-COPY keep_me_updated.php /var/www/html/keep_me_updated.php
-COPY compiled.css /var/www/html/compiled.css
+COPY ./package.json /app/package.json
+COPY ./yarn.lock /app/yarn.lock
 
-# Remove the default files
-RUN rm /var/www/html/index.php
-RUN rm /var/www/html/test.html
+RUN yarn install
 
-# Temporarily become root since the trafek/php-nginx image sets the user to nobody
-# which can't create or chown files
-USER root
+COPY ./src /app/src
+COPY ./vite.config.ts /app/vite.config.ts
+COPY ./tailwind.config.ts /app/tailwind.config.ts
+COPY ./tsconfig.json /app/tsconfig.json
+COPY ./postcss.config.mjs /app/postcss.config.mjs
+RUN yarn build
 
-RUN mkdir -p /etc/adventure
-RUN touch /etc/adventure/emails.txt
-RUN chmod 0777 /etc/adventure/emails.txt
-
-USER nobody
-
-EXPOSE 8080
+CMD ["yarn", "serve"]
