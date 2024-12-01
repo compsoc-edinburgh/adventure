@@ -49,7 +49,7 @@ const schema_updates = [
   `,
 
   `
-  INSERT INTO users (is_admin, aoc_id, email, is_physically_in_edinburgh, gained_stars) VALUES (1, 0, "hello@comp-soc.com", 1, 999);
+  INSERT INTO users (is_admin, aoc_id, email, is_physically_in_edinburgh, gained_stars) VALUES (1, 0, 'hello@comp-soc.com', 1, 999);
   `,
 ];
 
