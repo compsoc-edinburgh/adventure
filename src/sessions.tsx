@@ -39,7 +39,7 @@ export async function requireUserSession(request: Request) {
   const session = await getSession(cookie);
 
   if (!session.has("user_id")) {
-    throw new Error("You are not logged in.");
+    return null;
   }
 
   return session;

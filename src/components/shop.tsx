@@ -1,16 +1,19 @@
 import type { FunctionComponent } from "react";
 import { ShopItem } from "../sqlite.server";
 import { useFetcher } from "@remix-run/react";
+import { action as shopPurchaseAction } from "../routes/shop.purchase";
 
 type ShopProps = {
   shop_items: ShopItem[];
 };
 
 export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof shopPurchaseAction>();
+  console.log(fetcher.data);
   return (
     <div>
       <h1>Shop</h1>
+      {fetcher.data && !fetcher.data["success"] && <p>{fetcher.data["message"]}</p>}
       <ul>
         {shop_items.map(item => (
           <li key={item.id}>
