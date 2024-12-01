@@ -61,7 +61,7 @@ export default function App() {
 
         <div className="w-full">
           <div className="absolute inset-0 top-0 left-0 overflow-hidden -z-10">
-            <Tree className="absolute h-full -left-12" />
+            <Tree className="absolute h-full -left-12 opacity-25 md:opacity-100" />
           </div>
           <div className="flex flex-col mt-8 mb-8 items-center">
             <CompSocLogo className="w-32 opacity-50 mb-4" />
