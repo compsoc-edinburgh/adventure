@@ -75,6 +75,8 @@ export type ShopItem = {
   max_per_user: number;
 };
 
+export type ShopItemWithRemaining = ShopItem & { remaining_count: number };
+
 export type ShopTransaction = {
   id: number;
   user_id: number;
