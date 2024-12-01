@@ -147,6 +147,19 @@ export function getShopItems(): ShopItem[] {
   return db.prepare("SELECT * FROM shop_items").all() as ShopItem[];
 }
 
+export function getShopItemById(id: number): ShopItem {
+  return db.prepare("SELECT * FROM shop_items WHERE id = ?").get(id) as ShopItem;
+}
+
+export function createShopItem(image_url: string, name: string, description: string, star_cost: number, stock_count: number, max_per_user: number): ShopItem {
+  const inserted_id = db.prepare("INSERT INTO shop_items (image_url, name, description, star_cost, stock_count, max_per_user) VALUES (?, ?, ?, ?, ?, ?)").run(image_url, name, description, star_cost, stock_count, max_per_user).lastInsertRowid;
+  return db.prepare("SELECT * FROM shop_items WHERE id = ?").get(inserted_id) as ShopItem;
+}
+
+export function updateShopItem(id: number, image_url: string, name: string, description: string, star_cost: number, stock_count: number, max_per_user: number) {
+  db.prepare("UPDATE shop_items SET image_url = ?, name = ?, description = ?, star_cost = ?, stock_count = ?, max_per_user = ? WHERE id = ?").run(image_url, name, description, star_cost, stock_count, max_per_user, id);
+}
+
 export function getTransactionsByUserId(user_id: number): ShopTransaction[] {
   return db.prepare("SELECT * FROM shop_transactions WHERE user_id = ?").all(user_id) as ShopTransaction[];
 }
