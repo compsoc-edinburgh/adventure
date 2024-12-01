@@ -9,6 +9,7 @@ import SnowParticles from "../components/Particles";
 import { getStarsForUser } from "../stars.server";
 import { Tree } from "../components/Tree";
 import { Ornament1 } from "../components/Ornament1";
+import { CompSocLogo } from "../components/CompSocLogo";
 
 export async function loader({
   request,
@@ -60,7 +61,8 @@ export default function Index() {
         <Tree className="absolute h-full -left-12" />
       </div>
       <div className="flex flex-col mt-8 mb-8 items-center">
-        <h1 className="md:text-7xl text-4xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasDark to-christmasRed">Advent of Code</h1>
+        <CompSocLogo className="w-32 opacity-50 mb-4" />
+        <h1 className="md:text-7xl text-4xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasDark to-christmasRed">Advent of Code Rewards</h1>
         <Ornament1 className="w-56 -mt-3" />
       </div>
 
