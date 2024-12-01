@@ -99,6 +99,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return {
+    success: true,
     transaction_id: transaction.id,
   };
 }
