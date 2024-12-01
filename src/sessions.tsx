@@ -32,3 +32,15 @@ const { getSession, commitSession, destroySession }
   );
 
 export { getSession, commitSession, destroySession };
+
+export async function requireUserSession(request: Request) {
+  // get the session
+  const cookie = request.headers.get("cookie");
+  const session = await getSession(cookie);
+
+  if (!session.has("user_id")) {
+    throw new Error("You are not logged in.");
+  }
+
+  return session;
+}

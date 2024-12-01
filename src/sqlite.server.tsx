@@ -101,3 +101,12 @@ export function getShopItems(): ShopItem[] {
 export function getTransactionsByUserId(user_id: number): ShopTransaction[] {
   return db.prepare("SELECT * FROM shop_transactions WHERE user_id = ?").all(user_id) as ShopTransaction[];
 }
+
+export function getTransactionsByItemId(shop_item_id: number): ShopTransaction[] {
+  return db.prepare("SELECT * FROM shop_transactions WHERE shop_item_id = ?").all(shop_item_id) as ShopTransaction[];
+}
+
+export function createTransaction(user_id: number, shop_item_id: number): ShopTransaction {
+  const inserted_id = db.prepare("INSERT INTO shop_transactions (user_id, shop_item_id) VALUES (?, ?)").run(user_id, shop_item_id).lastInsertRowid;
+  return db.prepare("SELECT * FROM shop_transactions WHERE id = ?").get(inserted_id) as ShopTransaction;
+}
