@@ -7,6 +7,7 @@ import { MyTransactions } from "../components/my_transactions";
 import { getShopItems, getTransactionsByUserId, getUserById, ShopItem, ShopTransaction, updateUserStars, User } from "../sqlite.server";
 import SnowParticles from "../components/snow";
 import { getStarsForUser } from "../stars.server";
+import { Tree } from "../components/Tree";
 
 export async function loader({
   request,
@@ -41,20 +42,24 @@ export async function loader({
 
 export default function Index() {
   const { user, shop_items, transactions } = useLoaderData<typeof loader>();
+
   return (
-    <div>
-      <h1 className="text-8xl font-display bg-clip-text text-transparent bg-gradient-to-t from-white to-green-50">Advent of Code</h1>
+    <div className="w-full">
+      <h1 className="text-7xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasDark to-christmasRed pt-4">Advent of Code</h1>
       <UserLogin user={user} />
       <div className="flex flex-row md:flex-col">
         <Shop shop_items={shop_items} />
         <MyTransactions transactions={transactions} />
+      </div>
+      <div className="absolute inset-0 top-0 left-0">
+        <Tree />
       </div>
       <SnowParticles
         className="absolute inset-0"
         quantity={100}
         ease={80}
         color="#ffffff"
-        size={1.5}
+        size={3}
         staticity={60}
         vy={1.1}
       />
