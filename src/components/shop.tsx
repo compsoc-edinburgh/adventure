@@ -16,16 +16,16 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
       {fetcher.data && !fetcher.data["success"] && <p>{fetcher.data["message"]}</p>}
       <ul className="grid grid-cols-2 grid-rows-3 lg:grid-cols-3 lg:grid-rows-2 gap-4">
         {shop_items.map((item, i) => (
-          <li key={item.id} className={"bg-christmasBeigeAccent transform-gpu transition-all duration-150 overflow-hidden rounded-xl group relative flex flex-col hover:scale-105 " + (i == 0 ? "row-span-2 col-span-2" : "row-span-1 col-span-1")}>
-            <img src={item.image_url} alt={item.name} />
-            <div className="flex transform-gpu flex-col gap-1 p-6 transition-all duration-150 group-hover:-translate-y-10">
+          <li key={item.id} className={"bg-christmasBeigeAccent transform-gpu overflow-hidden rounded-xl group relative flex flex-col " + (i == 0 ? "row-span-2 col-span-2" : "row-span-1 col-span-1")}>
+            <img src={item.image_url} alt={item.name} className="[mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] group-hover:scale-105 transition-all duration-150" />
+            <div className="absolute bottom-0 flex transform-gpu flex-col gap-1 p-6 transition-all duration-150 group-hover:-translate-y-10 w-full">
               <h3 className="text-xl font-semibold text-christmasDark dark:text-neutral-300">
                 {item.name}
               </h3>
               <p className="max-w-lg text-christmasDark opacity-50">{item.description}</p>
             </div>
             <div
-              className="absolute bottom-0 w-full translate-y-10 transform-gpu flex justify-between items-center p-4 opacity-0 transition-all duration-150 group-hover:translate-y-0 group-hover:opacity-100"
+              className="absolute bottom-0 w-full translate-y-10 transform-gpu flex justify-between items-center p-6 opacity-0 transition-all duration-150 group-hover:translate-y-0 group-hover:opacity-100"
             >
               <Stars amount={item.star_cost} />
               <fetcher.Form method="post" action="shop/purchase">
