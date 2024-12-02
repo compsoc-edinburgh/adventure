@@ -60,7 +60,10 @@ export default function LoginDiscord() {
       {accessToken && (
         <div className="mt-8 w-96 max-w-full">
           <p className="w-0 min-w-full">
-            Receiving information from Discord... Username:
+            Receiving information from Discord...
+            <br />
+            Username:
+            {" "}
             {discordUsername}
           </p>
         </div>
@@ -138,7 +141,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
   // If they already have a Discord ID, check that it matches the one they're trying to link.
   const existing_discord_id = user.discord_id || getDiscordIdFromAocId(user.aoc_id || 0)?.toString();
-
   if (!existing_discord_id) {
     // If they have no mapping, the user probably manually visited /login/discord,
     // since otherwise the only time we redirect to this page is if they already
