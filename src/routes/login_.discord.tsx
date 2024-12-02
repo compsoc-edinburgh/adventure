@@ -3,7 +3,8 @@ import { Link, redirect, useFetcher, useLoaderData, useLocation } from "@remix-r
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineDiscord } from "react-icons/ai";
 import { commitSession, getSession } from "../sessions";
-import { updateUserDiscordId } from "../sqlite.server";
+import { getUserById, updateUserDiscordId } from "../sqlite.server";
+import { getDiscordIdFromAocId } from "src/mappings.server";
 
 export default function LoginDiscord() {
   const location = useLocation();
@@ -103,6 +104,7 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   }
   const temporary_user_id = session.get("temporary_user_id")!;
+  const user = getUserById(parseInt(temporary_user_id));
 
   const formData = await request.formData();
   const discord_id = formData.get("discord_id");
@@ -110,6 +112,7 @@ export async function action({ request }: ActionFunctionArgs) {
   // Check that the Discord ID and username are not empty.
   if (typeof discord_id !== "string") {
     session.flash("error", "Invalid form data.");
+    session.unset("temporary_user_id");
     return redirect("/login", {
       headers: {
         "Set-Cookie": await commitSession(session),
@@ -117,8 +120,34 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   }
 
-  // Update the user's Discord ID and username.
-  updateUserDiscordId(parseInt(temporary_user_id), discord_id);
+  // If they already have a Discord ID, check that it matches the one they're trying to link.
+  const existing_discord_id = user.discord_id || getDiscordIdFromAocId(user.aoc_id || 0)?.toString();
+
+  if (!existing_discord_id) {
+    // If they have no mapping, the user probably manually visited /login/discord,
+    // since otherwise the only time we redirect to this page is if they already
+    // have a mapping.
+    // We just ignore the Discord ID and log them in directly. If they want to
+    // link a Discord account, they can do so from the AoC Discord bot.
+    session.set("user_id", temporary_user_id);
+    session.unset("temporary_user_id");
+
+    return redirect("/", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+
+  if (existing_discord_id !== discord_id) {
+    session.flash("error", "You've used the wrong Discord account.");
+    session.unset("temporary_user_id");
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
 
   session.set("user_id", temporary_user_id);
   session.unset("temporary_user_id");
