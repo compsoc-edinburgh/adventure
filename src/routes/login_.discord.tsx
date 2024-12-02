@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Link, redirect, useFetcher, useLoaderData, useLocation } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import { Form, Link, redirect, useFetcher, useLoaderData, useLocation } from "@remix-run/react";
+import { useEffect, useRef, useState } from "react";
 import { AiOutlineDiscord } from "react-icons/ai";
 import { commitSession, getSession } from "../sessions";
 import { getUserById } from "../sqlite.server";
@@ -14,6 +14,9 @@ export default function LoginDiscord() {
 
   const fetcher = useFetcher<typeof action>();
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  const submitRef = useRef<HTMLButtonElement>(null);
+
   const [discordUsername, setDiscordUsername] = useState<string>("");
   const [error, setError] = useState<string | undefined>(undefined);
   useEffect(() => {
@@ -26,12 +29,8 @@ export default function LoginDiscord() {
         .then(result => result.json())
         .then((response) => {
           setDiscordUsername(response.username);
-          fetcher.submit({
-            discord_id: response.id,
-          }, {
-            method: "post",
-            action: "/login/discord",
-          });
+          if (inputRef.current) inputRef.current.value = response.id;
+          submitRef.current?.click();
         })
         .catch((reason) => {
           setError(String(reason));
@@ -71,6 +70,10 @@ export default function LoginDiscord() {
       {error && (
         <p className="text-christmasRedAccent text-sm mt-3 min-w-full w-0">{error}</p>
       )}
+      <Form method="post" className="hidden">
+        <input type="hidden" name="discord_id" readOnly hidden ref={inputRef} />
+        <button type="submit" className="hidden" ref={submitRef} />
+      </Form>
     </div>
   );
 }
