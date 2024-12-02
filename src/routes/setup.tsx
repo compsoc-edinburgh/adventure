@@ -5,7 +5,7 @@ import { getUserById, updateUserDetails } from "../sqlite.server";
 import Input from "../components/Input";
 
 export default function SetupAccount() {
-  const { error, email, is_physically_in_edinburgh } = useLoaderData<typeof loader>();
+  const { error, is_physically_in_edinburgh } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex items-center justify-center w-full flex-col">
@@ -25,7 +25,7 @@ export default function SetupAccount() {
         since this event runs with Edinburgh CompSoc funds.
       </p>
       <Form method="post" className="mt-6">
-        <Input className="min-w-64" type="text" name="ed_ac_uk_email" placeholder="e.g. s2100000@ed.ac.uk" label="Edinburgh Email Address" required value={email} />
+        <Input className="min-w-64" type="text" name="ed_ac_uk_email" placeholder="e.g. s2100000@ed.ac.uk" label="Edinburgh Email Address" required />
 
         <div className="min-w-64 mt-3 flex flex-row items-center">
           <input type="checkbox" name="physically_in_edinburgh" value="true" id="physically_in_edinburgh" className="text-christmasRedAccent mr-2" required defaultChecked={is_physically_in_edinburgh} />
@@ -50,7 +50,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return data({
     error: session.get("error"),
-    email: user.email,
     is_physically_in_edinburgh: user.is_physically_in_edinburgh,
   });
 }
