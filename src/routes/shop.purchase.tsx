@@ -74,7 +74,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const transactionsForItem = getTransactionsByItemId(item.id);
     const bought_count = transactionsForItem.filter(t => !t.cancelled_at).length;
     if (bought_count >= item.stock_count) {
-      transactionFailureMessage = "This item is out of stock.";
+      transactionFailureMessage = "This item is out of stock. But someone may cancel their order, so check back later!";
       return;
     }
 
