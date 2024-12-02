@@ -51,13 +51,18 @@ const schema_updates = [
   `
   INSERT INTO users (is_admin, aoc_id, email, is_physically_in_edinburgh, gained_stars) VALUES (1, 0, 'hello@comp-soc.com', 1, 999);
   `,
+
+  `
+  ALTER TABLE users ADD COLUMN discord_id TEXT DEFAULT NULL;
+  ALTER TABLE users DROP COLUMN discord_username;
+  `,
 ];
 
 export type User = {
   id: number;
   is_admin: boolean;
   aoc_id?: number;
-  discord_username?: string;
+  discord_id?: string;
   email?: string;
   is_physically_in_edinburgh: boolean;
   registered_at: number;
@@ -131,6 +136,10 @@ export function getUserById(id: number): User {
 export function createUser(aoc_id: number): User {
   const inserted_id = db.prepare("INSERT INTO users (aoc_id) VALUES (?)").run(aoc_id).lastInsertRowid;
   return db.prepare("SELECT * FROM users WHERE id = ?").get(inserted_id) as User;
+}
+
+export function updateUserDiscordId(id: number, discord_id: string) {
+  db.prepare("UPDATE users SET discord_id = ? WHERE id = ?").run(discord_id, id);
 }
 
 export function updateUserDetails(id: number, email: string, in_edinburgh: boolean) {

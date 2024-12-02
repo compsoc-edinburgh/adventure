@@ -2,6 +2,9 @@ import { createCookieSessionStorage } from "@remix-run/node";
 
 type SessionData = {
   user_id: string;
+
+  // Used during the login process to store the user's ID before they are logged in
+  temporary_user_id?: string;
 };
 
 type SessionFlashData = {

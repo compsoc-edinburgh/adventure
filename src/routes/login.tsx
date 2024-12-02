@@ -4,6 +4,7 @@ import { getUserByAoCId, createUser } from "../sqlite.server";
 import { getSession, commitSession } from "../sessions";
 import { isUserInLeaderboard } from "../stars.server";
 import Input from "../components/Input";
+import { getDiscordIdFromAocId } from "../mappings.server";
 
 export default function LoginForm() {
   const { error } = useLoaderData<typeof loader>();
@@ -145,6 +146,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         },
       });
     }
+  }
+
+  // Check if the user has a Discord ID linked, either in the database or from the bot
+  if (user.discord_id !== null || getDiscordIdFromAocId(parseInt(aoc_id)) !== null) {
+    session.set("temporary_user_id", user.id.toString());
+
+    return redirect("/login/discord", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
   }
 
   session.set("user_id", user.id.toString());
