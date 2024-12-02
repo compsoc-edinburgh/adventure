@@ -18,8 +18,8 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY --from=build /app/package.json /app/package.json
-COPY --from=build /app/yarn.lock /app/yarn.lock
+COPY ./package.json /app/package.json
+COPY ./yarn.lock /app/yarn.lock
 
 RUN yarn install --production
 
