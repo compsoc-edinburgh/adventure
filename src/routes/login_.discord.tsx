@@ -1,6 +1,6 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { Link, redirect, useFetcher, useLoaderData, useLocation } from "@remix-run/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineDiscord } from "react-icons/ai";
 import { commitSession, getSession } from "../sessions";
 import { getUserById } from "../sqlite.server";
@@ -13,9 +13,7 @@ export default function LoginDiscord() {
   const [accessToken, tokenType] = [parsedFragment.get("access_token"), parsedFragment.get("token_type")];
 
   const fetcher = useFetcher<typeof action>();
-  const formRef = useRef<HTMLFormElement>(null);
 
-  const [discordId, setDiscordId] = useState<string>("");
   const [discordUsername, setDiscordUsername] = useState<string>("");
   const [error, setError] = useState<string | undefined>(undefined);
   useEffect(() => {
@@ -27,15 +25,19 @@ export default function LoginDiscord() {
       })
         .then(result => result.json())
         .then((response) => {
-          setDiscordId(response.id);
           setDiscordUsername(response.username);
-          formRef.current?.submit();
+          fetcher.submit({
+            discord_id: response.id,
+          }, {
+            method: "post",
+            action: "/login/discord",
+          });
         })
         .catch((reason) => {
           setError(String(reason));
         });
     }
-  }, [accessToken, tokenType]);
+  }, [fetcher, accessToken, tokenType]);
 
   const { discord_oauth_url } = useLoaderData<typeof loader>();
   return (
@@ -66,10 +68,6 @@ export default function LoginDiscord() {
       {error && (
         <p className="text-christmasRedAccent text-sm mt-3 min-w-full w-0">{error}</p>
       )}
-      <fetcher.Form method="post" className="hidden" ref={formRef}>
-        <input type="text" name="discord_id" value={discordId} readOnly hidden />
-        <button type="submit">Submit</button>
-      </fetcher.Form>
     </div>
   );
 }
