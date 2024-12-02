@@ -16,10 +16,12 @@ RUN yarn build
 FROM node:23-slim AS production
 WORKDIR /app
 
+ENV NODE_ENV=production
+
 COPY --from=build /app/build /app/build
 COPY --from=build /app/package.json /app/package.json
 COPY --from=build /app/yarn.lock /app/yarn.lock
 
-RUN NODE_ENV=production yarn install
+RUN yarn install --production
 
-CMD ["yarn", "serve"]
+CMD ["yarn", "remix-serve", "build/server/index.js"]
