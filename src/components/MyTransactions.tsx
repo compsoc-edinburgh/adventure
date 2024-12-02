@@ -116,6 +116,12 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
                 </p>
               </div>
             )}
+            <div className="pb-3">
+              <p><b>Star count incorrect?</b></p>
+              <p className="text-sm">
+                Due to Advent of Code API limitations, we only sync your stars every 15 minutes. If you've just solved a puzzle, it may take a while to show up here.
+              </p>
+            </div>
           </div>
         </div>
       )}
