@@ -21,6 +21,12 @@ export default function LoginForm() {
             I understand that this event runs on trust and goodwill, and that going against it can risk the event being cancelled for everyone.
           </label>
         </div>
+        <div className="min-w-64 mt-3 flex flex-row items-center">
+          <input type="checkbox" name="only_one" id="only_one" className="mr-2" value="true" required />
+          <label htmlFor="only_one" className="block text-sm text-christmasDark w-0 min-w-full">
+            I do not have another account that I'm using for this event.
+          </label>
+        </div>
         <button type="submit" className="block relative w-full mt-3 px-6 py-2 rounded-lg bg-christmasRed text-white active:scale-95 transition-all duration-75 focus:outline-4 focus:outline-christmasRed focus:outline-double">Access Shop</button>
         {error && <p className="text-christmasRedAccent text-sm mt-3 min-w-full w-0">{error}</p>}
       </Form>
@@ -59,7 +65,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const aoc_id = formData.get("aoc_id");
   const mine = formData.get("mine");
-  if (typeof aoc_id !== "string" || typeof mine !== "string") {
+  const only_one = formData.get("only_one");
+  if (typeof aoc_id !== "string" || typeof mine !== "string" || typeof only_one !== "string") {
     session.flash("error", "Invalid form data.");
     return redirect("/login", {
       headers: {
@@ -72,6 +79,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   // Check that the user has confirmed the AoC ID is theirs
   if (mine !== "true") {
     session.flash("error", "You must confirm that the AoC ID is yours.");
+
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+
+  // Check that the user has confirmed they only have one account
+  if (only_one !== "true") {
+    session.flash("error", "You must confirm that you only have one account.");
 
     return redirect("/login", {
       headers: {
