@@ -15,8 +15,8 @@ type MyTransactionsProps = {
 export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, remaining_stars, shop_items, transactions }) => {
   const fetcher = useFetcher<typeof shopCancelAction>();
   return (
-    <div className="lg:self-start self-stretch mx-4 shadow-christmasBeigeAccent group">
-      <h2 className="text-4xl font-display mb-4 relative justify-self-start text-white">
+    <div className="lg:self-start self-stretch flex flex-col mx-4 shadow-christmasBeigeAccent group">
+      <h2 className="text-4xl font-display mb-4 relative self-start text-white">
         <div className="w-full bg-christmasDark bg-opacity-70 backdrop-blur-md h-full absolute top-0 left-0 z-[-1] scale-110 -skew-x-12 -rotate-2 transform-gpu" />
         My Purchases
       </h2>

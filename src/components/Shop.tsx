@@ -7,9 +7,10 @@ import { MdClose } from "react-icons/md";
 
 type ShopProps = {
   shop_items: ShopItemWithRemaining[];
+  className?: string;
 };
 
-export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
+export const Shop: FunctionComponent<ShopProps> = ({ shop_items, className }) => {
   const fetcher = useFetcher<typeof shopPurchaseAction>();
   // useFetcher doesn't have a way to reset/clear the state once one request is
   // performed, meaning if we get an error in the first request and want to
@@ -27,8 +28,8 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items }) => {
   }, [fetcher.state, fetcher.data]);
 
   return (
-    <div className="mx-4">
-      <h2 className="text-4xl font-display mb-4 relative justify-self-start text-white">
+    <div className={"mx-4 flex flex-col " + className}>
+      <h2 className="text-4xl font-display mb-4 relative self-start text-white">
         <div className="w-full bg-christmasDark bg-opacity-70 backdrop-blur-md h-full absolute top-0 left-0 z-[-1] scale-110 -skew-x-12 -rotate-2 transform-gpu" />
         Reward Shop
       </h2>
