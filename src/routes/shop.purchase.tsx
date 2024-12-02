@@ -48,6 +48,13 @@ export async function action({ request }: ActionFunctionArgs) {
     // First check that user's total stars minus the total cost of all their
     // past transactions still has enough stars to purchase the item.
     const user = getUserById(user_id);
+
+    // Unverified users can't purchase items
+    if (!user.is_physically_in_edinburgh || user.email == null) {
+      transactionFailureMessage = "Please finish setting up your account at /setup before purchasing items.";
+      return;
+    }
+
     const transactions = getTransactionsByUserId(user_id);
     const total_cost = transactions.reduce((acc, t) => {
       const item = shop_items.find(i => i.id === t.shop_item_id);
