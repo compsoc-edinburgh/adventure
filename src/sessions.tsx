@@ -16,7 +16,7 @@ const { getSession, commitSession, destroySession }
         name: "__session",
 
         // all of these are optional
-        // domain: "remix.run",
+        ...process.env.NODE_ENV == "production" ? { domain: "aoc.dev.comp-soc.com" } : {},
         // Expires can also be set (although maxAge overrides it when used in combination).
         // Note that this method is NOT recommended as `new Date` creates only one date on each server deployment, not a dynamic date in the future!
         //
@@ -25,7 +25,7 @@ const { getSession, commitSession, destroySession }
         maxAge: 60 * 60 * 24 * 30, // 30 days
         path: "/",
         sameSite: "strict",
-        secrets: ["s3cret1"],
+        secrets: [process.env.SESSION_SECRET || "s3cret1"],
         secure: true,
       },
     },
