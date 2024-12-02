@@ -29,6 +29,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=build /app/build /app/build
+COPY --from=build /app/package.json /app/package.json
+COPY --from=build /app/yarn.lock /app/yarn.lock
 COPY --from=vendor /app/node_modules /app/node_modules
 
 CMD ["yarn", "remix-serve", "build/server/index.js"]
