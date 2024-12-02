@@ -170,7 +170,11 @@ export async function action({ request }: ActionFunctionArgs) {
   session.set("user_id", temporary_user_id);
   session.unset("temporary_user_id");
 
-  return redirect("/", {
+  // We deem a user verified when they have checked that they are both in Edinburgh
+  // and have an email address.
+  let verified = user.is_physically_in_edinburgh && user.email !== null;
+
+  return redirect(verified ? "/" : "/setup", {
     headers: {
       "Set-Cookie": await commitSession(session),
     },
