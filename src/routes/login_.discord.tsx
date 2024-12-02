@@ -3,8 +3,8 @@ import { Link, redirect, useFetcher, useLoaderData, useLocation } from "@remix-r
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineDiscord } from "react-icons/ai";
 import { commitSession, getSession } from "../sessions";
-import { getUserById, updateUserDiscordId } from "../sqlite.server";
-import { getDiscordIdFromAocId } from "src/mappings.server";
+import { getUserById } from "../sqlite.server";
+import { getDiscordIdFromAocId } from "../mappings.server";
 
 export default function LoginDiscord() {
   const location = useLocation();
