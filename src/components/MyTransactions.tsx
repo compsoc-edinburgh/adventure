@@ -92,7 +92,7 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
 
       {user
       && (
-        <div className="bg-white transition-all opacity-75 lg:opacity-0 group-hover:opacity-75 -mt-1 group-hover:mt-0 shadow-sm rounded-lg group min-w-64 lg:max-w-md border-t-2 border-christmasGreenAccent">
+        <div className="bg-white transition-all opacity-80 lg:opacity-0 group-hover:opacity-75 -mt-1 group-hover:mt-0 shadow-sm rounded-lg group min-w-64 lg:max-w-md border-t-2 border-christmasGreenAccent">
           <div className="px-6 pt-3">
             <div className="pb-3">
               <p><b>{transactions.filter(t => !t.cancelled_at).length > 0 ? "That's It!" : "Collection"}</b></p>
