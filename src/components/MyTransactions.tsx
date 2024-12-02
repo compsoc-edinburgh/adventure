@@ -18,7 +18,7 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
   return (
     <div className={"lg:self-start self-stretch flex flex-col mx-4 shadow-christmasBeigeAccent group " + className}>
       <h2 className="text-4xl font-display mb-4 relative self-start text-white">
-        <div className="w-full bg-christmasDark bg-opacity-70 backdrop-blur-md h-full absolute top-0 left-0 z-[-1] scale-110 -skew-x-12 -rotate-2 transform-gpu" />
+        <div className="w-full bg-christmasDark bg-opacity-80 backdrop-blur-md h-full absolute top-0 left-0 z-[-1] scale-110 -skew-x-12 -rotate-2 transform-gpu" />
         My Purchases
       </h2>
       <div className="bg-white shadow-sm min-w-96 lg:max-w-md rounded-lg">

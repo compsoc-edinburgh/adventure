@@ -30,7 +30,7 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items, className }) =>
   return (
     <div className={"mx-4 flex flex-col " + className}>
       <h2 className="text-4xl font-display mb-4 relative self-start text-white">
-        <div className="w-full bg-christmasDark bg-opacity-70 backdrop-blur-md h-full absolute top-0 left-0 z-[-1] scale-110 -skew-x-12 -rotate-2 transform-gpu" />
+        <div className="w-full bg-christmasDark bg-opacity-80 backdrop-blur-md h-full absolute top-0 left-0 z-[-1] scale-110 -skew-x-12 -rotate-2 transform-gpu" />
         Reward Shop
       </h2>
       {fetcherData && !fetcherData["success"] && (
