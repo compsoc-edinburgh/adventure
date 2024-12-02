@@ -25,7 +25,7 @@ export default {
     },
     fontFamily: {
       sans: ["\"Noto Sans\"", "sans-serif"],
-      display: ["\"Fredericka the Great\"", "sans-serif"],
+      display: ["\"Kavoon\"", "sans-serif"],
     },
   },
   plugins: [],
