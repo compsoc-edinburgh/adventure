@@ -1,4 +1,4 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Link, redirect, useFetcher, useLoaderData, useLocation } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { AiOutlineDiscord } from "react-icons/ai";
@@ -72,7 +72,25 @@ export default function LoginDiscord() {
   );
 }
 
-export async function loader() {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const session = await getSession(
+    request.headers.get("Cookie"),
+  );
+
+  if (session.has("user_id")) {
+    // Redirect to the home page if they are already signed in.
+    return redirect("/");
+  }
+
+  if (!session.has("temporary_user_id")) {
+    session.flash("error", "You must log in with AoC ID first.");
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+
   const discord_oauth_return_url = process.env.OAUTH_DISCORD_REDIRECT_URI || "";
   const discord_client_id = process.env.OAUTH_DISCORD_CLIENT_ID || "";
   const discord_oauth_url = `https://discord.com/api/oauth2/authorize?client_id=${discord_client_id}&redirect_uri=${encodeURIComponent(discord_oauth_return_url)}&response_type=token&scope=identify`;
