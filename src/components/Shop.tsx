@@ -43,7 +43,7 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items, className }) =>
           </button>
         </div>
       )}
-      <ul className="grid grid-cols-2 grid-rows-3 md:grid-cols-4 xl:grid-rows-2 gap-4 mb-4">
+      <ul className="grid grid-cols-2 grid-rows-3 md:grid-cols-4 xl:grid-rows-2 gap-4">
         {shop_items.map((item, i) => (
           <li key={item.id} className={(i % 3 == 0 ? "bg-christmasGreen" : i % 3 == 1 ? "bg-christmasRed" : "bg-christmasDark") + " transform-gpu overflow-hidden rounded-xl group relative flex flex-col " + (i == 0 ? "row-span-2 col-span-2 aspect-square" : "row-span-1 col-span-2 aspect-[2] xl:col-span-1 xl:aspect-square")}>
             <img src={item.image_url} alt={item.name} className="[mask-image:linear-gradient(to_top,transparent_00%,#000_100%)] group-hover:scale-105 transition-all duration-150" />
