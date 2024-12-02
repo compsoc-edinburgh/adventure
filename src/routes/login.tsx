@@ -60,7 +60,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const aoc_id = formData.get("aoc_id");
   const mine = formData.get("mine");
   if (typeof aoc_id !== "string" || typeof mine !== "string") {
-    return redirect("/login");
+    session.flash("error", "Invalid form data.");
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    },
+    );
   }
 
   // Check that the user has confirmed the AoC ID is theirs
