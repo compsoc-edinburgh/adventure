@@ -117,7 +117,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (!session.has("temporary_user_id")) {
-    session.flash("error", "You must log in with AoC ID first.");
+    session.flash("error", "This action isn't performable without entering the AoC ID first.");
     // Redirect to the login page if they haven't logged in with AoC ID yet.
     return redirect("/login", {
       headers: {
