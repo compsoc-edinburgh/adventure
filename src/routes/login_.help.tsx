@@ -40,7 +40,14 @@ export default function LoginHelp() {
         <div className="bg-christmasBeigeAccent rounded-lg p-4">
           <h3 className="text-2xl font-display mb-3">How secure is this?</h3>
           <p>
-            We collect your AoC ID to verify your identity and sync your stars with the leaderboard. We do not store any passwords or other personal information. You can view the source code for this website on GitHub:
+            We collect the following information:
+            <ul className="list-disc list-inside">
+              <li>Your AoC ID - for syncing stars</li>
+              <li>Your institutional (Edinburgh) email - for contact</li>
+              <li>Whether or not you are physically in Edinburgh - for eligibility</li>
+            </ul>
+            <br />
+            Other than these, we do not store any passwords or other personal information. You can view the source code for this website on GitHub:
             {" "}
             <a href="https://github.com/compsoc-edinburgh/adventure" className="text-blue-500">
               https://github.com/compsoc-edinburgh/adventure
