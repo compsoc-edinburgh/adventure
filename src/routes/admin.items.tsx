@@ -140,15 +140,6 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (method == "new") {
-    if (!name || !image_url || !description) {
-      session.flash("error", "All fields are required.");
-      return redirect("/admin/items", {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-      });
-    }
-
     // Add the item to the database
     createShopItem(image_url, name, description, star_cost, stock_count, max_per_user);
   }
