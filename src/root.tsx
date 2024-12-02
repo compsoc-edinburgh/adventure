@@ -92,8 +92,10 @@ export default function App() {
           <div className="absolute inset-0 top-0 left-0 overflow-hidden -z-10">
             <Tree className="absolute h-full -left-12 opacity-25 md:opacity-100" />
           </div>
-          <div className="flex flex-col mt-8 mb-8 items-center">
-            <CompSocLogo className="w-32 opacity-50 mb-4" />
+          <div className="flex flex-col mt-16 mb-8 items-center">
+            <a href="https://comp-soc.com">
+              <CompSocLogo className="w-8 absolute left-0 top-0 m-4 opacity-50 hover:opacity-100" />
+            </a>
             <Link to="/">
               <h1 className="md:text-7xl text-4xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasDark to-christmasRed">Advent of Code Rewards</h1>
             </Link>
