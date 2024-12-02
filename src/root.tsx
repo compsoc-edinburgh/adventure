@@ -46,6 +46,10 @@ export const meta: MetaFunction = () => {
       name: "description",
       content: "Get rewards for completing Advent of Code challenges!",
     },
+    {
+      name: "viewport",
+      content: "width=device-width, initial-scale=1",
+    },
   ];
 };
 
