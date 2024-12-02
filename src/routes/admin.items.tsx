@@ -140,7 +140,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (method == "new") {
-    if (!name || !image_url || !description || !star_cost || !stock_count || !max_per_user) {
+    if (!name || !image_url || !description) {
       session.flash("error", "All fields are required.");
       return redirect("/admin/items", {
         headers: {
