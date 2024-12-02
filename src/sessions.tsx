@@ -27,7 +27,7 @@ const { getSession, commitSession, destroySession }
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 30, // 30 days
         path: "/",
-        sameSite: "strict",
+        sameSite: "lax",
         secrets: [process.env.SESSION_SECRET || "s3cret1"],
         secure: true,
       },
