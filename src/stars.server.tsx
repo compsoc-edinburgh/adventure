@@ -18,6 +18,20 @@ export function getStarsForUser(aoc_user_id: number): number {
   return 0;
 }
 
+export function getStarForAllUsers(): { [key: string]: number } {
+  let stars: { [key: string]: number } = {};
+  for (const file of leaderboard_files) {
+    const data = JSON.parse(fs.readFileSync(file, "utf-8"));
+    for (const user in data.members) {
+      // Ignore duplicate users in different files
+      if (!stars[user]) {
+        stars[user] = data.members[user].stars;
+      }
+    }
+  }
+  return stars;
+}
+
 export function isUserInLeaderboard(aoc_user_id: number): boolean {
   for (const file of leaderboard_files) {
     const data = JSON.parse(fs.readFileSync(file, "utf-8"));

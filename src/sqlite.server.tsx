@@ -1,4 +1,10 @@
 import Database from "better-sqlite3";
+
+// Make dir if necessary
+import fs from "fs";
+if (!fs.existsSync("data")) {
+  fs.mkdirSync("data");
+}
 export const db = new Database("data/database.db");
 db.pragma("journal_mode = WAL");
 
