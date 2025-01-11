@@ -1,8 +1,19 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { getShopItems, db, getTransactionsByUserId, getUserById, getTransactionsByItemId, createTransaction, ShopTransaction } from "../sqlite.server";
 import { requireUserSession } from "../sessions";
+import { cutoffTime } from "../cutoff";
 
 export async function action({ request }: ActionFunctionArgs) {
+  // Disable shop after 23:59 on 12 January 2025 UK time
+  if (new Date().getTime() > cutoffTime.getTime()) {
+    return Response.json({
+      success: false,
+      message: "The shop is now closed (as of 23:59 on 12 January 2025). No new items can be purchased.",
+    }, {
+      status: 403,
+    });
+  }
+
   const session = await requireUserSession(request);
   if (!session) {
     return Response.json({
