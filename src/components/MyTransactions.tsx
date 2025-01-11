@@ -4,6 +4,7 @@ import { useFetcher } from "@remix-run/react";
 import { action as shopCancelAction } from "../routes/shop.cancel";
 import Stars from "./Stars";
 import { IoMdCloseCircle } from "react-icons/io";
+import { cutoffTime } from "../cutoff";
 
 type MyTransactionsProps = {
   user?: User;
@@ -15,6 +16,9 @@ type MyTransactionsProps = {
 
 export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, remaining_stars, shop_items, transactions, className }) => {
   const fetcher = useFetcher<typeof shopCancelAction>();
+
+  const isPostCutoff = new Date().getTime() > cutoffTime.getTime();
+
   return (
     <div className={"lg:self-start self-stretch flex flex-col mx-4 shadow-christmasBeigeAccent group " + className}>
       <h2 className="text-4xl font-display mb-4 relative self-start text-white">
@@ -43,18 +47,39 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
                       </span>
                       <Stars className="z-10 bg-white pl-2" amount={shop_items.find(i => i.id === transaction.shop_item_id)?.star_cost || 0} />
 
-                      <fetcher.Form method="post" action="shop/cancel" className="opacity-0 group-hover:opacity-100 transition-all duration-75 absolute top-1/2 -translate-y-1/2 -right-4 group-hover:-right-5 flex items-center text-lg">
-                        <input type="hidden" name="transaction_id" value={transaction.id} />
-                        <button type="submit" title="Remove this item">
-                          <IoMdCloseCircle />
-                        </button>
-                      </fetcher.Form>
+                      {!isPostCutoff && (
+                        <fetcher.Form method="post" action="shop/cancel" className="opacity-0 group-hover:opacity-100 transition-all duration-75 absolute top-1/2 -translate-y-1/2 -right-4 group-hover:-right-5 flex items-center text-lg">
+                          <input type="hidden" name="transaction_id" value={transaction.id} />
+                          <button type="submit" title="Remove this item">
+                            <IoMdCloseCircle />
+                          </button>
+                        </fetcher.Form>
+                      )}
                     </div>
                   </li>
                 )}
               </React.Fragment>
             ))}
           </ul>
+
+          {isPostCutoff && (
+            <p className="text-sm mt-4 opacity-50">
+              The shop has closed as of
+              {" "}
+              {cutoffTime.toLocaleDateString([], {
+                timeZone: "Europe/London",
+              },
+              )}
+              {" "}
+              {cutoffTime.toLocaleTimeString([], {
+                hour: "2-digit", minute: "2-digit",
+                timeZone: "Europe/London",
+              })}
+              {" "}
+              UK time.
+              Your purchase list cannot be modified. Please await further announcement via your registered email or Discord for your reward collection!
+            </p>
+          )}
         </div>
       </div>
 

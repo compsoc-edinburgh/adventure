@@ -4,6 +4,7 @@ import { useFetcher } from "@remix-run/react";
 import { action as shopPurchaseAction } from "../routes/shop.purchase";
 import Stars from "./Stars";
 import { MdClose } from "react-icons/md";
+import { cutoffTime } from "../cutoff";
 
 type ShopProps = {
   shop_items: ShopItemWithRemaining[];
@@ -27,6 +28,8 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items, className }) =>
     }
   }, [fetcher.state, fetcher.data]);
 
+  const isPostCutoff = new Date().getTime() > cutoffTime.getTime();
+
   return (
     <div className={"mx-4 flex flex-col " + className}>
       <h2 className="text-4xl font-display mb-4 relative self-start text-white">
@@ -41,6 +44,28 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items, className }) =>
           <button onClick={() => setFetcherData(undefined)}>
             <MdClose />
           </button>
+        </div>
+      )}
+      {isPostCutoff && (
+        <div className="text-white p-4 rounded-lg mb-4 flex flex-row justify-between animate-slidein origin-top bg-[repeating-linear-gradient(-45deg,var(--tw-gradient-stops))] from-christmasRed from-[length:0_10px] to-christmasRedAccent to-[length:10px_20px]">
+          <p className="font-semibold text-lg">
+            The shop has closed as of
+            {" "}
+            {cutoffTime.toLocaleDateString([], {
+              timeZone: "Europe/London",
+            },
+            )}
+            {" "}
+            {cutoffTime.toLocaleTimeString([], {
+              hour: "2-digit", minute: "2-digit",
+              timeZone: "Europe/London",
+            })}
+            {" "}
+            UK time.
+            <br />
+            {" "}
+            Please await further announcement via your registered email or Discord for your reward collection!
+          </p>
         </div>
       )}
       <ul className="grid grid-cols-2 grid-rows-3 md:grid-cols-4 xl:grid-rows-2 gap-4">
@@ -62,10 +87,12 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items, className }) =>
               className="absolute bottom-0 w-full translate-y-10 transform-gpu flex justify-between items-center p-4 opacity-0 transition-all duration-150 group-hover:translate-y-0 group-hover:opacity-100"
             >
               <Stars amount={item.star_cost} className="text-christmasBeige" />
-              <fetcher.Form method="post" action="shop/purchase">
-                <input type="hidden" name="shop_item_id" value={item.id} />
-                <button type="submit" className="pointer-events-auto bg-christmasBeigeAccent text-christmasDark rounded-md py-2 px-4 active:scale-95 transition-all duration-75 focus:outline-4 focus:outline-christmasBeigeAccent focus:outline-double">Exchange</button>
-              </fetcher.Form>
+              {!isPostCutoff && (
+                <fetcher.Form method="post" action="shop/purchase">
+                  <input type="hidden" name="shop_item_id" value={item.id} />
+                  <button type="submit" className="pointer-events-auto bg-christmasBeigeAccent text-christmasDark rounded-md py-2 px-4 active:scale-95 transition-all duration-75 focus:outline-4 focus:outline-christmasBeigeAccent focus:outline-double">Exchange</button>
+                </fetcher.Form>
+              )}
             </div>
             <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-150 group-hover:bg-black/[.03]" />
             {" "}
