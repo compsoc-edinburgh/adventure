@@ -1,4 +1,4 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs } from "react-router";
 import { cancelTransaction, getTransactionsByUserId } from "../sqlite.server";
 import { requireUserSession } from "../sessions";
 import { cutoffTime } from "../cutoff";

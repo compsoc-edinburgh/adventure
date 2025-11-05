@@ -1,14 +1,6 @@
-import {
-  Link,
-  Links,
-  Meta,
-  MetaFunction,
-  Outlet,
-  Scripts,
-  useLoaderData,
-} from "@remix-run/react";
+import { Link, Links, Meta, MetaFunction, Outlet, Scripts, useLoaderData } from "react-router";
 
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "react-router";
 import stylesheet from "./tailwind.css?url";
 import SnowParticles from "./components/Particles";
 import { CompSocLogo } from "./components/CompSocLogo";

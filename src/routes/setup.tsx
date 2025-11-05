@@ -1,5 +1,5 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { data, Form, redirect, useLoaderData } from "@remix-run/react";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { data, Form, redirect, useLoaderData } from "react-router";
 import { commitSession, requireUserSession } from "../sessions";
 import { getUserById, updateUserDetails } from "../sqlite.server";
 import Input from "../components/Input";

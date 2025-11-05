@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs, redirect } from "react-router";
 import { getSession, destroySession } from "../sessions";
 
 export async function loader(args: LoaderFunctionArgs) {

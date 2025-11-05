@@ -1,6 +1,6 @@
 import { useEffect, useState, type FunctionComponent } from "react";
 import { ShopItemWithRemaining } from "../sqlite.server";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher } from "react-router";
 import { action as shopPurchaseAction } from "../routes/shop.purchase";
 import Stars from "./Stars";
 import { MdClose } from "react-icons/md";

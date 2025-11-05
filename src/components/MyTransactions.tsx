@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { User, ShopItem, ShopTransaction } from "../sqlite.server";
-import { useFetcher } from "@remix-run/react";
+import { useFetcher } from "react-router";
 import { action as shopCancelAction } from "../routes/shop.cancel";
 import Stars from "./Stars";
 import { IoMdCloseCircle } from "react-icons/io";

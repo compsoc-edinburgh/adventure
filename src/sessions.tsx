@@ -1,4 +1,4 @@
-import { createCookieSessionStorage } from "@remix-run/node";
+import { createCookieSessionStorage } from "react-router";
 
 type SessionData = {
   user_id: string;
@@ -19,7 +19,7 @@ const { getSession, commitSession, destroySession }
         name: "__session",
 
         // all of these are optional
-        ...process.env.NODE_ENV == "production" ? { domain: "aoc.dev.comp-soc.com" } : {},
+        ...(process.env.NODE_ENV == "production" ? { domain: "aoc.dev.comp-soc.com" } : {}),
         // Expires can also be set (although maxAge overrides it when used in combination).
         // Note that this method is NOT recommended as `new Date` creates only one date on each server deployment, not a dynamic date in the future!
         //

@@ -1,6 +1,6 @@
-import { Link, Outlet, redirect, useNavigation } from "@remix-run/react";
+import { Link, Outlet, redirect, useNavigation } from "react-router";
 import { requireUserSession } from "../sessions";
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs } from "react-router";
 import { getUserById } from "../sqlite.server";
 
 export default function Admin() {

@@ -1,4 +1,4 @@
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "react-router";
 import aoc_id from "../assets/Screenshot 2024-12-01_17-08-36.png";
 
 export default function LoginHelp() {
