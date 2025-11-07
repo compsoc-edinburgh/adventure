@@ -1,7 +1,6 @@
 import compression from "compression";
 import express from "express";
 import morgan from "morgan";
-import { createRequestHandler } from "@react-router/express";
 
 // Short-circuit the type-checking of the built output.
 const BUILD_PATH = "./build/server/index.js";
