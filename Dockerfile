@@ -1,29 +1,29 @@
-FROM alpine:3.22 AS build
+FROM alpine:3.22 AS eshop-build
 WORKDIR /app
 RUN apk add --update --no-cache nodejs yarn
 
-COPY ./package.json /app/package.json
-COPY ./yarn.lock /app/yarn.lock
+COPY ./eshop/package.json /app/package.json
+COPY ./eshop/yarn.lock /app/yarn.lock
 
 RUN yarn install
 
-COPY ./src /app/src
-COPY ./server /app/server
-COPY ./vite.config.ts /app/vite.config.ts
-COPY ./tailwind.config.ts /app/tailwind.config.ts
-COPY ./tsconfig.json /app/tsconfig.json
-COPY ./postcss.config.mjs /app/postcss.config.mjs
-COPY ./react-router.config.ts /app/react-router.config.ts
+COPY ./eshop/src /app/src
+COPY ./eshop/server /app/server
+COPY ./eshop/vite.config.ts /app/vite.config.ts
+COPY ./eshop/tailwind.config.ts /app/tailwind.config.ts
+COPY ./eshop/tsconfig.json /app/tsconfig.json
+COPY ./eshop/postcss.config.mjs /app/postcss.config.mjs
+COPY ./eshop/react-router.config.ts /app/react-router.config.ts
 RUN yarn build
 
-FROM alpine:3.22 AS vendor
+FROM alpine:3.22 AS eshop-vendor
 WORKDIR /app
 RUN apk add --update --no-cache nodejs yarn
 
 ENV NODE_ENV=production
 
-COPY ./package.json /app/package.json
-COPY ./yarn.lock /app/yarn.lock
+COPY ./eshop/package.json /app/package.json
+COPY ./eshop/yarn.lock /app/yarn.lock
 
 RUN yarn install --production
 
@@ -38,9 +38,9 @@ ADD supervisord.conf /etc/
 
 ENV NODE_ENV=production
 
-COPY --from=vendor /app/node_modules /app/node_modules
-COPY --from=build /app/build /app/build
-COPY package.json /app/package.json
-COPY server.js /app/server.js
+COPY --from=eshop-vendor /app/node_modules /app/eshop/node_modules
+COPY --from=eshop-build /app/build /app/eshop/build
+COPY eshop/package.json /app/eshop/package.json
+COPY eshop/server.js /app/eshop/server.js
 
 ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
