@@ -1,6 +1,5 @@
-import { Link, Outlet, redirect, useNavigation } from "react-router";
+import { Link, Outlet, redirect, useNavigation, LoaderFunctionArgs } from "react-router";
 import { requireUserSession } from "../sessions";
-import { LoaderFunctionArgs } from "react-router";
 import { getUserById } from "../sqlite.server";
 
 export default function Admin() {

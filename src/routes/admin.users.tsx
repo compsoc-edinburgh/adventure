@@ -1,5 +1,4 @@
-import { LoaderFunctionArgs } from "react-router";
-import { Link, redirect, useLoaderData } from "react-router";
+import { LoaderFunctionArgs, Link, redirect, useLoaderData } from "react-router";
 import { requireUserSession } from "../sessions";
 import { getUserById, getUsers, User } from "../sqlite.server";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/Table";

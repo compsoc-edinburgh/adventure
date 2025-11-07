@@ -1,6 +1,5 @@
-import { LoaderFunctionArgs } from "react-router";
+import { LoaderFunctionArgs, useLoaderData } from "react-router";
 import { getSession } from "../sessions";
-import { useLoaderData } from "react-router";
 import { Shop } from "../components/Shop";
 import { MyTransactions } from "../components/MyTransactions";
 import { getTransactionsByUserId, getUserById, ShopItemWithRemaining, ShopTransaction, updateUserStars, User } from "../sqlite.server";

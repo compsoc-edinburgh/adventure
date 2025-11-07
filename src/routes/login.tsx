@@ -1,5 +1,4 @@
-import { data, ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { Form, Link, redirect, useLoaderData } from "react-router";
+import { data, ActionFunctionArgs, LoaderFunctionArgs, Form, Link, redirect, useLoaderData } from "react-router";
 import { getUserByAoCId, createUser } from "../sqlite.server";
 import { getSession, commitSession } from "../sessions";
 import { isUserInLeaderboard } from "../stars.server";

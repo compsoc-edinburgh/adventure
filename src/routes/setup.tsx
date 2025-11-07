@@ -1,5 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { data, Form, redirect, useLoaderData } from "react-router";
+import { ActionFunctionArgs, LoaderFunctionArgs, data, Form, redirect, useLoaderData } from "react-router";
 import { commitSession, requireUserSession } from "../sessions";
 import { getUserById, updateUserDetails } from "../sqlite.server";
 import Input from "../components/Input";
