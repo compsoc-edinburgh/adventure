@@ -1,0 +1,12 @@
+cache.json
+mapping.json
+*.backup
+*.cachebackup
+run.sh
+run_prod.sh
+.DS_Store
+.vscode/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
