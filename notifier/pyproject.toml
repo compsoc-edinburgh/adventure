@@ -12,7 +12,7 @@ datargs = "^1.1.0"
 apscheduler = "4.0.0a4"
 hikari = {extras = ["server"], version = "^2.5.0"}
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^25.9.0"
 mypy = "^1.18.2"
 isort = "^7.0.0"
