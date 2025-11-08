@@ -30,25 +30,31 @@ RUN yarn install --production
 FROM alpine:3.22 AS production
 WORKDIR /app
 
+ENV NODE_ENV=production
+
 RUN apk update
 RUN apk add --update --no-cache nodejs
 RUN apk add --update --no-cache poetry
 RUN apk add --update --no-cache supervisor && rm  -rf /tmp/* /var/cache/apk/*
 
-ADD supervisord.conf /etc/
+# Supervisor config
+COPY supervisord.conf /etc/supervisor/
 
-ENV NODE_ENV=production
+# Core files
+COPY core/fetch_stars.sh /app/core/fetch_stars.sh
+RUN echo -e "*/15 * * * * supervisorctl -c /etc/supervisor/supervisord.conf start core\n" >> /etc/crontabs/root
 
+# eShop files
 COPY --from=eshop-vendor /app/node_modules /app/eshop/node_modules
 COPY --from=eshop-build /app/build /app/eshop/build
 COPY eshop/package.json /app/eshop/package.json
 COPY eshop/server.js /app/eshop/server.js
 
+# notifier files
 COPY notifier/aoc_bot /app/notifier/aoc_bot
 COPY notifier/.python-version /app/notifier/.python-version
 COPY notifier/poetry.lock /app/notifier/poetry.lock
 COPY notifier/pyproject.toml /app/notifier/pyproject.toml
-
 RUN cd notifier && poetry install -vv --without dev
 
-ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
+ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisor/supervisord.conf"]
