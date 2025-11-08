@@ -55,6 +55,6 @@ COPY notifier/aoc_bot /app/notifier/aoc_bot
 COPY notifier/.python-version /app/notifier/.python-version
 COPY notifier/poetry.lock /app/notifier/poetry.lock
 COPY notifier/pyproject.toml /app/notifier/pyproject.toml
-RUN cd notifier && poetry install -vv --without dev
+RUN cd notifier && poetry install --no-cache -vv --without dev
 
 ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisor/supervisord.conf"]
