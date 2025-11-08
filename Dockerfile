@@ -43,6 +43,7 @@ COPY supervisord.conf /etc/supervisor/
 # Core files
 COPY core/fetch_stars.sh /app/core/fetch_stars.sh
 RUN echo -e "*/15 * * * * supervisorctl -c /etc/supervisor/supervisord.conf start core\n" >> /etc/crontabs/root
+RUN crond reload
 
 # eShop files
 COPY --from=eshop-vendor /app/node_modules /app/eshop/node_modules
