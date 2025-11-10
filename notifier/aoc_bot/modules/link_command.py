@@ -53,15 +53,21 @@ async def link_command(
         mapping[str(aoc_id)] = str(ctx.author.id)
 
         try:
-            # Attempt to retrieve the cached leaderboard, so we can check if
-            # the user has a name on AoC. Also, it helps to check if they've
-            # completed all 25 days.
-            cached_leaderboard = leaderboard.retrieve_cached_leaderboard(cache_file=cli_args.cache_file)
+            # Attempt to retrieve the last processed leaderboard, so we can
+            # check if the user has a name on AoC. Also, it helps to check if
+            # they've completed all 25 days so we can reward them. We must use
+            # the "last processed" data, not the most fresh data, since
+            # otherwise we will double-notify when the cron runs next time.
+            cached_leaderboard = leaderboard.retrieve_leaderboard(
+                leaderboard_file=cli_args.cache_file, last_processed=True
+            )
 
             aoc_username = f"Anonymous User"
-            if ("members" in cached_leaderboard and
-                str(aoc_id) in cached_leaderboard["members"] and
-                "name" in cached_leaderboard["members"][str(aoc_id)]):
+            if (
+                "members" in cached_leaderboard
+                and str(aoc_id) in cached_leaderboard["members"]
+                and "name" in cached_leaderboard["members"][str(aoc_id)]
+            ):
                 # If the user has a name, specify it for the notification, just
                 # so they can double-check.
                 aoc_username = cached_leaderboard["members"][str(aoc_id)]["name"]
@@ -146,14 +152,17 @@ async def unlink_command(
 
         try:
             # Attempt to retrieve the cached leaderboard, so we can check if
-            # the user has a name on AoC. Also, it helps to check if they've
-            # completed all 25 days.
-            cached_leaderboard = leaderboard.retrieve_cached_leaderboard(cache_file=cli_args.cache_file)
+            # the user has a name on AoC.
+            cached_leaderboard = leaderboard.retrieve_leaderboard(
+                leaderboard_file=cli_args.cache_file, last_processed=True
+            )
 
             aoc_username = f"Anonymous User"
-            if ("members" in cached_leaderboard and
-                str(aoc_id) in cached_leaderboard["members"] and
-                "name" in cached_leaderboard["members"][str(aoc_id)]):
+            if (
+                "members" in cached_leaderboard
+                and str(aoc_id) in cached_leaderboard["members"]
+                and "name" in cached_leaderboard["members"][str(aoc_id)]
+            ):
                 # If the user has a name, specify it for the notification, just
                 # so they can double-check.
                 aoc_username = cached_leaderboard["members"][str(aoc_id)]["name"]

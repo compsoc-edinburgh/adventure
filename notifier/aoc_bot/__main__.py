@@ -15,12 +15,6 @@ parser.add_argument(
     help="The path to a .json file which will be written to and read from for the username mapping.",
 )
 parser.add_argument(
-    "--year",
-    required=False,
-    type=int,
-    help="The year to hardcode to, mainly for debugging. Otherwise will always use the relevant year at time of leaderboard fetch (current year if December, previous year if any other month).",
-)
-parser.add_argument(
     "--leaderboard-id",
     required=True,
     type=int,

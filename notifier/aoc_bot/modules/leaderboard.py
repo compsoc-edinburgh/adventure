@@ -14,7 +14,6 @@ from typing import Any, Optional, Set, Tuple
 import typing
 
 import hikari
-import requests
 import tanjun
 
 component = tanjun.Component()
@@ -37,58 +36,57 @@ def get_default_year() -> int:
     return today.year
 
 
-def retrieve_cached_leaderboard(cache_file: str) -> Any:
-    """Retrieve the cached leaderboard JSON from disk.
+def retrieve_leaderboard(leaderboard_file: str, last_processed: bool = False) -> Any:
+    """Retrieve the latest unprocessed or the last-processed leaderboard JSON from disk.
+
+    Parameters
+    ----------
+    leaderboard_file : str
+        The name of the leaderboard file (used as a prefix to append ".last" to)
+    last_processed : bool
+        Set to True to retrieve not the most recent but the last processed data.
 
     Returns
     -------
     Any
-        The parsed JSON response for the previous request.
+        The parsed JSON response for the relevant AoC request.
     """
     try:
-        with open(cache_file, "r") as f:
+        if last_processed:
+            leaderboard_file += ".last"
+
+        with open(leaderboard_file, "r") as f:
             return json.load(f)
     except FileNotFoundError:
         return {}
 
 
-def save_cached_leaderboard(data: Any, cache_file: str) -> None:
-    """Save the leadeboard JSON to disk.
+def save_as_last_processed(
+    data: Any, leaderboard_file: str, backup: bool = False
+) -> None:
+    """Save the leadeboard JSON to disk, overwriting the last processed one.
 
     Parameters
     ----------
     data : Any
         The parsed JSON response for a request.
+    leaderboard_file : str
+        The name of the leaderboard file (used as a prefix to append ".last" to)
+    backup : bool
+        Set to True to keep a copy of the last processed JSON before overwriting.
     """
-    with open(cache_file, "w+") as f:
+    leaderboard_file += ".last"
+    if backup:
+        os.replace(
+            leaderboard_file,
+            leaderboard_file + datetime.now().strftime("%Y%m%d.%H.%M.%S.cachebackup"),
+        )
+    with open(leaderboard_file, "w+") as f:
         json.dump(
             data,
             f,
             indent=2,  # Pretty-print it for easy of debugging
         )
-
-
-def fetch_leaderboard(
-    leaderboard_id: int, session_id: str, year: Optional[int] = None
-) -> Any:
-    """Query the leaderboard endpoint and return the parsed JSON response.
-
-    Returns
-    -------
-    Any
-        The parsed JSON response for a request.
-    """
-    if year is None:
-        year = get_default_year()
-
-    response = requests.get(
-        f"https://adventofcode.com/{year}/leaderboard/private/view/{leaderboard_id}.json",
-        cookies={"session": session_id},
-    )
-
-    response.raise_for_status()
-
-    return response.json()
 
 
 def get_leaderboard_set(
@@ -324,12 +322,10 @@ async def on_schedule(
     cli_args: argparse.Namespace = tanjun.inject(type=argparse.Namespace),
     bot: hikari.GatewayBot = tanjun.inject(type=hikari.GatewayBot),
 ) -> None:
-    old_leaderboard = retrieve_cached_leaderboard(cache_file=cli_args.cache_file)
-    new_leaderboard = fetch_leaderboard(
-        leaderboard_id=cli_args.leaderboard_id,
-        session_id=cli_args.session_id,
-        year=cli_args.year,
+    old_leaderboard = retrieve_leaderboard(
+        leaderboard_file=cli_args.cache_file, last_processed=True
     )
+    new_leaderboard = retrieve_leaderboard(leaderboard_file=cli_args.cache_file)
 
     old_events = get_leaderboard_set(
         old_leaderboard, require_both=cli_args.require_both_stars
@@ -350,12 +346,9 @@ async def on_schedule(
         # There are negative changes. The only case I can think of that can
         # make this happen is when the year changes.
         # We make a backup keyed with the current time just in case.
-        os.replace(
-            cli_args.cache_file,
-            cli_args.cache_file
-            + datetime.now().strftime("%Y%m%d.%H.%M.%S.cachebackup"),
+        save_as_last_processed(
+            new_leaderboard, leaderboard_file=cli_args.cache_file, backup=True
         )
-        save_cached_leaderboard(new_leaderboard, cache_file=cli_args.cache_file)
         return
 
     # Get all Discord users in the guild
@@ -402,7 +395,7 @@ async def on_schedule(
         webhook_token=cli_args.webhook_token,
     )
 
-    save_cached_leaderboard(new_leaderboard, cache_file=cli_args.cache_file)
+    save_as_last_processed(new_leaderboard, leaderboard_file=cli_args.cache_file)
 
 
 load_leaderboard = component.make_loader()
