@@ -30,5 +30,5 @@ fi
 
 echo "${AOC_LEADERBOARD_IDS}" | sed s/,/\\n/g | while read -r LEADERBOARD_ID
 do
-  curl --fail --cookie "session=${AOC_SESSION_ID}" -H "Accept: application/json" -L "https://adventofcode.com/${YEAR}/leaderboard/private/view/${LEADERBOARD_ID}.json" -o "${DATA_DIR}/aoc_star_data_${AOC_SESSION_ID}.json"
+  curl --fail --cookie "session=${AOC_SESSION_ID}" -H "Accept: application/json" -L "https://adventofcode.com/${YEAR}/leaderboard/private/view/${LEADERBOARD_ID}.json" -o "${DATA_DIR}/aoc_star_data_${LEADERBOARD_ID}.json"
 done
