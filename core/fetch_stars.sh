@@ -15,6 +15,10 @@ if [ -z "${AOC_LEADERBOARD_IDS-}" ]; then
   exit 1
 fi
 
+if [ -z "${DATA_DIR-}" ]; then
+  echo "DATA_DIR must be provided."
+fi
+
 if [ -z "${YEAR-}" ]; then
   month=$(date +"%m")
   if [ "$month" -ne 11 ] && [ "$month" -ne 12 ]; then
@@ -22,10 +26,6 @@ if [ -z "${YEAR-}" ]; then
   else
     YEAR=$(date +"%Y")
   fi
-fi
-
-if [ -z "${DATA_DIR-}" ]; then
-  DATA_DIR="data"
 fi
 
 echo "${AOC_LEADERBOARD_IDS}" | sed s/,/\\n/g | while read -r LEADERBOARD_ID

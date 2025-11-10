@@ -38,6 +38,8 @@ RUN apk add --update --no-cache poetry
 RUN apk add --update --no-cache curl
 RUN apk add --update --no-cache supervisor && rm  -rf /tmp/* /var/cache/apk/*
 
+ENV DATA_DIR=data
+
 # Supervisor config
 COPY supervisord.conf /etc/supervisor/
 
