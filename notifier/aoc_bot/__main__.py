@@ -15,17 +15,6 @@ parser.add_argument(
     help="The path to a .json file which will be written to and read from for the username mapping.",
 )
 parser.add_argument(
-    "--leaderboard-id",
-    required=True,
-    type=int,
-    help="The leaderboard ID. This is not the join code, but rather the integer ID shown in the URL.",
-)
-parser.add_argument(
-    "--session-id",
-    required=True,
-    help="The ID value to use for the Session cookie when fetching the leaderboard.",
-)
-parser.add_argument(
     "--slash-guild-id",
     required=True,
     help="Guild ID where slash command should show up. This bot does not support global slash commands.",
