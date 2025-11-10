@@ -40,9 +40,6 @@ RUN apk add --update --no-cache supervisor && rm  -rf /tmp/* /var/cache/apk/*
 
 ENV DATA_DIR=data
 
-# Supervisor config
-COPY supervisord.conf /etc/supervisor/
-
 # Core files
 COPY core/fetch_stars.sh /app/core/fetch_stars.sh
 RUN echo -e "*/15 * * * * supervisorctl -c /etc/supervisor/supervisord.conf start core\n" >> /etc/crontabs/root
@@ -60,5 +57,8 @@ COPY notifier/.python-version /app/notifier/.python-version
 COPY notifier/poetry.lock /app/notifier/poetry.lock
 COPY notifier/pyproject.toml /app/notifier/pyproject.toml
 RUN cd notifier && poetry install --no-cache -vv --without dev
+
+# Supervisor config
+COPY supervisord.conf /etc/supervisor/
 
 ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisor/supervisord.conf"]
