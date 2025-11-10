@@ -35,6 +35,7 @@ ENV NODE_ENV=production
 RUN apk update
 RUN apk add --update --no-cache nodejs
 RUN apk add --update --no-cache poetry
+RUN apk add --update --no-cache curl
 RUN apk add --update --no-cache supervisor && rm  -rf /tmp/* /var/cache/apk/*
 
 # Supervisor config
