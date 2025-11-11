@@ -5,9 +5,20 @@ import tanjun
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--cache-file",
+    "--star-data-dir",
     required=True,
-    help="The path to a non-existent .json file which will be written to and read from for the cache.",
+    help="The directory where the --star-file-ingest-regex argument will be used to scan all direct child files.",
+)
+parser.add_argument(
+    "--star-data-ingest-regex",
+    required=True,
+    help="A regex to match the AoC star data JSON files to ingest. Only direct child files of the --star-file-ingest-dir will be matched. (So forward slashes are unndeeded)",
+)
+parser.add_argument(
+    "--star-data-cache",
+    required=False,
+    default="lastprocessed.json",
+    help="Filename to write the last processed star data cache to. Must have read-write access.",
 )
 parser.add_argument(
     "--mapping-file",

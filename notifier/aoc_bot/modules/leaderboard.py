@@ -5,11 +5,13 @@
 #
 # Modifications by Yuto Takano under MIT license:
 #   Add type hints, inlined short functions, integrated with tanjun
+#   Rewrite to read from existing JSON fetched elsewhere by another script
 #
 import argparse
 import json
 import os
 from datetime import date, datetime
+import re
 from typing import Any, Optional, Set, Tuple
 import typing
 
@@ -36,52 +38,81 @@ def get_default_year() -> int:
     return today.year
 
 
-def retrieve_leaderboard(leaderboard_file: str, last_processed: bool = False) -> Any:
-    """Retrieve the latest unprocessed or the last-processed leaderboard JSON from disk.
+def retrieve_last_leaderboard(dir: str) -> Any:
+    """Retrieve the last processed leaderboard data (combined).
 
     Parameters
     ----------
-    leaderboard_file : str
-        The name of the leaderboard file (used as a prefix to append ".last" to)
-    last_processed : bool
-        Set to True to retrieve not the most recent but the last processed data.
+    dir : str
+        The directory to look in.
 
     Returns
     -------
     Any
-        The parsed JSON response for the relevant AoC request.
+        Loaded AoC dict, probably with a "members" field
     """
     try:
-        if last_processed:
-            leaderboard_file += ".last"
-
-        with open(leaderboard_file, "r") as f:
+        with open(os.path.join(dir, "lastprocessed.json")) as f:
             return json.load(f)
     except FileNotFoundError:
         return {}
 
 
-def save_as_last_processed(
-    data: Any, leaderboard_file: str, backup: bool = False
-) -> None:
+def retrieve_leaderboard(dir: str, regex_pattern: str) -> Any:
+    """Retrieve the latest leaderboard JSON from disk, combining all files that
+    match the specified RegEx pattern (in the filename).
+
+    Parameters
+    ----------
+    dir : str
+        Directory to search files in.
+    regex_pattern : str
+        RegEx pattern to match file names for. Only direct child files of the
+        specified directory is searched: thus, slashes shouldn't be necessary.
+
+    Returns
+    -------
+    Any
+        The combined parsed JSON response from AoC.
+    """
+    pattern = re.compile(regex_pattern)
+    results: dict[str, Any] = {}
+    try:
+        with os.scandir(path=dir) as it:
+            for entry in it:
+                match = pattern.match(entry.name)
+                if match:
+                    with open(entry.path, "r") as f:
+                        contents = json.load(f)
+                        results["members"] = (
+                            results.get("members", {}).items()
+                            | contents.get("members", {}).items()
+                        )
+
+                        return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+
+def save_as_last_processed(dir: str, data: Any, backup: bool = False) -> None:
     """Save the leadeboard JSON to disk, overwriting the last processed one.
 
     Parameters
     ----------
+    dir: str
+        Directory to save the cache file to.
     data : Any
-        The parsed JSON response for a request.
-    leaderboard_file : str
-        The name of the leaderboard file (used as a prefix to append ".last" to)
+        The JSON to cache as the last processed data.
     backup : bool
         Set to True to keep a copy of the last processed JSON before overwriting.
     """
-    leaderboard_file += ".last"
+    filename = os.path.join(dir, "lastprocessed.json")
     if backup:
         os.replace(
-            leaderboard_file,
-            leaderboard_file + datetime.now().strftime("%Y%m%d.%H.%M.%S.cachebackup"),
+            filename,
+            filename + datetime.now().strftime("%Y%m%d.%H.%M.%S.cachebackup"),
         )
-    with open(leaderboard_file, "w+") as f:
+    with open(filename, "w+") as f:
         json.dump(
             data,
             f,
@@ -322,10 +353,11 @@ async def on_schedule(
     cli_args: argparse.Namespace = tanjun.inject(type=argparse.Namespace),
     bot: hikari.GatewayBot = tanjun.inject(type=hikari.GatewayBot),
 ) -> None:
-    old_leaderboard = retrieve_leaderboard(
-        leaderboard_file=cli_args.cache_file, last_processed=True
+    old_leaderboard = retrieve_last_leaderboard(dir=cli_args.star_data_dir)
+    new_leaderboard = retrieve_leaderboard(
+        dir=cli_args.star_data_dir,
+        regex_pattern=cli_args.star_data_ingest_regex,
     )
-    new_leaderboard = retrieve_leaderboard(leaderboard_file=cli_args.cache_file)
 
     old_events = get_leaderboard_set(
         old_leaderboard, require_both=cli_args.require_both_stars
@@ -346,9 +378,7 @@ async def on_schedule(
         # There are negative changes. The only case I can think of that can
         # make this happen is when the year changes.
         # We make a backup keyed with the current time just in case.
-        save_as_last_processed(
-            new_leaderboard, leaderboard_file=cli_args.cache_file, backup=True
-        )
+        save_as_last_processed(cli_args.star_data_dir, new_leaderboard, backup=True)
         return
 
     # Get all Discord users in the guild
@@ -395,7 +425,7 @@ async def on_schedule(
         webhook_token=cli_args.webhook_token,
     )
 
-    save_as_last_processed(new_leaderboard, leaderboard_file=cli_args.cache_file)
+    save_as_last_processed(cli_args.star_data_dir, new_leaderboard)
 
 
 load_leaderboard = component.make_loader()
