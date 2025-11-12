@@ -11,7 +11,6 @@ import argparse
 import json
 import os
 from datetime import date, datetime
-import re
 from typing import Any, Optional, Set, Tuple
 import typing
 
@@ -38,13 +37,15 @@ def get_default_year() -> int:
     return today.year
 
 
-def retrieve_last_leaderboard(dir: str) -> Any:
+def retrieve_last_leaderboard(dir: str, cache_filename: str) -> Any:
     """Retrieve the last processed leaderboard data (combined).
 
     Parameters
     ----------
     dir : str
         The directory to look in.
+    cache_filename : str
+        The filename of the cache file.
 
     Returns
     -------
@@ -52,61 +53,51 @@ def retrieve_last_leaderboard(dir: str) -> Any:
         Loaded AoC dict, probably with a "members" field
     """
     try:
-        with open(os.path.join(dir, "lastprocessed.json")) as f:
+        with open(os.path.join(dir, cache_filename)) as f:
             return json.load(f)
     except FileNotFoundError:
         return {}
 
 
-def retrieve_leaderboard(dir: str, regex_pattern: str) -> Any:
-    """Retrieve the latest leaderboard JSON from disk, combining all files that
-    match the specified RegEx pattern (in the filename).
+def retrieve_leaderboard(dir: str, filename: str) -> Any:
+    """Retrieve the latest leaderboard JSON from disk.
 
     Parameters
     ----------
     dir : str
         Directory to search files in.
-    regex_pattern : str
-        RegEx pattern to match file names for. Only direct child files of the
-        specified directory is searched: thus, slashes shouldn't be necessary.
+    filename : str
+        Filename which has all the star data combined.
 
     Returns
     -------
     Any
         The combined parsed JSON response from AoC.
     """
-    pattern = re.compile(regex_pattern)
-    results: dict[str, Any] = {}
     try:
-        with os.scandir(path=dir) as it:
-            for entry in it:
-                match = pattern.match(entry.name)
-                if match:
-                    with open(entry.path, "r") as f:
-                        contents = json.load(f)
-                        results["members"] = (
-                            results.get("members", {}).items()
-                            | contents.get("members", {}).items()
-                        )
-
-                        return json.load(f)
+        with open(os.path.join(dir, filename), "r") as f:
+            return json.load(f)
     except FileNotFoundError:
         return {}
 
 
-def save_as_last_processed(dir: str, data: Any, backup: bool = False) -> None:
+def save_as_last_processed(
+    dir: str, cache_filename: str, data: Any, backup: bool = False
+) -> None:
     """Save the leadeboard JSON to disk, overwriting the last processed one.
 
     Parameters
     ----------
     dir: str
         Directory to save the cache file to.
+    filename: str
+        Filename of the cache file.
     data : Any
         The JSON to cache as the last processed data.
     backup : bool
         Set to True to keep a copy of the last processed JSON before overwriting.
     """
-    filename = os.path.join(dir, "lastprocessed.json")
+    filename = os.path.join(dir, cache_filename)
     if backup:
         os.replace(
             filename,
@@ -353,10 +344,12 @@ async def on_schedule(
     cli_args: argparse.Namespace = tanjun.inject(type=argparse.Namespace),
     bot: hikari.GatewayBot = tanjun.inject(type=hikari.GatewayBot),
 ) -> None:
-    old_leaderboard = retrieve_last_leaderboard(dir=cli_args.star_data_dir)
+    old_leaderboard = retrieve_last_leaderboard(
+        dir=cli_args.star_data_dir, cache_filename=cli_args.star_data_cache
+    )
     new_leaderboard = retrieve_leaderboard(
         dir=cli_args.star_data_dir,
-        regex_pattern=cli_args.star_data_ingest_regex,
+        filename=cli_args.star_data_input,
     )
 
     old_events = get_leaderboard_set(
@@ -378,7 +371,12 @@ async def on_schedule(
         # There are negative changes. The only case I can think of that can
         # make this happen is when the year changes.
         # We make a backup keyed with the current time just in case.
-        save_as_last_processed(cli_args.star_data_dir, new_leaderboard, backup=True)
+        save_as_last_processed(
+            dir=cli_args.star_data_dir,
+            cache_filename=cli_args.star_data_cache,
+            data=new_leaderboard,
+            backup=True,
+        )
         return
 
     # Get all Discord users in the guild
@@ -425,7 +423,11 @@ async def on_schedule(
         webhook_token=cli_args.webhook_token,
     )
 
-    save_as_last_processed(cli_args.star_data_dir, new_leaderboard)
+    save_as_last_processed(
+        dir=cli_args.star_data_dir,
+        cache_filename=cli_args.star.data.cache,
+        data=new_leaderboard,
+    )
 
 
 load_leaderboard = component.make_loader()

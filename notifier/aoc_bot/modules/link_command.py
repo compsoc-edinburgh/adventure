@@ -59,7 +59,8 @@ async def link_command(
             # the "last processed" data, not the most fresh data, since
             # otherwise we will double-notify when the cron runs next time.
             cached_leaderboard = leaderboard.retrieve_last_leaderboard(
-                dir=cli_args.star_data_dir
+                dir=cli_args.star_data_dir,
+                cache_filename=cli_args.star_data_cache,
             )
 
             aoc_username = f"Anonymous User"
@@ -154,7 +155,8 @@ async def unlink_command(
             # Attempt to retrieve the cached leaderboard, so we can check if
             # the user has a name on AoC.
             cached_leaderboard = leaderboard.retrieve_last_leaderboard(
-                dir=cli_args.star_data_dir
+                dir=cli_args.star_data_dir,
+                cache_filename=cli_args.star_data_cache,
             )
 
             aoc_username = f"Anonymous User"

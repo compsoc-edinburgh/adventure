@@ -10,15 +10,15 @@ parser.add_argument(
     help="The directory where the --star-file-ingest-regex argument will be used to scan all direct child files.",
 )
 parser.add_argument(
-    "--star-data-ingest-regex",
+    "--star-data-input",
     required=True,
-    help="A regex to match the AoC star data JSON files to ingest. Only direct child files of the --star-file-ingest-dir will be matched. (So forward slashes are unndeeded)",
+    help="Filename to read the latest star data from. Expected fields are '.members'. Must be a direct child of the directory specified in --star-data-dir.",
 )
 parser.add_argument(
     "--star-data-cache",
     required=False,
     default="lastprocessed.json",
-    help="Filename to write the last processed star data cache to. Must have read-write access.",
+    help="Filename to write the last processed star data cache to. Must have read-write access. Must be a direct child of the directory specified in --star-data-dir.",
 )
 parser.add_argument(
     "--mapping-file",

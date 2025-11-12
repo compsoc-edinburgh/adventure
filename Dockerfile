@@ -36,6 +36,7 @@ RUN apk update
 RUN apk add --update --no-cache nodejs
 RUN apk add --update --no-cache poetry
 RUN apk add --update --no-cache curl
+RUN apk add --update --no-cache jq
 RUN apk add --update --no-cache supervisor && rm  -rf /tmp/* /var/cache/apk/*
 
 ENV ABS_DATA_DIR=/app/data
