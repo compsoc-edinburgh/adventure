@@ -39,24 +39,31 @@ RUN apk add --update --no-cache curl
 RUN apk add --update --no-cache jq
 RUN apk add --update --no-cache supervisor && rm  -rf /tmp/* /var/cache/apk/*
 
+# Default value
 ENV ABS_DATA_DIR=/app/data
 
-# Core files
-COPY core/fetch_stars.sh /app/core/fetch_stars.sh
-RUN echo -e "*/15 * * * * cd /app && sh ./core/fetch_stars.sh\n" >> /etc/crontabs/root
-
-# eShop files
+# Dependencies
+## eShop
 COPY --from=eshop-vendor /app/node_modules /app/eshop/node_modules
-COPY --from=eshop-build /app/build /app/eshop/build
 COPY eshop/package.json /app/eshop/package.json
-COPY eshop/server.js /app/eshop/server.js
 
-# notifier files
-COPY notifier/aoc_bot /app/notifier/aoc_bot
+## notifier
 COPY notifier/.python-version /app/notifier/.python-version
 COPY notifier/poetry.lock /app/notifier/poetry.lock
 COPY notifier/pyproject.toml /app/notifier/pyproject.toml
 RUN cd notifier && poetry install --no-cache -vv --without dev
+
+# Source files
+## Core
+COPY core/fetch_stars.sh /app/core/fetch_stars.sh
+RUN echo -e "*/15 * * * * cd /app && sh ./core/fetch_stars.sh\n" >> /etc/crontabs/root
+
+## eShop
+COPY --from=eshop-build /app/build /app/eshop/build
+COPY eshop/server.js /app/eshop/server.js
+
+## notifier
+COPY notifier/aoc_bot /app/notifier/aoc_bot
 
 # Supervisor config
 COPY supervisord.conf /etc/supervisor/
