@@ -38,7 +38,7 @@ RUN apk add --update --no-cache poetry
 RUN apk add --update --no-cache curl
 RUN apk add --update --no-cache supervisor && rm  -rf /tmp/* /var/cache/apk/*
 
-ENV DATA_DIR=data
+ENV ABS_DATA_DIR=/app/data
 
 # Core files
 COPY core/fetch_stars.sh /app/core/fetch_stars.sh
