@@ -1,11 +1,8 @@
 import Database from "better-sqlite3";
+import path from "path";
+import { env } from "process";
 
-// Make dir if necessary
-import fs from "fs";
-if (!fs.existsSync("data")) {
-  fs.mkdirSync("data");
-}
-export const db = new Database("data/database.db");
+export const db = new Database(path.join(env.ABS_DATA_DIR || "/", "database.db"));
 db.pragma("journal_mode = WAL");
 
 const schema_updates = [
