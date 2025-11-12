@@ -7,6 +7,11 @@ const BUILD_PATH = "./build/server/index.js";
 const DEVELOPMENT = process.env.NODE_ENV === "development";
 const PORT = Number.parseInt(process.env.PORT || "3000");
 
+if (!process.env.ABS_DATA_DIR) {
+  console.log("ABS_DATA_DIR environment variable doesn't seem specified!");
+  process.exit(1);
+}
+
 const app = express();
 
 app.use(compression());
