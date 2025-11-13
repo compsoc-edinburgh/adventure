@@ -19,16 +19,6 @@ username_db_lock = threading.Lock()
 # Pings are disabled anyway, so this is a purely cosmetic aspect.
 
 
-# @loader.task(lightbulb.crontrigger("* * * * *"))
-# async def every_minute_test1() -> None:  # pyright: ignore[reportUnusedFunction]
-#     print("Tes 2")
-
-
-# @loader.task(lightbulb.uniformtrigger(minutes=1))
-# async def every_minute_test2() -> None:  # pyright: ignore[reportUnusedFunction]
-#     print("Tes 3")
-
-
 @plugin.include
 @crescent.command(
     name="link_aoc",
