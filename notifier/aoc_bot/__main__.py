@@ -1,7 +1,8 @@
 import argparse
+import dataclasses
 
 import hikari
-import tanjun
+import crescent
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -59,26 +60,24 @@ parser.add_argument(
 )
 
 
+# Used for Dependency Injection, i.e. sharing state across all extensions
+@dataclasses.dataclass
+class Model:
+    cli_args: argparse.Namespace
+
+
 def main():
     args = parser.parse_args()
     bot = hikari.GatewayBot(
         token=args.discord_token,
         intents=hikari.Intents.ALL_UNPRIVILEGED | hikari.Intents.GUILD_MEMBERS,
     )
+    client = crescent.Client(bot, Model(args))
 
-    (
-        # Setting `declare_global_commands` to True will propagate commands globally,
-        # which can take up to an hour to update. This bot only needs to work in one
-        # server, so we specify that ID and in return get instant updates.
-        tanjun.Client.from_gateway_bot(
-            bot, declare_global_commands=[args.slash_guild_id]
-        )
-        .load_modules("aoc_bot.modules.link_command")
-        .load_modules("aoc_bot.modules.leaderboard")
-        .set_type_dependency(argparse.Namespace, args)
-    )
+    client.plugins.load_folder("aoc_bot.modules")
 
     bot.run()
 
 
-main()
+if __name__ == "__main__":
+    main()

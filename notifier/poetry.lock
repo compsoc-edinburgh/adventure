@@ -168,20 +168,6 @@ frozenlist = ">=1.1.0"
 typing-extensions = {version = ">=4.2", markers = "python_version < \"3.13\""}
 
 [[package]]
-name = "alluka"
-version = "0.4.0"
-description = "A type based dependency injection framework for Python 3.9+."
-optional = false
-python-versions = "<3.15,>=3.11.0"
-files = [
-    {file = "alluka-0.4.0-py3-none-any.whl", hash = "sha256:758f4d0623dc8e895949fedac8e9fb124cfdd412b9608ab5eba7f8db316692e0"},
-    {file = "alluka-0.4.0.tar.gz", hash = "sha256:25ca19ffe47eab876ea1a6cc118af9b30dd075ac1bf706a248750ab38e0c5c9b"},
-]
-
-[package.dependencies]
-typing-extensions = ">=4.5,<5"
-
-[[package]]
 name = "anyio"
 version = "4.11.0"
 description = "High-level concurrency and networking framework on top of asyncio or Trio"
@@ -566,6 +552,21 @@ colorama = {version = "*", markers = "sys_platform == \"win32\""}
 development = ["black", "flake8", "mypy", "pytest", "types-colorama"]
 
 [[package]]
+name = "croniter"
+version = "5.0.1"
+description = "croniter provides iteration for datetime object with cron like format"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.6"
+files = [
+    {file = "croniter-5.0.1-py2.py3-none-any.whl", hash = "sha256:eb28439742291f6c10b181df1a5ecf421208b1fc62ef44501daec1780a0b09e9"},
+    {file = "croniter-5.0.1.tar.gz", hash = "sha256:7d9b1ef25b10eece48fdf29d8ac52f9b6252abff983ac614ade4f3276294019e"},
+]
+
+[package.dependencies]
+python-dateutil = "*"
+pytz = ">2021.1"
+
+[[package]]
 name = "datargs"
 version = "1.1.0"
 description = "Declarative, type-safe command line argument parsers from dataclasses and attrs classes"
@@ -745,20 +746,26 @@ speedups = ["aiohttp[speedups]", "backports-zstd", "ciso8601 (>=2.3,<3.0)", "orj
 zstd = ["backports-zstd"]
 
 [[package]]
-name = "hikari-tanjun"
-version = "2.17.7"
-description = "A flexible command framework designed to extend Hikari."
+name = "hikari-crescent"
+version = "1.4.0"
+description = "🌙 A command handler for Hikari that keeps your project neat and tidy."
 optional = false
-python-versions = "<3.14,>=3.11.0"
+python-versions = "<3.15,>=3.10"
 files = [
-    {file = "hikari_tanjun-2.17.7-py3-none-any.whl", hash = "sha256:f7cc3e55ab9fb3fae04d971a80781b007ede840c626be929743760bd0b9281d0"},
-    {file = "hikari_tanjun-2.17.7.tar.gz", hash = "sha256:163a82866677de048e125b1226216ba20909ed6bf71a0f6e9f4a6893708cbc71"},
+    {file = "hikari_crescent-1.4.0-py3-none-any.whl", hash = "sha256:9618c90a438563bb1e34d68dc363cd37f827c42a25a316d9fe7f02f3f3901757"},
+    {file = "hikari_crescent-1.4.0.tar.gz", hash = "sha256:ab34ddbddecf1586c256c0ed44847b9758247a04e5ce081765b4721325e8db82"},
 ]
 
 [package.dependencies]
-alluka = ">=0.2.0,<1"
-hikari = ">=2.0.0.dev115,<3"
-typing-extensions = ">=4.5,<5"
+croniter = {version = ">=5.0.0,<6.0.0", optional = true, markers = "extra == \"cron\""}
+hikari = ">=2.3.0,<3.0.0"
+sigparse = ">=3.0.0,<4.0.0"
+types-croniter = {version = ">=5.0.0,<6.0.0", optional = true, markers = "extra == \"cron\""}
+
+[package.extras]
+cooldowns = ["floodgate-rs (>=0.1.1,<0.2.0)"]
+cron = ["croniter (>=5.0.0,<6.0.0)", "types-croniter (>=5.0.0,<6.0.0)"]
+i18n = ["python-i18n (>=0.2)"]
 
 [[package]]
 name = "idna"
@@ -1238,6 +1245,20 @@ docs = ["sphinx (<7)", "sphinx_rtd_theme"]
 tests = ["hypothesis (>=3.27.0)", "pytest (>=7.4.0)", "pytest-cov (>=2.10.1)", "pytest-xdist (>=3.5.0)"]
 
 [[package]]
+name = "python-dateutil"
+version = "2.9.0.post0"
+description = "Extensions to the standard Python datetime module"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
+files = [
+    {file = "python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3"},
+    {file = "python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427"},
+]
+
+[package.dependencies]
+six = ">=1.5"
+
+[[package]]
 name = "pytokens"
 version = "0.3.0"
 description = "A Fast, spec compliant Python 3.14+ tokenizer that runs on older Pythons."
@@ -1250,6 +1271,17 @@ files = [
 
 [package.extras]
 dev = ["black", "build", "mypy", "pytest", "pytest-cov", "setuptools", "tox", "twine", "wheel"]
+
+[[package]]
+name = "pytz"
+version = "2025.2"
+description = "World timezone definitions, modern and historical"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pytz-2025.2-py2.py3-none-any.whl", hash = "sha256:5ddf76296dd8c44c26eb8f4b6f35488f3ccbf6fbbd7adee0b7262d43f0ec2f00"},
+    {file = "pytz-2025.2.tar.gz", hash = "sha256:360b9e3dbb49a209c21ad61809c7fb453643e048b38924c765813546746e81c3"},
+]
 
 [[package]]
 name = "requests"
@@ -1271,6 +1303,28 @@ urllib3 = ">=1.21.1,<3"
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
+
+[[package]]
+name = "sigparse"
+version = "3.0.0"
+description = "Backports python3.10 typing features into python 3.7 and newer."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "sigparse-3.0.0-py3-none-any.whl", hash = "sha256:51926c7914e5386d43d9503036c93e698e5a32cb88fc8336d89187739f04ddee"},
+    {file = "sigparse-3.0.0.tar.gz", hash = "sha256:608d14fd5ead44d84482f2a1139803a0416157a0bac2fffa12382caac9566680"},
+]
+
+[[package]]
+name = "six"
+version = "1.17.0"
+description = "Python 2 and 3 compatibility utilities"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
+files = [
+    {file = "six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274"},
+    {file = "six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81"},
+]
 
 [[package]]
 name = "sniffio"
@@ -1297,6 +1351,17 @@ files = [
 [package.extras]
 doc = ["reno", "sphinx"]
 test = ["pytest", "tornado (>=4.5)", "typeguard"]
+
+[[package]]
+name = "types-croniter"
+version = "5.0.1.20250322"
+description = "Typing stubs for croniter"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "types_croniter-5.0.1.20250322-py3-none-any.whl", hash = "sha256:82280f00f1543758e1e4bac9805ca7a27c183e5bf316c7240be73ac459655306"},
+    {file = "types_croniter-5.0.1.20250322.tar.gz", hash = "sha256:0858064a5ec6ea93abcc1dbb7c7235b69df1a3395ce9bb0714123ec8d0c477fe"},
+]
 
 [[package]]
 name = "typing-extensions"
@@ -1501,4 +1566,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11, <3.14"
-content-hash = "3ae77ec5e6a7d1e4e0ed8ac262530a931f33c88bf5916919ca5f18a5ca2becf2"
+content-hash = "182e5862dab976dacb2cde8c44e21d290d32c4363b6cd1b249fa715b0b2653e6"

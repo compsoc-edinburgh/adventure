@@ -6,8 +6,8 @@
 # Modifications by Yuto Takano under MIT license:
 #   Add type hints, inlined short functions, integrated with tanjun
 #   Rewrite to read from existing JSON fetched elsewhere by another script
+#   Rewrite to move from tanjun to crescent
 #
-import argparse
 import json
 import os
 from datetime import date, datetime
@@ -15,9 +15,12 @@ from typing import Any, Optional, Set, Tuple
 import typing
 
 import hikari
-import tanjun
+import crescent
 
-component = tanjun.Component()
+from aoc_bot.__main__ import Model
+from crescent.ext import tasks
+
+plugin = crescent.Plugin[hikari.GatewayBot, Model]()
 
 
 def get_default_year() -> int:
@@ -338,12 +341,18 @@ async def give_role(
         return
 
 
-@component.with_schedule
-@tanjun.as_time_schedule(minutes=[0, 15, 30, 45])
-async def on_schedule(
-    cli_args: argparse.Namespace = tanjun.inject(type=argparse.Namespace),
-    bot: hikari.GatewayBot = tanjun.inject(type=hikari.GatewayBot),
-) -> None:
+@plugin.include
+@tasks.cronjob("* * * * *")
+async def every_minute_test() -> None:
+    print("Tes 1")
+
+
+@plugin.include
+@tasks.cronjob("*/15 * * * *")
+async def on_schedule() -> None:
+    cli_args = plugin.model.cli_args
+
+    print("Checking!")
     old_leaderboard = retrieve_last_leaderboard(
         dir=cli_args.star_data_dir, cache_filename=cli_args.star_data_cache
     )
@@ -380,7 +389,7 @@ async def on_schedule(
         return
 
     # Get all Discord users in the guild
-    guild = await bot.rest.fetch_guild(cli_args.slash_guild_id)
+    guild = await plugin.app.rest.fetch_guild(cli_args.slash_guild_id)
     members = guild.get_members()
 
     # Accumlate all messages for updates at this check. There can be multiple
@@ -408,7 +417,7 @@ async def on_schedule(
             )
             if cli_args.completion_role:
                 await give_role(
-                    bot=bot,
+                    bot=plugin.app,
                     guild_id=cli_args.slash_guild_id,
                     mapping_file=cli_args.mapping_file,
                     member_id=member_id,
@@ -417,7 +426,7 @@ async def on_schedule(
         messages.append(message)
 
     await send_webhook_notification(
-        bot=bot,
+        bot=plugin.app,
         content="\n".join(messages),
         webhook_id=cli_args.webhook_id,
         webhook_token=cli_args.webhook_token,
@@ -428,6 +437,3 @@ async def on_schedule(
         cache_filename=cli_args.star.data.cache,
         data=new_leaderboard,
     )
-
-
-load_leaderboard = component.make_loader()
