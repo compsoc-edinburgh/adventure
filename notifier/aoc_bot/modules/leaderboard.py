@@ -342,12 +342,6 @@ async def give_role(
 
 
 @plugin.include
-@tasks.cronjob("* * * * *")
-async def every_minute_test() -> None:
-    print("Tes 1")
-
-
-@plugin.include
 @tasks.cronjob("*/15 * * * *")
 async def on_schedule() -> None:
     cli_args = plugin.model.cli_args
