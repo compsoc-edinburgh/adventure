@@ -362,18 +362,13 @@ async def on_schedule() -> None:
 
     if not diff:
         # Either no change, or negative change.
-        if old_events == new_events:
-            # No change whatsoever since last run.
-            return
-
-        # There are negative changes. The only case I can think of that can
-        # make this happen is when the year changes.
-        # We make a backup keyed with the current time just in case.
         save_as_last_processed(
             dir=plugin.model.star_data_dir,
             cache_filename=plugin.model.star_data_cache,
             data=new_leaderboard,
-            backup=True,
+            # Back up on negative changes. The only case I can think of that can
+            # make this happen is when the year changes and we might lose data.
+            backup=old_events != new_events,
         )
         return
 
