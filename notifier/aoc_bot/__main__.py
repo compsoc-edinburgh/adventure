@@ -29,6 +29,7 @@ parser.add_argument(
 parser.add_argument(
     "--slash-guild-id",
     required=True,
+    type=int,
     help="Guild ID where slash command should show up. This bot does not support global slash commands.",
 )
 parser.add_argument(
@@ -60,10 +61,19 @@ parser.add_argument(
 )
 
 
-# Used for Dependency Injection, i.e. sharing state across all extensions
+# Used for Dependency Injection of CLI args, i.e. sharing state across all extensions
 @dataclasses.dataclass
 class Model:
-    cli_args: argparse.Namespace
+    star_data_dir: str
+    star_data_input: str
+    star_data_cache: str
+    mapping_file: str
+    slash_guild_id: int
+    webhook_id: int
+    webhook_token: str
+    discord_token: str
+    require_both_stars: bool
+    completion_role: int
 
 
 def main():
@@ -72,7 +82,7 @@ def main():
         token=args.discord_token,
         intents=hikari.Intents.ALL_UNPRIVILEGED | hikari.Intents.GUILD_MEMBERS,
     )
-    client = crescent.Client(bot, Model(args))
+    client = crescent.Client(bot, Model(**args.__dict__))
 
     client.plugins.load_folder("aoc_bot.modules")
 

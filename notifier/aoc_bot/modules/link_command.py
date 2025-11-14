@@ -1,4 +1,5 @@
 import json
+import os
 import threading
 
 import aoc_bot.modules.leaderboard as leaderboard
@@ -28,8 +29,9 @@ class LinkCommand:
     aoc_id = crescent.option(int, name="aoc_id", description="AoC User ID")
 
     async def callback(self, ctx: crescent.Context) -> None:
-        cli_args = plugin.model.cli_args
-
+        mapping_file = os.path.join(
+            plugin.model.star_data_dir, plugin.model.mapping_file
+        )
         # Make sure no other threads modify content by acquiring a mutex
         # This is especially important since we separate the read and write operations.
         # There is no sufficient mode to open the file and do both reading (from
@@ -37,7 +39,7 @@ class LinkCommand:
         # doesn't exist.
         with username_db_lock:
             try:
-                with open(cli_args.mapping_file, "r") as f:
+                with open(mapping_file, "r") as f:
                     mapping: dict[str, str] = json.load(f)
             except FileNotFoundError as e:
                 # If ia file is not found on open, proceed with empty and try to
@@ -60,8 +62,8 @@ class LinkCommand:
                 # the "last processed" data, not the most fresh data, since
                 # otherwise we will double-notify when the cron runs next time.
                 cached_leaderboard = leaderboard.retrieve_last_leaderboard(
-                    dir=cli_args.star_data_dir,
-                    cache_filename=cli_args.star_data_cache,
+                    dir=plugin.model.star_data_dir,
+                    cache_filename=plugin.model.star_data_cache,
                 )
 
                 aoc_username = f"Anonymous User"
@@ -76,7 +78,7 @@ class LinkCommand:
                         "name"
                     ]
 
-                with open(cli_args.mapping_file, "w") as f:
+                with open(mapping_file, "w") as f:
                     json.dump(
                         mapping,
                         f,
@@ -94,7 +96,7 @@ class LinkCommand:
                 # the next update anyway.
                 events = leaderboard.get_leaderboard_set(
                     cached_leaderboard,
-                    require_both=cli_args.require_both_stars,
+                    require_both=plugin.model.require_both_stars,
                 )
                 if leaderboard.solved_all_days(events, str(self.aoc_id)):
                     # Hide user ID at least on the public notification, but still
@@ -102,16 +104,16 @@ class LinkCommand:
                     # contain any identifying information.
                     await leaderboard.send_webhook_notification(
                         plugin.app,
-                        f"{ctx.user.mention} linked their account.\n{leaderboard.display_final_message(cli_args.mapping_file, str(self.aoc_id), cli_args.completion_role)}",
-                        webhook_id=cli_args.webhook_id,
-                        webhook_token=cli_args.webhook_token,
+                        f"{ctx.user.mention} linked their account.\n{leaderboard.display_final_message(mapping_file, str(self.aoc_id), plugin.model.completion_role)}",
+                        webhook_id=plugin.model.webhook_id,
+                        webhook_token=plugin.model.webhook_token,
                     )
                     await leaderboard.give_role(
                         bot=plugin.app,
-                        guild_id=cli_args.slash_guild_id,
-                        mapping_file=cli_args.mapping_file,
+                        guild_id=plugin.model.slash_guild_id,
+                        mapping_file=plugin.model.mapping_file,
                         member_id=str(self.aoc_id),
-                        role_id=cli_args.completion_role,
+                        role_id=plugin.model.completion_role,
                     )
 
             except FileNotFoundError as e:
@@ -129,13 +131,15 @@ class LinkCommand:
 )
 class UnlinkCommand:
     async def callback(self, ctx: crescent.Context) -> None:
-        cli_args = plugin.model.cli_args
+        mapping_file = os.path.join(
+            plugin.model.star_data_dir, plugin.model.mapping_file
+        )
 
         # Make sure no other threads are writing by acquiring a mutex
 
         with username_db_lock:
             try:
-                with open(cli_args.mapping_file, "r") as f:
+                with open(mapping_file, "r") as f:
                     mapping: dict[str, str] = json.load(f)
             except FileNotFoundError as e:
                 # If ia file is not found on open, proceed with empty and try to
@@ -164,8 +168,8 @@ class UnlinkCommand:
                 # Attempt to retrieve the cached leaderboard, so we can check if
                 # the user has a name on AoC.
                 cached_leaderboard = leaderboard.retrieve_last_leaderboard(
-                    dir=cli_args.star_data_dir,
-                    cache_filename=cli_args.star_data_cache,
+                    dir=plugin.model.star_data_dir,
+                    cache_filename=plugin.model.star_data_cache,
                 )
 
                 aoc_username = f"Anonymous User"
@@ -178,7 +182,7 @@ class UnlinkCommand:
                     # so they can double-check.
                     aoc_username = cached_leaderboard["members"][str(aoc_id)]["name"]
 
-                with open(cli_args.mapping_file, "w") as f:
+                with open(mapping_file, "w") as f:
                     json.dump(
                         mapping,
                         f,

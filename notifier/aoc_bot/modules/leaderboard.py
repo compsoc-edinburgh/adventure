@@ -255,8 +255,7 @@ def solved_all_days(events: Set[Tuple[str, str, str]], member_id: str) -> bool:
 def display_final_message(
     mapping_file: str,
     member_id: str,
-    role_id: Optional[str],
-    year: Optional[int] = None,
+    role_id: Optional[int],
 ) -> str:
     """Pretty-print a final message upon completing all 25 days and 50 challenges.
     If the user has a Discord account linked, show that they are eligible for
@@ -276,8 +275,7 @@ def display_final_message(
     str
         The congratulatory message.
     """
-    if year is None:
-        year = get_default_year()
+    year = get_default_year()
 
     string = f"🎉 **Congrats on completing all 25 days of AoC {year}!** "
 
@@ -286,7 +284,7 @@ def display_final_message(
             with open(mapping_file, "r") as f:
                 mapping: dict[str, str] = json.load(f)
                 assert member_id in mapping
-                string += f"As a reward, you get the <@&{role_id}> role until the end of January!"
+                string += f"As a reward, you get the <@&{str(role_id)}> role until the end of January!"
 
         except (
             AssertionError,
@@ -303,10 +301,10 @@ def display_final_message(
 
 async def give_role(
     bot: hikari.GatewayBot,
-    guild_id: str,
+    guild_id: int,
     mapping_file: str,
     member_id: str,
-    role_id: str,
+    role_id: int,
 ):
     """Give the role specified by the snowflake ID to a potential Discord user
     linked by the AoC member ID and a mapping file.
@@ -330,9 +328,9 @@ async def give_role(
             mapping: dict[str, str] = json.load(f)
             assert member_id in mapping
             await bot.rest.add_role_to_member(
-                guild=int(guild_id),
+                guild=guild_id,
                 user=int(mapping[member_id]),
-                role=int(role_id),
+                role=role_id,
                 reason="Completion of AoC!",
             )
     except hikari.ForbiddenError:
@@ -344,22 +342,19 @@ async def give_role(
 @plugin.include
 @tasks.cronjob("*/15 * * * *")
 async def on_schedule() -> None:
-    cli_args = plugin.model.cli_args
-
-    print("Checking!")
     old_leaderboard = retrieve_last_leaderboard(
-        dir=cli_args.star_data_dir, cache_filename=cli_args.star_data_cache
+        dir=plugin.model.star_data_dir, cache_filename=plugin.model.star_data_cache
     )
     new_leaderboard = retrieve_leaderboard(
-        dir=cli_args.star_data_dir,
-        filename=cli_args.star_data_input,
+        dir=plugin.model.star_data_dir,
+        filename=plugin.model.star_data_input,
     )
 
     old_events = get_leaderboard_set(
-        old_leaderboard, require_both=cli_args.require_both_stars
+        old_leaderboard, require_both=plugin.model.require_both_stars
     )
     new_events = get_leaderboard_set(
-        new_leaderboard, require_both=cli_args.require_both_stars
+        new_leaderboard, require_both=plugin.model.require_both_stars
     )
 
     # Get the interesting diff, which only takes into account relevant parameters
@@ -375,15 +370,15 @@ async def on_schedule() -> None:
         # make this happen is when the year changes.
         # We make a backup keyed with the current time just in case.
         save_as_last_processed(
-            dir=cli_args.star_data_dir,
-            cache_filename=cli_args.star_data_cache,
+            dir=plugin.model.star_data_dir,
+            cache_filename=plugin.model.star_data_cache,
             data=new_leaderboard,
             backup=True,
         )
         return
 
     # Get all Discord users in the guild
-    guild = await plugin.app.rest.fetch_guild(cli_args.slash_guild_id)
+    guild = await plugin.app.rest.fetch_guild(plugin.model.slash_guild_id)
     members = guild.get_members()
 
     # Accumlate all messages for updates at this check. There can be multiple
@@ -393,7 +388,7 @@ async def on_schedule() -> None:
         message = "[{}] {} solved Day #{}.".format(
             "★★" if part == "2" else "★　",  # fullwidth space to align
             display_aoc_user(
-                mapping_file=cli_args.mapping_file,
+                mapping_file=plugin.model.mapping_file,
                 aoc_user=new_leaderboard["members"][member_id],
                 discord_members=members,
             ),
@@ -404,30 +399,29 @@ async def on_schedule() -> None:
         # line and give them a role based on the config.
         if solved_all_days(new_events, member_id):
             message += "\n" + display_final_message(
-                mapping_file=cli_args.mapping_file,
+                mapping_file=plugin.model.mapping_file,
                 member_id=member_id,
-                role_id=cli_args.completion_role,
-                year=cli_args.year,
+                role_id=plugin.model.completion_role,
             )
-            if cli_args.completion_role:
+            if plugin.model.completion_role:
                 await give_role(
                     bot=plugin.app,
-                    guild_id=cli_args.slash_guild_id,
-                    mapping_file=cli_args.mapping_file,
+                    guild_id=plugin.model.slash_guild_id,
+                    mapping_file=plugin.model.mapping_file,
                     member_id=member_id,
-                    role_id=cli_args.completion_role,
+                    role_id=plugin.model.completion_role,
                 )
         messages.append(message)
 
     await send_webhook_notification(
         bot=plugin.app,
         content="\n".join(messages),
-        webhook_id=cli_args.webhook_id,
-        webhook_token=cli_args.webhook_token,
+        webhook_id=plugin.model.webhook_id,
+        webhook_token=plugin.model.webhook_token,
     )
 
     save_as_last_processed(
-        dir=cli_args.star_data_dir,
-        cache_filename=cli_args.star.data.cache,
+        dir=plugin.model.star_data_dir,
+        cache_filename=plugin.model.star_data_cache,
         data=new_leaderboard,
     )
