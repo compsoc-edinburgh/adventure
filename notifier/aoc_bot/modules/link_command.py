@@ -53,6 +53,22 @@ class LinkCommand:
                 )
                 return
 
+            for k, v in mapping.items():
+                # Prevent one Discord user mapping to multiple AoC ID
+                if v == str(ctx.user.id):
+                    await ctx.respond(
+                        f"You seem to already be linked to a different AoC User ID: {str(k)}. Please use `/unlink_aoc` before trying to link again.",
+                        ephemeral=True,
+                    )
+                    return
+
+                # Prevent one AoC ID being mapped to different Discord users
+                if k == str(self.aoc_id):
+                    await ctx.respond(
+                        f"AoC User ID {str(k)} seems to already be linked to someone else: <@{v}>. They must run `/unlink_aoc` before you can link your own.",
+                        ephemeral=True,
+                    )
+
             mapping[str(self.aoc_id)] = str(ctx.user.id)
 
             try:
