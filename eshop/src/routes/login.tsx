@@ -125,7 +125,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   // Check if they are in the CompSoc leaderboard
   if (!isUserInLeaderboard(parseInt(aoc_id))) {
-    session.flash("error", "You are not in the CompSoc leaderboard! See the Help.");
+    session.flash("error", "You are not in any of the CompSoc leaderboards! Please see the Help and do that first.");
 
     return redirect("/login", {
       headers: {
