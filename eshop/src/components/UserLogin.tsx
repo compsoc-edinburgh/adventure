@@ -15,12 +15,13 @@ const UserLogin: FunctionComponent<UserLoginProps> = ({ className, user, aoc_nam
       {user?.aoc_id === undefined
         ? <Button component={Link} to="/login" bg="red" className="m-2 px-6 py-2 ">Login</Button>
         : (
-            <div className="flex flex-row items-center">
+            <div className="flex flex-row items-center gap-2 m-2">
               <span>
                 {aoc_name || `AoC#${user.aoc_id}`}
               </span>
+              {user.is_admin && <Button component={Link} to="/admin" bg="red" className="py-2 px-6">Admin View</Button>}
               <Form action="logout" method="post">
-                <Button type="submit" bg="beige" className="m-2 py-2 px-6">Logout</Button>
+                <Button type="submit" bg="beige" className="py-2 px-6">Logout</Button>
               </Form>
             </div>
           )}
