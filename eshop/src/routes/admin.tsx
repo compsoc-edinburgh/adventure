@@ -1,6 +1,7 @@
 import { Link, Outlet, redirect, useNavigation, LoaderFunctionArgs } from "react-router";
 import { requireUserSession } from "../sessions";
 import { getUserById } from "../sqlite.server";
+import { Button } from "../components/Button";
 
 export default function Admin() {
   const navigation = useNavigation();
@@ -8,9 +9,9 @@ export default function Admin() {
     <div className="flex flex-col items-center md:max-w-[70%] m-auto">
       <h1 className="text-3xl font-display mb-3">Admin Page</h1>
       <div className="flex flex-row gap-3 mb-6">
-        <Link to="/admin/users" className="bg-christmasGreen rounded-md px-6 py-2 text-white active:scale-95 transition-all duration-75">Users</Link>
-        <Link to="/admin/items" className="bg-christmasGreen rounded-md px-6 py-2 text-white active:scale-95 transition-all duration-75">Items</Link>
-        <Link to="/admin/transactions" className="bg-christmasGreen rounded-md px-6 py-2 text-white active:scale-95 transition-all duration-75">Transactions</Link>
+        <Button component={Link} to="/admin/users" bg="green" className="px-6 py-2">Users</Button>
+        <Button component={Link} to="/admin/items" bg="green" className="px-6 py-2">Items</Button>
+        <Button component={Link} to="/admin/transactions" bg="green" className="px-6 py-2">Transactions</Button>
       </div>
       {navigation.state === "loading"
         ? (
