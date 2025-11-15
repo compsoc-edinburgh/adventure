@@ -3,6 +3,7 @@ import { requireUserSession } from "../sessions";
 import { getTransactions, getUserById } from "../sqlite.server";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/Table";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { Button } from "../components/Button";
 
 export default function Items() {
   const { transactions } = useLoaderData<typeof loader>();
@@ -22,10 +23,11 @@ export default function Items() {
   return (
     <>
       <h2 className="text-2xl font-display mb-3">Transactions</h2>
-      <fieldset className="flex gap-2 w-full justify-end">
+      <div className="flex gap-2 w-full justify-end items-center mb-2">
         <label htmlFor="setExcludeCancelled">Show only valid transactions</label>
         <input id="setExcludeCancelled" type="checkbox" checked={excludeCancelled} onChange={onSetExcludeCancelled} />
-      </fieldset>
+        <Button component="a" href="/admin/download?type=transactions" className="px-4 py-1" bg="beige">Download as CSV</Button>
+      </div>
       <Table className="bg-white">
         <TableHeader>
           <TableRow>

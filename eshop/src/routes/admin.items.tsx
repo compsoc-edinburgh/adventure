@@ -4,6 +4,7 @@ import { createShopItem, getShopItems, getUserById, updateShopItem } from "../sq
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/Table";
 import { useState } from "react";
 import Input from "../components/Input";
+import { Button } from "../components/Button";
 
 export default function Items() {
   const { error, shopItems } = useLoaderData<typeof loader>();
@@ -16,6 +17,9 @@ export default function Items() {
   return (
     <>
       <h2 className="text-2xl font-display mb-3">Shop Items</h2>
+      <div className="flex gap-2 w-full justify-end items-center mb-2">
+        <Button component="a" href="/admin/download?type=items" className="px-4 py-1" bg="beige">Download as CSV</Button>
+      </div>
       <Table className="bg-white">
         <TableHeader>
           <TableRow>

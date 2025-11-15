@@ -3,12 +3,16 @@ import { requireUserSession } from "../sessions";
 import { getUserById, getUsers, User } from "../sqlite.server";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/Table";
 import { getStarForAllUsers } from "../stars.server";
+import { Button } from "../components/Button";
 
 export default function Users() {
   const { users } = useLoaderData<typeof loader>();
   return (
     <>
       <h2 className="text-2xl font-display mb-3">Users</h2>
+      <div className="flex gap-2 w-full justify-end items-center mb-2">
+        <Button component="a" href="/admin/download?type=users" className="px-4 py-1" bg="beige">Download as CSV</Button>
+      </div>
       <Table className="bg-white">
         <TableHeader>
           <TableRow>
