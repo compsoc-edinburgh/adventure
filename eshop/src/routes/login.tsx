@@ -4,6 +4,7 @@ import { getSession, commitSession } from "../sessions";
 import { isUserInLeaderboard } from "../stars.server";
 import Input from "../components/Input";
 import { getDiscordIdFromAocId } from "../mappings.server";
+import { Button } from "../components/Button";
 
 export default function LoginForm() {
   const { error } = useLoaderData<typeof loader>();
@@ -27,7 +28,7 @@ export default function LoginForm() {
             I do not have another account that I'm using for this event.
           </label>
         </div>
-        <button type="submit" className="block relative w-full mt-3 px-6 py-2 rounded-lg bg-christmasRed text-white active:scale-95 transition-all duration-75 focus:outline-4 focus:outline-christmasRed focus:outline-double">Access Shop</button>
+        <Button type="submit" className="w-full mt-3 px-6 py-2" bg="red">Access Shop</Button>
         {error && <p className="text-christmasRedAccent text-sm mt-3 min-w-full w-0">{error}</p>}
       </Form>
 

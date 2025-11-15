@@ -5,6 +5,7 @@ import { action as shopPurchaseAction } from "../routes/shop.purchase";
 import Stars from "./Stars";
 import { MdClose } from "react-icons/md";
 import { cutoffTime } from "../cutoff";
+import { Button } from "./Button";
 
 type ShopProps = {
   shop_items: ShopItemWithRemaining[];
@@ -90,7 +91,7 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items, className }) =>
               {!isPostCutoff && (
                 <fetcher.Form method="post" action="shop/purchase">
                   <input type="hidden" name="shop_item_id" value={item.id} />
-                  <button type="submit" className="pointer-events-auto bg-christmasBeigeAccent text-christmasDark rounded-md py-2 px-4 active:scale-95 transition-all duration-75 focus:outline-4 focus:outline-christmasBeigeAccent focus:outline-double">Exchange</button>
+                  <Button type="submit" bg="beige" className="pointer-events-auto py-2 px-4">Exchange</Button>
                 </fetcher.Form>
               )}
             </div>

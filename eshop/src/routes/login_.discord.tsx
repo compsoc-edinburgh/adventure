@@ -4,6 +4,7 @@ import { AiOutlineDiscord } from "react-icons/ai";
 import { commitSession, getSession } from "../sessions";
 import { getUserById } from "../sqlite.server";
 import { getDiscordIdFromAocId } from "../mappings.server";
+import { Button } from "../components/Button";
 
 export default function LoginDiscord() {
   const location = useLocation();
@@ -48,10 +49,10 @@ export default function LoginDiscord() {
             <p className="w-0 min-w-full">
               This AoC ID has a linked Discord account. Please confirm this is your account by logging in with Discord.
             </p>
-            <a href={discord_oauth_url} className="mt-4 px-6 py-2 rounded-lg bg-[#6488da] text-white active:scale-95 transition-all duration-75 focus:outline-4 focus:outline-[#6488da] focus:outline-double flex flex-row gap-2 items-center">
+            <Button component="a" href={discord_oauth_url} bg="custom" className="mt-4 px-6 py-2 bg-[#6488da] text-white focus:outline-[#6488da] flex flex-row gap-2 items-center">
               <AiOutlineDiscord />
               <span>Login with Discord</span>
-            </a>
+            </Button>
           </div>
         </>
       )}

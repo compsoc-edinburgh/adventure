@@ -2,6 +2,7 @@ import { ActionFunctionArgs, LoaderFunctionArgs, data, Form, redirect, useLoader
 import { commitSession, requireUserSession } from "../sessions";
 import { getUserById, updateUserDetails } from "../sqlite.server";
 import Input from "../components/Input";
+import { Button } from "../components/Button";
 
 export default function SetupAccount() {
   const { error, is_physically_in_edinburgh } = useLoaderData<typeof loader>();
@@ -30,7 +31,7 @@ export default function SetupAccount() {
           <input type="checkbox" name="physically_in_edinburgh" value="true" id="physically_in_edinburgh" className="text-christmasRedAccent mr-2" required defaultChecked={is_physically_in_edinburgh} />
           <label htmlFor="physically_in_edinburgh" className="w-0 min-w-full block text-sm text-christmasDark">I confirm I am physically available in Edinburgh in January to collect goods</label>
         </div>
-        <button type="submit" className="block relative w-full mt-3 px-6 py-2 rounded-lg bg-christmasRed text-white active:scale-95 transition-all duration-75 focus:outline-4 focus:outline-christmasRed focus:outline-double">Finish</button>
+        <Button type="submit" className="w-full mt-3 py-2 px-6">Finish</Button>
         {error && <p className="text-christmasRedAccent text-sm mt-3 min-w-full w-0">{error}</p>}
       </Form>
     </div>
