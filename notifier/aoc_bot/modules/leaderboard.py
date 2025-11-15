@@ -376,6 +376,8 @@ async def on_schedule() -> None:
     guild = await plugin.app.rest.fetch_guild(plugin.model.slash_guild_id)
     members = guild.get_members()
 
+    mapping_file = os.path.join(plugin.model.data_dir, plugin.model.mapping_file)
+
     # Accumlate all messages for updates at this check. There can be multiple
     # people!
     messages: list[str] = []
@@ -383,7 +385,7 @@ async def on_schedule() -> None:
         message = "[{}] {} solved Day #{}.".format(
             "★★" if part == "2" else "★　",  # fullwidth space to align
             display_aoc_user(
-                mapping_file=plugin.model.mapping_file,
+                mapping_file=mapping_file,
                 aoc_user=new_leaderboard["members"][member_id],
                 discord_members=members,
             ),
@@ -394,7 +396,7 @@ async def on_schedule() -> None:
         # line and give them a role based on the config.
         if solved_all_days(new_events, member_id):
             message += "\n" + display_final_message(
-                mapping_file=plugin.model.mapping_file,
+                mapping_file=mapping_file,
                 member_id=member_id,
                 role_id=plugin.model.completion_role,
             )
@@ -402,7 +404,7 @@ async def on_schedule() -> None:
                 await give_role(
                     bot=plugin.app,
                     guild_id=plugin.model.slash_guild_id,
-                    mapping_file=plugin.model.mapping_file,
+                    mapping_file=mapping_file,
                     member_id=member_id,
                     role_id=plugin.model.completion_role,
                 )
