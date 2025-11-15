@@ -97,19 +97,21 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
           {user && (
             <div className="flex flex-row justify-between">
               <span>Stars Spent</span>
-              <Stars amount={-1 * transactions.reduce((acc, t) => {
-                const item = shop_items.find(i => i.id === t.shop_item_id);
-                if (!item || t.cancelled_at) {
-                  return acc;
-                }
-                return acc + item.star_cost;
-              }, 0)}
+              <Stars
+                prefix="-"
+                amount={transactions.reduce((acc, t) => {
+                  const item = shop_items.find(i => i.id === t.shop_item_id);
+                  if (!item || t.cancelled_at) {
+                    return acc;
+                  }
+                  return acc + item.star_cost;
+                }, 0)}
               />
             </div>
           )}
           <div className="flex flex-row justify-between font-bold">
             <span>Available to Spend</span>
-            <Stars amount={remaining_stars} />
+            <Stars prefix="=" amount={remaining_stars} />
           </div>
           {!user && (
             <div>
