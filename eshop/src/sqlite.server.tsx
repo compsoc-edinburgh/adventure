@@ -59,6 +59,11 @@ const schema_updates = [
   ALTER TABLE users ADD COLUMN discord_id TEXT DEFAULT NULL;
   ALTER TABLE users DROP COLUMN discord_username;
   `,
+
+  `
+  ALTER TABLE shop_items ADD COLUMN \`order\` INTEGER NOT NULL DEFAULT 0;
+  UPDATE shop_items SET \`order\` = id-1;
+  `,
 ];
 
 export type User = {
@@ -81,6 +86,7 @@ export type ShopItem = {
   star_cost: number;
   stock_count: number;
   max_per_user: number;
+  order: number;
 };
 
 export type ShopItemWithRemaining = ShopItem & { remaining_count: number };
@@ -166,12 +172,30 @@ export function getShopItemById(id: number): ShopItem {
 }
 
 export function createShopItem(image_url: string, name: string, description: string, star_cost: number, stock_count: number, max_per_user: number): ShopItem {
-  const inserted_id = db.prepare("INSERT INTO shop_items (image_url, name, description, star_cost, stock_count, max_per_user) VALUES (?, ?, ?, ?, ?, ?)").run(image_url, name, description, star_cost, stock_count, max_per_user).lastInsertRowid;
+  let inserted_id;
+
+  // Wrap in a transaction to prevent count from changing
+  db.transaction(() => {
+    const count = db.prepare("SELECT count(*) FROM shop_items").pluck().get();
+    inserted_id = db.prepare("INSERT INTO shop_items (image_url, name, description, star_cost, stock_count, max_per_user, `order`) VALUES (?, ?, ?, ?, ?, ?, ?)").run(image_url, name, description, star_cost, stock_count, max_per_user, count).lastInsertRowid;
+  })();
   return db.prepare("SELECT * FROM shop_items WHERE id = ?").get(inserted_id) as ShopItem;
 }
 
-export function updateShopItem(id: number, image_url: string, name: string, description: string, star_cost: number, stock_count: number, max_per_user: number) {
+export function updateShopItem(id: number, image_url: string, name: string, description: string, star_cost: number, stock_count: number, max_per_user: number, order: number) {
   db.prepare("UPDATE shop_items SET image_url = ?, name = ?, description = ?, star_cost = ?, stock_count = ?, max_per_user = ? WHERE id = ?").run(image_url, name, description, star_cost, stock_count, max_per_user, id);
+
+  // Reorder if necessary
+  db.transaction(() => {
+    // Get current order
+    const current_order = (db.prepare("SELECT `order` FROM shop_items WHERE id = ?").get(id) as { order: number }).order;
+    console.log(current_order, order);
+    if (current_order !== order) {
+      // Move whatever was in the place we want to move to
+      db.prepare("UPDATE shop_items SET `order` = ? WHERE `order` = ?").run(current_order, order);
+      db.prepare("UPDATE shop_items SET `order` = ? WHERE id = ?").run(order, id);
+    }
+  })();
 }
 
 export function getTransactionsByUserId(user_id: number): ShopTransaction[] {

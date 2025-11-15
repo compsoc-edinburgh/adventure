@@ -13,6 +13,8 @@ export async function loader({
     throw new Error("Failed to load shop items and transactions");
   }
 
+  items.sort((a, b) => a.order - b.order);
+
   // For each item, calculate the remaining stock
   for (const item of items) {
     item.remaining_count = item.stock_count - transactions.filter(t => t.shop_item_id === item.id && !t.cancelled_at).length;

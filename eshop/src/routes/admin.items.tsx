@@ -14,6 +14,7 @@ export default function Items() {
   const [starCost, setStarCost] = useState<string | undefined>(undefined);
   const [stockCount, setStockCount] = useState<string | undefined>(undefined);
   const [maxPerUser, setMaxPerUser] = useState<string | undefined>(undefined);
+  const [order, setOrder] = useState<string | undefined>(undefined);
   return (
     <>
       <h2 className="text-2xl font-display mb-3">Shop Items</h2>
@@ -24,6 +25,7 @@ export default function Items() {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">ID</TableHead>
+            <TableHead>Order</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Image URL</TableHead>
             <TableHead>Description</TableHead>
@@ -33,9 +35,10 @@ export default function Items() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {shopItems.map(item => (
+          {shopItems.slice().sort((a, b) => a.order - b.order).map(item => (
             <TableRow key={item.id}>
               <TableCell>{item.id}</TableCell>
+              <TableCell>{item.order}</TableCell>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.image_url}</TableCell>
               <TableCell>{item.description}</TableCell>
@@ -57,6 +60,7 @@ export default function Items() {
             setStarCost(editingItem?.star_cost?.toString() ?? "");
             setStockCount(editingItem?.stock_count?.toString() ?? "");
             setMaxPerUser(editingItem?.max_per_user?.toString() ?? "");
+            setOrder(editingItem?.order.toString() ?? "");
           }}
         >
           <option value="new">Add Item</option>
@@ -80,6 +84,10 @@ export default function Items() {
           <Input type="number" label="Stock Count" placeholder="Stock Count" name="stock_count" value={stockCount} onChange={e => setStockCount(e.target.value)} />
 
           <Input type="number" label="Max per User" placeholder="Max per User" name="max_per_user" value={maxPerUser} onChange={e => setMaxPerUser(e.target.value)} />
+
+          {order && (
+            <Input type="number" label="Swap Order with..." placeholder="Order" name="order" value={order} min={0} max={Items.length - 1} onChange={e => setOrder(e.target.value)} />
+          )}
         </div>
 
         <button type="submit" className="block relative w-full mt-3 px-6 py-2 rounded-lg bg-christmasRed text-white active:scale-95 transition-all duration-75 focus:outline-4 focus:outline-christmasRed focus:outline-double">Save</button>
@@ -133,7 +141,8 @@ export async function action({ request }: ActionFunctionArgs) {
   const star_cost = parseInt(formData.get("star_cost") as string);
   const stock_count = parseInt(formData.get("stock_count") as string);
   const max_per_user = parseInt(formData.get("max_per_user") as string);
-  if (typeof name !== "string" || typeof image_url !== "string" || typeof description !== "string" || typeof star_cost !== "number" || typeof stock_count !== "number" || typeof max_per_user !== "number") {
+  const order = parseInt(formData.get("order") as string);
+  if (typeof name !== "string" || typeof image_url !== "string" || typeof description !== "string" || typeof star_cost !== "number" || typeof stock_count !== "number" || typeof max_per_user !== "number" || typeof order !== "number") {
     session.flash("error", "Fields have the wrong type.");
     return redirect("/admin/items", {
       headers: {
@@ -157,7 +166,7 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     // Edit the item in the database
-    updateShopItem(parseInt(method as string), image_url, name, description, star_cost, stock_count, max_per_user);
+    updateShopItem(parseInt(method as string), image_url, name, description, star_cost, stock_count, max_per_user, order);
   }
 
   return redirect("/admin/items");

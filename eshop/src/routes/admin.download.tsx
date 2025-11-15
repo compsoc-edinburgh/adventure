@@ -44,9 +44,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   else if (type === "items") {
     const items = getShopItems();
 
-    data = "id, name, stock_count, star_cost, max_per_user, description, image_url\n";
+    data = "id, name, stock_count, star_cost, max_per_user, description, image_url, order\n";
     items.forEach((item) => {
-      data += `${item.id}, ${item.name}, ${item.stock_count}, ${item.star_cost}, ${item.max_per_user}, ${item.description}, ${item.image_url}\n`;
+      data += `${item.id}, ${item.name}, ${item.stock_count}, ${item.star_cost}, ${item.max_per_user}, ${item.description}, ${item.image_url}, ${item.order}\n`;
     });
   }
 
