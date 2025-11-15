@@ -284,7 +284,7 @@ def display_final_message(
             with open(mapping_file, "r") as f:
                 mapping: dict[str, str] = json.load(f)
                 assert member_id in mapping
-                string += f"As a reward, you get the <@&{str(role_id)}> role until the end of January!"
+                string += f"As a reward, you get the <@&{str(role_id)}> role!"
 
         except (
             AssertionError,
