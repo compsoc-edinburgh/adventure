@@ -20,3 +20,6 @@ notifier/.vscode/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+
+# Docker-Compose env file
+.env

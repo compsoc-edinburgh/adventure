@@ -43,25 +43,19 @@ In addition, the following volume mount must be present:
 |---|---|
 | `/app/data` | Contains a JSON mapping of from AoC ID to Discord ID, AoC star data, and caches |
 
-## Example docker-compose file
+## Running
 
-```yaml
-version: "3"
-services:
-  aoc-eshop:
-    image: ghcr.io/compsoc-edinburgh/service-adventure:latest
-    container_name: adventure
-    ports:
-      - 58745:3000
-    environment:
-      - ADMIN_LOGIN=mysecretadminlogin
-      - SESSION_SECRET=somesessioncookiesecret
-      - AOC_LEADERBOARD_JOIN_CODES="123123-123123 (Main),234234-234234 (verified leaderboard by CCSig)"
-      - LEADERBOARD_JOIN_CODE=123123-123123
-      - CCSIG_LEADERBOARD_JOIN_CODE=124124-124124
-      - OAUTH_DISCORD_CLIENT_ID=77101010101010
-      - OAUTH_DISCORD_REDIRECT_URL=https://localhost:58745/login/discord
-    volumes:
-      - ./data:/app/data
-    restart: unless-stopped
+### From image on ghcr.io
+
+The example below is for Docker, but is easily adaptable to Kubernetes, Docker Compose, Helm, etc.
+
+```bash
+docker run --env-file .env -v ./data:/app/data -p 80:3000 -it ghcr.io/compsoc-edinburgh/adventure:latest
+```
+
+### Locally from source
+
+```bash
+docker build --tag adventure:latest .
+docker run --env-file .env -v ./data:/app/data -p 3000:3000 -it adventure:latest
 ```
