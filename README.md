@@ -22,14 +22,14 @@ The following environment variables need to be set for a successful run:
 |---|---|
 | AOC_SESSION_ID | **Core**: The session cookie contents from AoC. (Note! Expiry is ~1 month) |
 | AOC_LEADERBOARD_IDS | **Core**: Comma-separated list of AoC leaderboard IDs to fetch data from |
-| SLASH_GUILD_ID | **Notifier**: Guild ID to propagate slash commands to, e.g. `/link_aoc`. Bot **must** have slash command permissions in the guild. |
+| AOC_LEADERBOARD_JOIN_CODES | **eShop, Notifier**: Comma-separated list of AoC leaderboard join codes, with optional part in brackets to tag it. This is used for the Help screen in eShop and in the notifier's help menu. |
 | DISCORD_TOKEN | **Notifier**: Discord bot token. Bot **must** be given Member intent permission in the Discord developer console |
+| SLASH_GUILD_ID | **Notifier**: Guild ID to propagate slash commands to, e.g. `/link_aoc`. Bot **must** have slash command permissions in the guild. |
 | WEBHOOK_ID | **Notifier**: Discord webhook ID for sending star achievement notifications |
 | WEBHOOK_TOKEN | **Notifier**: Discord webhook token for sending star achievement notifications |
 | COMPLETION_ROLE | **Notifier**: Discord role ID auto-given to people who complete 12 days of challenges |
 | ADMIN_LOGIN | **eShop**: A long complex passstring to be used for the Admin to log in to the eShop |
 | HOST | **eShop**: The deployment domain, (e.g. `localhost`, or `aoc.dev.comp-soc.com`). Used for secure cookies |
-| AOC_LEADERBOARD_JOIN_CODES | **eShop, Notifier**: Comma-separated list of AoC leaderboard join codes, with optional part in brackets to tag it. This is used for the Help screen in eShop and in the notifier's help menu. |
 | OAUTH_DISCORD_CLIENT_ID | **eShop**: The Discord client ID with "identify" scope |
 | OAUTH_DISCORD_REDIRECT_URI | **eShop**: The Discord redirect URL, must be approved on Discord Developers Console prior to use |
 
