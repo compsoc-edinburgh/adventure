@@ -12,6 +12,9 @@ export default function LoginForm() {
     <div className="flex items-center justify-center w-full flex-col">
       <h2 className="text-3xl font-display mb-6">Login</h2>
       <span className="text-sm opacity-75">Please enter your AoC ID to access the reward exchange shop.</span>
+      <Link className="text-sm opacity-50 hover:opacity-100" to="/login/help">
+        No idea what that is? Click to view the help.
+      </Link>
       <Form method="post" className="mt-6">
         <Input className="min-w-64" type="text" name="aoc_id" placeholder="e.g. 1234512" label="AoC ID Number" required />
         <div className="min-w-64 mt-3 flex flex-row items-center">
