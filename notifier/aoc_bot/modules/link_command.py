@@ -20,6 +20,30 @@ username_db_lock = threading.Lock()
 # Pings are disabled anyway, so this is a purely cosmetic aspect.
 
 
+def get_aoc_name_from_aoc_id(aoc_id: int):
+    """
+    Attempt to retrieve the cached leaderboard and get the AoC display name.
+    We must use the "last processed" data, not the most fresh data, since
+    otherwise we will double-notify when the cron runs next time.
+    """
+    cached_leaderboard = leaderboard.retrieve_last_leaderboard(
+        dir=plugin.model.star_data_dir,
+        cache_filename=plugin.model.star_data_cache,
+    )
+
+    aoc_username = f"Anonymous User"
+    if (
+        "members" in cached_leaderboard
+        and str(aoc_id) in cached_leaderboard["members"]
+        and "name" in cached_leaderboard["members"][str(aoc_id)]
+    ):
+        # If the user has a name, specify it for the notification, just
+        # so they can double-check.
+        aoc_username = cached_leaderboard["members"][str(aoc_id)]["name"]
+
+    return aoc_username
+
+
 @plugin.include
 @crescent.command(
     name="link_aoc",
@@ -53,11 +77,12 @@ class LinkCommand:
                 )
                 return
 
+            aoc_username = get_aoc_name_from_aoc_id(self.aoc_id)
             for k, v in mapping.items():
                 # Prevent one Discord user mapping to multiple AoC ID
                 if v == str(ctx.user.id):
                     await ctx.respond(
-                        f"You seem to already be linked to a different AoC User ID: {str(k)}. Please use `/unlink_aoc` before trying to link again.",
+                        f"You seem to already be linked to a different AoC User ID: {str(k)} ({aoc_username}). Please use `/unlink_aoc` before trying to link again.",
                         ephemeral=True,
                     )
                     return
@@ -65,7 +90,7 @@ class LinkCommand:
                 # Prevent one AoC ID being mapped to different Discord users
                 if k == str(self.aoc_id):
                     await ctx.respond(
-                        f"AoC User ID {str(k)} seems to already be linked to someone else: <@{v}>. They must run `/unlink_aoc` before you can link your own.",
+                        f"AoC User ID {str(k)} ({aoc_username}) seems to already be linked to someone else: <@{v}>. They must run `/unlink_aoc` before you can link your own.",
                         ephemeral=True,
                     )
 
@@ -73,26 +98,11 @@ class LinkCommand:
 
             try:
                 # Attempt to retrieve the last processed leaderboard, so we can
-                # check if the user has a name on AoC. Also, it helps to check if
-                # they've completed all 25 days so we can reward them. We must use
-                # the "last processed" data, not the most fresh data, since
-                # otherwise we will double-notify when the cron runs next time.
+                # check if they've completed all 25 days so we can reward them.
                 cached_leaderboard = leaderboard.retrieve_last_leaderboard(
                     dir=plugin.model.star_data_dir,
                     cache_filename=plugin.model.star_data_cache,
                 )
-
-                aoc_username = f"Anonymous User"
-                if (
-                    "members" in cached_leaderboard
-                    and str(self.aoc_id) in cached_leaderboard["members"]
-                    and "name" in cached_leaderboard["members"][str(self.aoc_id)]
-                ):
-                    # If the user has a name, specify it for the notification, just
-                    # so they can double-check.
-                    aoc_username = cached_leaderboard["members"][str(self.aoc_id)][
-                        "name"
-                    ]
 
                 with open(mapping_file, "w") as f:
                     json.dump(
@@ -183,20 +193,7 @@ class UnlinkCommand:
             try:
                 # Attempt to retrieve the cached leaderboard, so we can check if
                 # the user has a name on AoC.
-                cached_leaderboard = leaderboard.retrieve_last_leaderboard(
-                    dir=plugin.model.star_data_dir,
-                    cache_filename=plugin.model.star_data_cache,
-                )
-
-                aoc_username = f"Anonymous User"
-                if (
-                    "members" in cached_leaderboard
-                    and str(aoc_id) in cached_leaderboard["members"]
-                    and "name" in cached_leaderboard["members"][str(aoc_id)]
-                ):
-                    # If the user has a name, specify it for the notification, just
-                    # so they can double-check.
-                    aoc_username = cached_leaderboard["members"][str(aoc_id)]["name"]
+                aoc_username = get_aoc_name_from_aoc_id(int(aoc_id))
 
                 with open(mapping_file, "w") as f:
                     json.dump(
