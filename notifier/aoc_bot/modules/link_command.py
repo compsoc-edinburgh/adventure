@@ -26,7 +26,7 @@ def get_aoc_name_from_aoc_id(aoc_id: int):
     otherwise we will double-notify when the cron runs next time.
     """
     cached_leaderboard = leaderboard.retrieve_last_leaderboard(
-        dir=plugin.model.star_data_dir,
+        dir=plugin.model.data_dir,
         cache_filename=plugin.model.star_data_cache,
     )
 
@@ -52,9 +52,7 @@ class LinkCommand:
     aoc_id = crescent.option(int, name="aoc_id", description="AoC User ID")
 
     async def callback(self, ctx: crescent.Context) -> None:
-        mapping_file = os.path.join(
-            plugin.model.star_data_dir, plugin.model.mapping_file
-        )
+        mapping_file = os.path.join(plugin.model.data_dir, plugin.model.mapping_file)
         # Make sure no other threads modify content by acquiring a mutex
         # This is especially important since we separate the read and write operations.
         # There is no sufficient mode to open the file and do both reading (from
@@ -99,7 +97,7 @@ class LinkCommand:
                 # Attempt to retrieve the last processed leaderboard, so we can
                 # check if they've completed all 25 days so we can reward them.
                 cached_leaderboard = leaderboard.retrieve_last_leaderboard(
-                    dir=plugin.model.star_data_dir,
+                    dir=plugin.model.data_dir,
                     cache_filename=plugin.model.star_data_cache,
                 )
 
@@ -156,9 +154,7 @@ class LinkCommand:
 )
 class UnlinkCommand:
     async def callback(self, ctx: crescent.Context) -> None:
-        mapping_file = os.path.join(
-            plugin.model.star_data_dir, plugin.model.mapping_file
-        )
+        mapping_file = os.path.join(plugin.model.data_dir, plugin.model.mapping_file)
 
         # Make sure no other threads are writing by acquiring a mutex
 

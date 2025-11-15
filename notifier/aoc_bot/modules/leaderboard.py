@@ -343,10 +343,10 @@ async def give_role(
 @tasks.cronjob("*/15 * * * *")
 async def on_schedule() -> None:
     old_leaderboard = retrieve_last_leaderboard(
-        dir=plugin.model.star_data_dir, cache_filename=plugin.model.star_data_cache
+        dir=plugin.model.data_dir, cache_filename=plugin.model.star_data_cache
     )
     new_leaderboard = retrieve_leaderboard(
-        dir=plugin.model.star_data_dir,
+        dir=plugin.model.data_dir,
         filename=plugin.model.star_data_input,
     )
 
@@ -363,7 +363,7 @@ async def on_schedule() -> None:
     if not diff:
         # Either no change, or negative change.
         save_as_last_processed(
-            dir=plugin.model.star_data_dir,
+            dir=plugin.model.data_dir,
             cache_filename=plugin.model.star_data_cache,
             data=new_leaderboard,
             # Back up on negative changes. The only case I can think of that can
@@ -416,7 +416,7 @@ async def on_schedule() -> None:
     )
 
     save_as_last_processed(
-        dir=plugin.model.star_data_dir,
+        dir=plugin.model.data_dir,
         cache_filename=plugin.model.star_data_cache,
         data=new_leaderboard,
     )

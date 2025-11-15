@@ -6,25 +6,25 @@ import crescent
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--star-data-dir",
+    "--data-dir",
     required=True,
     help="The directory where the --star-file-ingest-regex argument will be used to scan all direct child files.",
 )
 parser.add_argument(
     "--star-data-input",
     required=True,
-    help="Filename to read the latest star data from. Expected fields are '.members'. Must be a direct child of the directory specified in --star-data-dir.",
+    help="Filename to read the latest star data from. Expected fields are '.members'. Must be a direct child of the directory specified in --data-dir.",
 )
 parser.add_argument(
     "--star-data-cache",
     required=False,
     default="lastprocessed.json",
-    help="Filename to write the last processed star data cache to. Must have read-write access. Must be a direct child of the directory specified in --star-data-dir.",
+    help="Filename to write the last processed star data cache to. Must have read-write access. Must be a direct child of the directory specified in --data-dir.",
 )
 parser.add_argument(
     "--mapping-file",
     required=True,
-    help="The path to a .json file which will be written to and read from for the username mapping. Must have read-write access. Must be a direct child of the directory specified in --star-data-dir.",
+    help="The path to a .json file which will be written to and read from for the username mapping. Must have read-write access. Must be a direct child of the directory specified in --data-dir.",
 )
 parser.add_argument(
     "--slash-guild-id",
@@ -64,7 +64,7 @@ parser.add_argument(
 # Used for Dependency Injection of CLI args, i.e. sharing state across all extensions
 @dataclasses.dataclass
 class Model:
-    star_data_dir: str
+    data_dir: str
     star_data_input: str
     star_data_cache: str
     mapping_file: str
