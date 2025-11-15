@@ -36,7 +36,7 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
           {transactions.filter(t => !t.cancelled_at).length === 0 && (
             <p className="opacity-50">
               ...Nothing!
-              {!user && "Or maybe I should log in?"}
+              {!user && " Or maybe I should log in?"}
             </p>
           )}
           <ul>
