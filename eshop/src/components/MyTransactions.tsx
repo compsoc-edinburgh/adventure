@@ -34,7 +34,10 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
           <h1 className="text-3xl font-display mb-4">Dear Santa, I want...</h1>
           {fetcher.data && !fetcher.data["success"] && <p>{fetcher.data["message"]}</p>}
           {transactions.filter(t => !t.cancelled_at).length === 0 && (
-            <p className="opacity-50">...Nothing! That's fine too.</p>
+            <p className="opacity-50">
+              ...Nothing!
+              {!user && "Or maybe I should log in?"}
+            </p>
           )}
           <ul>
             {transactions.map(transaction => (
