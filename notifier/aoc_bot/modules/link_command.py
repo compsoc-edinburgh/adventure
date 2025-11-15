@@ -147,7 +147,7 @@ class LinkCommand:
 
             try:
                 # Attempt to retrieve the last processed leaderboard, so we can
-                # check if they've completed all 25 days so we can reward them.
+                # check if they've completed all 12 days so we can reward them.
                 cached_leaderboard = leaderboard.retrieve_last_leaderboard(
                     dir=plugin.model.data_dir,
                     cache_filename=plugin.model.star_data_cache,
@@ -159,7 +159,7 @@ class LinkCommand:
                     ephemeral=True,
                 )
 
-                # Now check if they have completed 25 days, 50 challenges
+                # Now check if they have completed 12 days, 24 challenges
                 # We can use the cached leaderboard, since if they issued /link
                 # it's pretty much guaranteed their data's already been fetched
                 # before. If it's not registered complete yet, it'll be triggered in

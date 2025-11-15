@@ -225,7 +225,7 @@ def display_aoc_user(
 
 
 def solved_all_days(events: Set[Tuple[str, str, str]], member_id: str) -> bool:
-    """Returns true if a given member has solved all 25 Part 2 problems for a
+    """Returns true if a given member has solved all 12 Part 2 problems for a
     given event list generated from get_leaderboard_set().
 
     Parameters
@@ -238,7 +238,7 @@ def solved_all_days(events: Set[Tuple[str, str, str]], member_id: str) -> bool:
     Returns
     -------
     bool
-        True if the user has solved all 50 challenges, False otherwise.
+        True if the user has solved all 24 challenges, False otherwise.
     """
     return all(
         any(
@@ -248,7 +248,7 @@ def solved_all_days(events: Set[Tuple[str, str, str]], member_id: str) -> bool:
                 if event[0] == member_id and event[1] == str(day) and event[2] == "2"
             ]
         )
-        for day in range(1, 26)
+        for day in range(1, 13)
     )
 
 
@@ -257,7 +257,7 @@ def display_final_message(
     member_id: str,
     role_id: Optional[int],
 ) -> str:
-    """Pretty-print a final message upon completing all 25 days and 50 challenges.
+    """Pretty-print a final message upon completing all 12 days and 24 challenges.
     If the user has a Discord account linked, show that they are eligible for
     a role. If they are not linked, suggest that it's not too late for them to
     do so now.
@@ -277,7 +277,7 @@ def display_final_message(
     """
     year = get_default_year()
 
-    string = f"🎉 **Congrats on completing all 25 days of AoC {year}!** "
+    string = f"🎉 **Congrats on completing all 12 days of AoC {year}!** "
 
     if role_id:
         try:
@@ -292,7 +292,7 @@ def display_final_message(
             FileNotFoundError,
             json.decoder.JSONDecodeError,
         ):
-            # If a user links their AoC account after completing all 25 days,
+            # If a user links their AoC account after completing all 12 days,
             # they will automatically get the role. See link_command.py.
             string += "If you want to receive a coloured name as a reward, link your AoC account with `/link_aoc`!"
 
@@ -390,7 +390,7 @@ async def on_schedule() -> None:
             day,
         )
 
-        # If the person solved all 25 days and 50 challenges, add a new congratulatory
+        # If the person solved all 12 days and 24 challenges, add a new congratulatory
         # line and give them a role based on the config.
         if solved_all_days(new_events, member_id):
             message += "\n" + display_final_message(
