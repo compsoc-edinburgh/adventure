@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 
-interface InputProps {
+interface InputProps extends React.HTMLAttributes<HTMLDivElement> {
   type?: string;
   label: string;
   placeholder: string;
