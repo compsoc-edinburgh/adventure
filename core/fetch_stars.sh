@@ -51,3 +51,5 @@ jq -s '
   }
 ' "${TEMP_DIR}"/*.json > "${ABS_DATA_DIR}"/aoc_star_data.json
 rm -r "${TEMP_DIR}"
+
+echo "$(date +"%Y-%m-%dT%H:%M:%S%z") Finished fetching data."
