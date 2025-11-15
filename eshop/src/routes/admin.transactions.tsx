@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router";
+import { Link, LoaderFunctionArgs, redirect, useLoaderData } from "react-router";
 import { requireUserSession } from "../sessions";
 import { getTransactions, getUserById } from "../sqlite.server";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/Table";
@@ -39,7 +39,7 @@ export default function Items() {
           {transactions.filter(txn => !excludeCancelled || txn.cancelled_at === null).map(transaction => (
             <TableRow key={transaction.id}>
               <TableCell>{transaction.id}</TableCell>
-              <TableCell>{transaction.user_id}</TableCell>
+              <TableCell><Link to={`/admin/users/${transaction.user_id}`}>{transaction.user_id}</Link></TableCell>
               <TableCell>{transaction.shop_item_id}</TableCell>
               <TableCell>{transaction.cancelled_at}</TableCell>
             </TableRow>
