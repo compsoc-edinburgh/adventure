@@ -2,7 +2,7 @@ import Database from "better-sqlite3";
 import path from "path";
 import { env } from "process";
 
-export const db = new Database(path.join(env.ABS_DATA_DIR || "/", "database.db"));
+export const db = new Database(path.join(env.ABS_DATA_DIR as string, "database.db"));
 db.pragma("journal_mode = WAL");
 
 const schema_updates = [

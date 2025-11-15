@@ -6,7 +6,7 @@ import { env } from "process";
 // merging multiple leaderboard files (since each one has a maximum of 200
 // participants and it accumulates over the years). Note that the only field
 // guaranteed to exist in the merged file is "members"
-const leaderboard_file = path.join(env.ABS_DATA_DIR || "/", "aoc_star_data.json");
+const leaderboard_file = path.join(env.ABS_DATA_DIR as string, "aoc_star_data.json");
 
 export function getStarsForUser(aoc_user_id: number): number {
   const data = JSON.parse(fs.readFileSync(leaderboard_file, "utf-8"));
