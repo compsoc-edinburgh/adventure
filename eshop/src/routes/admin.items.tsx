@@ -9,6 +9,7 @@ import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 
 export default function Items() {
   const { error, shopItems } = useLoaderData<typeof loader>();
+  const [itemId, setItemId] = useState<number | undefined>(undefined);
   const [name, setName] = useState<string | undefined>(undefined);
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const [description, setDescription] = useState<string | undefined>(undefined);
@@ -68,6 +69,7 @@ export default function Items() {
           name="_method"
           onChange={(e) => {
             const editingItem = shopItems.find(item => item.id == parseInt(e.target.value));
+            setItemId(editingItem ? parseInt(e.target.value) : undefined);
             setName(editingItem?.name ?? "");
             setImageUrl(editingItem?.image_url ?? "");
             setDescription(editingItem?.description ?? "");
@@ -99,7 +101,7 @@ export default function Items() {
 
           <Input type="number" label="Max per User" placeholder="Max per User" name="max_per_user" value={maxPerUser} onChange={e => setMaxPerUser(e.target.value)} />
 
-          {order && (
+          {itemId && (
             <>
               <Input
                 type="number"
