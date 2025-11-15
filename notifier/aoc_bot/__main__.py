@@ -27,6 +27,11 @@ parser.add_argument(
     help="The path to a .json file which will be written to and read from for the username mapping. Must have read-write access. Must be a direct child of the directory specified in --data-dir.",
 )
 parser.add_argument(
+    "--join-codes",
+    required=True,
+    help='Comma-separated list of join codes for the private leaderboard. May optionally have a bracket-enclosed hint shown in the bot\'s help screen. E.G. --join-codes="123123-123123 (Main), 124124-124124 (CCSig)"',
+)
+parser.add_argument(
     "--slash-guild-id",
     required=True,
     type=int,
@@ -68,6 +73,7 @@ class Model:
     star_data_input: str
     star_data_cache: str
     mapping_file: str
+    join_codes: str
     slash_guild_id: int
     webhook_id: int
     webhook_token: str
