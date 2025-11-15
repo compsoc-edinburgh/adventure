@@ -18,7 +18,11 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items, className }) =>
   // performed, meaning if we get an error in the first request and want to
   // dismiss a modal or something, we can't directly change fetcher.data.
   // To work around this, we maintain a copy of the fetcher data.
-  const [fetcherData, setFetcherData] = useState();
+  const [fetcherData, setFetcherData] = useState<{
+    success: boolean;
+    message: undefined;
+    transaction_id: number;
+  }>();
 
   useEffect(() => {
     if (fetcher.state === "submitting" || fetcher.state === "loading") {
@@ -37,11 +41,11 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items, className }) =>
         <div className="w-full bg-christmasDark bg-opacity-80 backdrop-blur-md h-full absolute top-0 left-0 z-[-1] scale-110 -skew-x-12 -rotate-2 transform-gpu" />
         Reward Shop
       </h2>
-      {fetcherData && !fetcherData["success"] && (
+      {fetcherData && !fetcherData.success && (
         <div
           className="text-white p-4 rounded-lg mb-4 flex flex-row justify-between animate-slidein origin-top bg-[repeating-linear-gradient(-45deg,var(--tw-gradient-stops))] from-christmasRed from-[length:0_10px] to-christmasRedAccent to-[length:10px_20px]"
         >
-          <p className="font-semibold text-lg">{fetcher.data["message"]}</p>
+          <p className="font-semibold text-lg">{fetcherData.message}</p>
           <button onClick={() => setFetcherData(undefined)}>
             <MdClose />
           </button>

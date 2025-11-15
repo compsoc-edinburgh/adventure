@@ -118,6 +118,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   return {
     success: true,
+    message: undefined,
     transaction_id: transaction.id,
   };
 }
