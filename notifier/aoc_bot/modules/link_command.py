@@ -43,6 +43,56 @@ def get_aoc_name_from_aoc_id(aoc_id: int):
     return aoc_username
 
 
+def read_mapping_file(mapping_file: str) -> dict[int, int]:
+    """
+    Read the AoC ID to Discord ID mapping file. The file is stored as mapping
+    of string to string because JSON doesn't support integer keys. For
+    convenience, this function converts both keys and values into integers.
+
+    Parameters
+    ----------
+    mapping_file : str
+        File to open and read.
+
+    Returns
+    -------
+    dict[int, int]
+        AoC ID keys to Discord ID values.
+    """
+    mapping: dict[int, int]
+    try:
+        with open(mapping_file, "r") as f:
+            tmp: dict[str, str] = json.load(f)
+            mapping = {int(k): int(v) for k, v in tmp.items()}
+    except FileNotFoundError:
+        # If ia file is not found on open, proceed with empty and try to
+        # create it later.
+        mapping = {}
+
+    return mapping
+
+
+def write_mapping_file(mapping_file: str, mapping: dict[int, int]):
+    """Write the mapping data to JSON. Since JSON doesn't support integer keys,
+    we convert IDs to string. Values could technically stay int if needed, but
+    for consistency we also convert those to string.
+
+    Parameters
+    ----------
+    mapping_file : str
+        File to open and write.
+    mapping : dict[int, int]
+        AoC ID keys to Discord ID values.
+    """
+    with open(mapping_file, "w") as f:
+        tmp = {str(k): str(v) for k, v in mapping.items()}
+        json.dump(
+            tmp,
+            f,
+            indent=2,  # Pretty-print it for easy of debugging
+        )
+
+
 @plugin.include
 @crescent.command(
     name="link_aoc",
@@ -60,12 +110,7 @@ class LinkCommand:
         # doesn't exist.
         with username_db_lock:
             try:
-                with open(mapping_file, "r") as f:
-                    mapping: dict[str, str] = json.load(f)
-            except FileNotFoundError as e:
-                # If ia file is not found on open, proceed with empty and try to
-                # create it later.
-                mapping = {}
+                mapping = read_mapping_file(mapping_file)
             except json.decoder.JSONDecodeError as e:
                 # Failing to read a JSON could lead to data loss, so don't proceed.
                 print(f"Failed link_command (read): {e}")
@@ -76,15 +121,15 @@ class LinkCommand:
 
             aoc_username = get_aoc_name_from_aoc_id(self.aoc_id)
             for k, v in mapping.items():
-                if int(k) == self.aoc_id and v == str(ctx.user.id):
+                if k == self.aoc_id and v == ctx.user.id:
                     await ctx.respond(
                         "You have already linked this AoC ID previously. Don't worry!",
                         ephemeral=True,
                     )
                     return
                 # Prevent one Discord user mapping to multiple AoC ID
-                if v == str(ctx.user.id):
-                    aoc_username = get_aoc_name_from_aoc_id(int(k))
+                if v == ctx.user.id:
+                    aoc_username = get_aoc_name_from_aoc_id(k)
                     await ctx.respond(
                         f"You seem to already be linked to a different AoC User ID: {str(k)} ({aoc_username}). Please use `/unlink_aoc` before trying to link again.",
                         ephemeral=True,
@@ -92,13 +137,13 @@ class LinkCommand:
                     return
 
                 # Prevent one AoC ID being mapped to different Discord users
-                if k == str(self.aoc_id):
+                if k == self.aoc_id:
                     await ctx.respond(
-                        f"AoC User ID {str(k)} ({aoc_username}) seems to already be linked to someone else: <@{v}>. They must run `/unlink_aoc` before you can link your own.",
+                        f"AoC User ID {str(k)} ({aoc_username}) seems to already be linked to someone else: <@{str(v)}>. They must run `/unlink_aoc` before you can link your own.",
                         ephemeral=True,
                     )
 
-            mapping[str(self.aoc_id)] = str(ctx.user.id)
+            mapping[self.aoc_id] = ctx.user.id
 
             try:
                 # Attempt to retrieve the last processed leaderboard, so we can
@@ -108,16 +153,11 @@ class LinkCommand:
                     cache_filename=plugin.model.star_data_cache,
                 )
 
-                with open(mapping_file, "w") as f:
-                    json.dump(
-                        mapping,
-                        f,
-                        indent=2,  # Pretty-print it for easy of debugging
-                    )
-                    await ctx.respond(
-                        f"Linked {ctx.user.username} with AoC User ID {str(self.aoc_id)} ({aoc_username})!",
-                        ephemeral=True,
-                    )
+                write_mapping_file(mapping_file, mapping)
+                await ctx.respond(
+                    f"Linked {ctx.user.username} with AoC User ID {str(self.aoc_id)} ({aoc_username})!",
+                    ephemeral=True,
+                )
 
                 # Now check if they have completed 25 days, 50 challenges
                 # We can use the cached leaderboard, since if they issued /link
@@ -167,12 +207,7 @@ class UnlinkCommand:
 
         with username_db_lock:
             try:
-                with open(mapping_file, "r") as f:
-                    mapping: dict[str, str] = json.load(f)
-            except FileNotFoundError as e:
-                # If ia file is not found on open, proceed with empty and try to
-                # create it later.
-                mapping = {}
+                mapping = read_mapping_file(mapping_file)
             except json.decoder.JSONDecodeError as e:
                 # Failing to read a JSON could lead to data loss, so don't proceed.
                 print(f"Failed link_command (read): {e}")
@@ -182,7 +217,7 @@ class UnlinkCommand:
                 return
 
             for aoc_id, discord_id in mapping.items():
-                if discord_id == str(ctx.user.id):
+                if discord_id == ctx.user.id:
                     mapping.pop(aoc_id)
                     break
             else:
@@ -195,18 +230,13 @@ class UnlinkCommand:
             try:
                 # Attempt to retrieve the cached leaderboard, so we can check if
                 # the user has a name on AoC.
-                aoc_username = get_aoc_name_from_aoc_id(int(aoc_id))
+                aoc_username = get_aoc_name_from_aoc_id(aoc_id)
 
-                with open(mapping_file, "w") as f:
-                    json.dump(
-                        mapping,
-                        f,
-                        indent=2,  # Pretty-print it for easy of debugging
-                    )
-                    await ctx.respond(
-                        f"Unlinked {ctx.user.username} from AoC User ID {aoc_id} ({aoc_username})!",
-                        ephemeral=True,
-                    )
+                write_mapping_file(mapping_file, mapping)
+                await ctx.respond(
+                    f"Unlinked {ctx.user.username} from AoC User ID {str(aoc_id)} ({aoc_username})!",
+                    ephemeral=True,
+                )
 
             except FileNotFoundError as e:
                 # Either parent directory doesn't exist or no write perms
