@@ -2,12 +2,11 @@ import json
 import os
 import threading
 
-import aoc_bot.modules.leaderboard as leaderboard
-
 import hikari
 import crescent
 
 from aoc_bot.__main__ import Model
+import aoc_bot.modules.leaderboard as leaderboard
 
 plugin = crescent.Plugin[hikari.GatewayBot, Model]()
 

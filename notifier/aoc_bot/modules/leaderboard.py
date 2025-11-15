@@ -16,9 +16,9 @@ import typing
 
 import hikari
 import crescent
+from crescent.ext import tasks
 
 from aoc_bot.__main__ import Model
-from crescent.ext import tasks
 
 plugin = crescent.Plugin[hikari.GatewayBot, Model]()
 
