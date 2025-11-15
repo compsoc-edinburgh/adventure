@@ -24,7 +24,7 @@ parser.add_argument(
 parser.add_argument(
     "--mapping-file",
     required=True,
-    help="The path to a .json file which will be written to and read from for the username mapping.",
+    help="The path to a .json file which will be written to and read from for the username mapping. Must have read-write access. Must be a direct child of the directory specified in --star-data-dir.",
 )
 parser.add_argument(
     "--slash-guild-id",
