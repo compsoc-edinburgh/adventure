@@ -25,7 +25,7 @@ export default function LoginHelp() {
           <p>
             It is necessary to join the 'CompSoc Private Leadeboard' on Advent of Code in order for us to track your progress and sync your stars with this website. Once you've created an account on Advent of Code, you can join the leaderboard through
             {" "}
-            <a href="https://adventofcode.com/2024/leaderboard/private" className="text-blue-500">the Leaderboard page</a>
+            <a href="https://adventofcode.com/2025/leaderboard/private" className="text-blue-500">the Leaderboard page</a>
             {" "}
             by using the code:
             <pre className="w-full rounded-md p-2 my-3 bg-gray-200">
