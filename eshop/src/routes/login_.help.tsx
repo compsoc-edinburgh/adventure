@@ -2,7 +2,7 @@ import { Link, useLoaderData } from "react-router";
 import aoc_id from "../assets/Screenshot 2024-12-01_17-08-36.png";
 
 export default function LoginHelp() {
-  const { compsoc_leaderboard_join_code, ccsig_leaderboard_join_code } = useLoaderData<typeof loader>();
+  const { join_codes } = useLoaderData<typeof loader>();
   return (
     <div className="flex items-center justify-center w-full flex-col">
       <h2 className="text-3xl font-display mb-6">Help with Logging in</h2>
@@ -23,18 +23,20 @@ export default function LoginHelp() {
         <div className="bg-christmasBeigeAccent rounded-lg p-4">
           <h3 className="text-2xl font-display mb-3">What is the Leaderboard?</h3>
           <p>
-            It is necessary to join the 'CompSoc Private Leadeboard' on Advent of Code in order for us to track your progress and sync your stars with this website. Once you've created an account on Advent of Code, you can join the leaderboard through
+            It is necessary to join a 'CompSoc Private Leadeboard' on Advent of Code in order for us to track your progress and sync your stars with this website. Once you've created an account on Advent of Code, you can join a leaderboard through
             {" "}
             <a href="https://adventofcode.com/2025/leaderboard/private" className="text-blue-500">the Leaderboard page</a>
             {" "}
-            by using the code:
-            <pre className="w-full rounded-md p-2 my-3 bg-gray-200">
-              <code>{compsoc_leaderboard_join_code}</code>
-            </pre>
-            If the above is full, CCSig is also running a verified leaderboard, which you can join with the code:
-            <pre className="w-full rounded-md p-2 my-3 bg-gray-200">
-              <code>{ccsig_leaderboard_join_code}</code>
-            </pre>
+            by using any of the following codes:
+            {join_codes && join_codes.map(v => (
+              <div key={v.code} className="flex flex-col my-3">
+                <pre className="w-full rounded-md p-2 bg-gray-200 flex justify-between">
+                  <code>{v.code}</code>
+                  {v.hint && (<span className="text-sm font-sans">{v.hint}</span>)}
+                </pre>
+              </div>
+            ))}
+            If any of the above is full, please try another one. If all verified leaderboards are full, please contact CompSoc via any method available to you and we can create a new one.
           </p>
         </div>
         <div className="bg-christmasBeigeAccent rounded-lg p-4">
@@ -65,8 +67,16 @@ export default function LoginHelp() {
 }
 
 export async function loader() {
+  const env_join_codes = process.env.AOC_LEADERBOARD_JOIN_CODES;
+  const regex = /([0-9-]+) *(?:\((.+)\))?/;
+  const join_codes = env_join_codes?.split(",")?.map(v => v.trim().match(regex))?.filter(match => match !== null)?.map((match) => {
+    return {
+      code: match[1],
+      hint: match[2], // may be undefined if no hint
+    };
+  });
+  console.log(join_codes);
   return {
-    compsoc_leaderboard_join_code: process.env.COMPSOC_LEADERBOARD_JOIN_CODE,
-    ccsig_leaderboard_join_code: process.env.CCSIG_LEADERBOARD_JOIN_CODE,
+    join_codes,
   };
 };

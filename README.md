@@ -41,6 +41,7 @@ services:
     environment:
       - ADMIN_LOGIN=mysecretadminlogin
       - SESSION_SECRET=somesessioncookiesecret
+      - AOC_LEADERBOARD_JOIN_CODES="123123-123123 (Main),234234-234234 (verified leaderboard by CCSig)"
       - LEADERBOARD_JOIN_CODE=123123-123123
       - CCSIG_LEADERBOARD_JOIN_CODE=124124-124124
       - OAUTH_DISCORD_CLIENT_ID=77101010101010
