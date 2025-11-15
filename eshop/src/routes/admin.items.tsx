@@ -1,10 +1,11 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, Form, redirect, useLoaderData } from "react-router";
+import { ActionFunctionArgs, LoaderFunctionArgs, redirect, useLoaderData, useFetcher } from "react-router";
 import { commitSession, requireUserSession } from "../sessions";
 import { createShopItem, getShopItems, getUserById, updateShopItem } from "../sqlite.server";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/Table";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Input from "../components/Input";
 import { Button } from "../components/Button";
+import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 
 export default function Items() {
   const { error, shopItems } = useLoaderData<typeof loader>();
@@ -15,6 +16,19 @@ export default function Items() {
   const [stockCount, setStockCount] = useState<string | undefined>(undefined);
   const [maxPerUser, setMaxPerUser] = useState<string | undefined>(undefined);
   const [order, setOrder] = useState<string | undefined>(undefined);
+
+  const fetcher = useFetcher();
+
+  // Handler to move an item up or down by instantaneously changing the
+  // contents of the 'order' input box and submitting the form. Used for up/down
+  // arrows.
+  const moveItem = useCallback((e: React.MouseEvent<HTMLButtonElement>, by: number) => {
+    (document.getElementById("order") as HTMLInputElement).valueAsNumber += by;
+    fetcher.submit(e.currentTarget.form, {
+      method: "POST",
+    });
+  }, [fetcher]);
+
   return (
     <>
       <h2 className="text-2xl font-display mb-3">Shop Items</h2>
@@ -49,7 +63,7 @@ export default function Items() {
           ))}
         </TableBody>
       </Table>
-      <Form method="post" action="/admin/items" className="p-6 bg-christmasBeigeAccent shadow-sm rounded-lg mt-8">
+      <fetcher.Form method="post" action="/admin/items" className="p-6 bg-christmasBeigeAccent shadow-sm rounded-lg mt-8">
         <select
           name="_method"
           onChange={(e) => {
@@ -86,13 +100,31 @@ export default function Items() {
           <Input type="number" label="Max per User" placeholder="Max per User" name="max_per_user" value={maxPerUser} onChange={e => setMaxPerUser(e.target.value)} />
 
           {order && (
-            <Input type="number" label="Swap Order with..." placeholder="Order" name="order" value={order} min={0} max={Items.length - 1} onChange={e => setOrder(e.target.value)} />
+            <>
+              <Input
+                type="number"
+                label="Swap Order with..."
+                placeholder="Order"
+                name="order"
+                value={order}
+                inputProps={{
+                  min: 0,
+                  max: shopItems.length - 1,
+                  id: "order",
+                }}
+                onChange={e => setOrder(e.target.value)}
+              />
+              <div className="flex gap-2 items-end">
+                <Button className="py-4 px-4" onClick={e => moveItem(e, -1)} disabled={order === "0"}><AiOutlineUp className="text-sm" /></Button>
+                <Button className="py-4 px-4" onClick={e => moveItem(e, 1)} disabled={order === (shopItems.length - 1).toString()}><AiOutlineDown className="text-sm" /></Button>
+              </div>
+            </>
           )}
         </div>
 
         <button type="submit" className="block relative w-full mt-3 px-6 py-2 rounded-lg bg-christmasRed text-white active:scale-95 transition-all duration-75 focus:outline-4 focus:outline-christmasRed focus:outline-double">Save</button>
         {error && <p className="text-christmasRedAccent text-sm mt-3 min-w-full w-0">{error}</p>}
-      </Form>
+      </fetcher.Form>
     </>
   );
 }
