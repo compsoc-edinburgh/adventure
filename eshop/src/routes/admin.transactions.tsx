@@ -2,12 +2,30 @@ import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router";
 import { requireUserSession } from "../sessions";
 import { getTransactions, getUserById } from "../sqlite.server";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/Table";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 
 export default function Items() {
   const { transactions } = useLoaderData<typeof loader>();
+  const [excludeCancelled, setExcludeCancelled] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (window.localStorage.getItem("admin_exclude_cancelled") === "true") {
+      setExcludeCancelled(true);
+    };
+  }, [setExcludeCancelled]);
+
+  const onSetExcludeCancelled = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setExcludeCancelled(e.target.checked);
+    window.localStorage.setItem("admin_exclude_cancelled", e.target.checked.toString());
+  }, [setExcludeCancelled]);
+
   return (
     <>
       <h2 className="text-2xl font-display mb-3">Transactions</h2>
+      <fieldset className="flex gap-2 w-full justify-end">
+        <label htmlFor="setExcludeCancelled">Show only valid transactions</label>
+        <input id="setExcludeCancelled" type="checkbox" checked={excludeCancelled} onChange={onSetExcludeCancelled} />
+      </fieldset>
       <Table className="bg-white">
         <TableHeader>
           <TableRow>
@@ -18,7 +36,7 @@ export default function Items() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {transactions.map(transaction => (
+          {transactions.filter(txn => !excludeCancelled || txn.cancelled_at === null).map(transaction => (
             <TableRow key={transaction.id}>
               <TableCell>{transaction.id}</TableCell>
               <TableCell>{transaction.user_id}</TableCell>
