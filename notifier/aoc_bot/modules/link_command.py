@@ -76,6 +76,12 @@ class LinkCommand:
 
             aoc_username = get_aoc_name_from_aoc_id(self.aoc_id)
             for k, v in mapping.items():
+                if int(k) == self.aoc_id and v == str(ctx.user.id):
+                    await ctx.respond(
+                        "You have already linked this AoC ID previously. Don't worry!",
+                        ephemeral=True,
+                    )
+                    return
                 # Prevent one Discord user mapping to multiple AoC ID
                 if v == str(ctx.user.id):
                     aoc_username = get_aoc_name_from_aoc_id(int(k))
