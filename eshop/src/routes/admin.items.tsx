@@ -160,7 +160,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (typeof method !== "string") {
     session.flash("error", "No method provided.");
-    return redirect("/admin/items", {
+    return new Response(null, {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
@@ -176,7 +176,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const order = parseInt(formData.get("order") as string);
   if (typeof name !== "string" || typeof image_url !== "string" || typeof description !== "string" || typeof star_cost !== "number" || typeof stock_count !== "number" || typeof max_per_user !== "number" || typeof order !== "number") {
     session.flash("error", "Fields have the wrong type.");
-    return redirect("/admin/items", {
+    return new Response(null, {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
@@ -190,7 +190,7 @@ export async function action({ request }: ActionFunctionArgs) {
   else {
     if (isNaN(parseInt(method))) {
       session.flash("error", "Invalid item ID format.");
-      return redirect("/admin/items", {
+      return new Response(null, {
         headers: {
           "Set-Cookie": await commitSession(session),
         },
@@ -201,5 +201,5 @@ export async function action({ request }: ActionFunctionArgs) {
     updateShopItem(parseInt(method as string), image_url, name, description, star_cost, stock_count, max_per_user, order);
   }
 
-  return redirect("/admin/items");
+  return new Response(null);
 };
