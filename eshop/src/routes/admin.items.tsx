@@ -1,8 +1,8 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, redirect, useLoaderData, useFetcher } from "react-router";
+import { ActionFunctionArgs, LoaderFunctionArgs, redirect, useLoaderData, useFetcher, useRevalidator } from "react-router";
 import { commitSession, requireUserSession } from "../sessions";
 import { createShopItem, getShopItems, getUserById, updateShopItem } from "../sqlite.server";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/Table";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Input from "../components/Input";
 import { Button } from "../components/Button";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
@@ -10,6 +10,8 @@ import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 export default function Items() {
   const { error, shopItems } = useLoaderData<typeof loader>();
   const [itemId, setItemId] = useState<number | undefined>(undefined);
+
+  // Form item fields
   const [name, setName] = useState<string | undefined>(undefined);
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const [description, setDescription] = useState<string | undefined>(undefined);
@@ -18,7 +20,24 @@ export default function Items() {
   const [maxPerUser, setMaxPerUser] = useState<string | undefined>(undefined);
   const [order, setOrder] = useState<string | undefined>(undefined);
 
+  // Update the form fields when either the shop items list changes (e.g. due to
+  // a fetcher form submission) or if the selected item ID changes.
+  useEffect(() => {
+    const editingItem = shopItems.find(item => item.id == itemId);
+    setName(editingItem?.name ?? "");
+    setImageUrl(editingItem?.image_url ?? "");
+    setDescription(editingItem?.description ?? "");
+    setStarCost(editingItem?.star_cost?.toString() ?? "");
+    setStockCount(editingItem?.stock_count?.toString() ?? "");
+    setMaxPerUser(editingItem?.max_per_user?.toString() ?? "");
+    setOrder(editingItem?.order.toString() ?? "");
+  }, [shopItems, itemId]);
+
+  // Fetcher form allows submission without page load
   const fetcher = useFetcher();
+
+  // Use a revalidator to revalidate the loader data on demand
+  const revalidator = useRevalidator();
 
   // Handler to move an item up or down by instantaneously changing the
   // contents of the 'order' input box and submitting the form. Used for up/down
@@ -27,8 +46,10 @@ export default function Items() {
     (document.getElementById("order") as HTMLInputElement).valueAsNumber += by;
     fetcher.submit(e.currentTarget.form, {
       method: "POST",
+    }).then(() => {
+      revalidator.revalidate();
     });
-  }, [fetcher]);
+  }, [fetcher, revalidator]);
 
   return (
     <>
@@ -68,15 +89,7 @@ export default function Items() {
         <select
           name="_method"
           onChange={(e) => {
-            const editingItem = shopItems.find(item => item.id == parseInt(e.target.value));
-            setItemId(editingItem ? parseInt(e.target.value) : undefined);
-            setName(editingItem?.name ?? "");
-            setImageUrl(editingItem?.image_url ?? "");
-            setDescription(editingItem?.description ?? "");
-            setStarCost(editingItem?.star_cost?.toString() ?? "");
-            setStockCount(editingItem?.stock_count?.toString() ?? "");
-            setMaxPerUser(editingItem?.max_per_user?.toString() ?? "");
-            setOrder(editingItem?.order.toString() ?? "");
+            setItemId(typeof parseInt(e.target.value) !== "number" ? undefined : parseInt(e.target.value));
           }}
         >
           <option value="new">Add Item</option>
