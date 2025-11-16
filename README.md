@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./readme_assets/Screenshots.png" align="center" />
+</p>
+
 # Adventure
 
 Adventure is the Advent of Code Platform for CompSoc Edinburgh.
@@ -51,7 +55,12 @@ In addition, the following volume mount must be present:
 |---|---|
 | `/app/data` | Contains a JSON mapping of from AoC ID to Discord ID, AoC star data, and caches |
 
-## Local Development from source
+
+## Local development
+
+### Architecture
+
+![Architecture of Adventure](./readme_assets/Adventure%20Architecture.drawio.svg)
 
 ### Without Docker (recommended for testing indvidual components)
 
