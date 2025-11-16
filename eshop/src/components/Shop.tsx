@@ -6,6 +6,7 @@ import Stars from "./Stars";
 import { MdClose } from "react-icons/md";
 import { cutoffTime } from "../cutoff";
 import { Button } from "./Button";
+import NumberFlow from "@number-flow/react";
 
 type ShopProps = {
   shop_items: ShopItemWithRemaining[];
@@ -78,7 +79,7 @@ export const Shop: FunctionComponent<ShopProps> = ({ shop_items, className }) =>
           <li key={item.id} className={(i % 3 == 0 ? "bg-christmasGreen" : i % 3 == 1 ? "bg-christmasRed" : "bg-christmasDark") + " transform-gpu overflow-hidden rounded-xl group relative flex flex-col " + (i == 0 ? "row-span-2 col-span-2" : "row-span-1 col-span-2 aspect-[2] xl:col-span-1 xl:aspect-square")}>
             <img src={item.image_url} alt={item.name} className="[mask-image:linear-gradient(to_top,transparent_00%,#000_100%)] group-hover:scale-105 transition-all duration-150" />
             <div className={`absolute top-0 right-0 text-white p-2 ${item.remaining_count === 0 ? "bg-christmasRed" : "bg-black"} bg-opacity-50 rounded-bl-xl`}>
-              {item.remaining_count}
+              <NumberFlow value={item.remaining_count} />
               {" "}
               in stock
             </div>
