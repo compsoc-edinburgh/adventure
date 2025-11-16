@@ -8,7 +8,7 @@ export async function action({ request }: ActionFunctionArgs) {
   if (new Date().getTime() > cutoffTime.getTime()) {
     return Response.json({
       success: false,
-      message: "The shop is now closed (as of 23:59 on 12 January 2025). No new items can be purchased.",
+      message: "The shop is now closed (as of 23:59 on 31 December 2025). No new items can be purchased.",
     }, {
       status: 403,
     });
