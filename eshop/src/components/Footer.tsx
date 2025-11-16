@@ -28,7 +28,7 @@ export const Footer: React.FC<{}> = () => {
             </span>
           </div>
         </div>
-        <div className="flex flex-row">
+        <div className="flex flex-col sm:flex-row gap-8 sm:gap-0">
           <div className="flex flex-col gap-2 w-40">
             <h2 className="font-bold mb-2">Project</h2>
             <a href="https://github.com/compsoc-edinburgh/adventure" className="text-christmasDark text-sm text-opacity-75 hover:underline">Repository</a>
