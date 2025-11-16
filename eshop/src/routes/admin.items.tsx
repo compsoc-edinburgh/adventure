@@ -59,13 +59,13 @@ export default function Items() {
       <Table className="bg-white">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">ID</TableHead>
+            <TableHead className="w-[50px]">ID</TableHead>
             <TableHead>Order</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Image URL</TableHead>
+            <TableHead className="w-[250px]">Image URL</TableHead>
             <TableHead>Description</TableHead>
             <TableHead>Star Cost</TableHead>
-            <TableHead>Stock Count</TableHead>
+            <TableHead>Stock</TableHead>
             <TableHead>Max per User</TableHead>
           </TableRow>
         </TableHeader>
@@ -81,7 +81,7 @@ export default function Items() {
                 </div>
               </TableCell>
               <TableCell>{item.name}</TableCell>
-              <TableCell>{item.image_url}</TableCell>
+              <TableCell className="w-[250px] break-all">{item.image_url}</TableCell>
               <TableCell>{item.description}</TableCell>
               <TableCell>{item.star_cost}</TableCell>
               <TableCell>{item.stock_count}</TableCell>
