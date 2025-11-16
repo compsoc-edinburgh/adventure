@@ -64,7 +64,7 @@ In addition, the following volume mount must be present:
 
 ![Architecture of Adventure](./readme_assets/Adventure%20Architecture.drawio.svg)
 
-### Without Docker (recommended for testing indvidual components)
+### Without Docker (recommended for testing individual components)
 
 Frontend. You may need to edit `eshop/.env.development` as necessary.
 
