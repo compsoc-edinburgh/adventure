@@ -124,14 +124,27 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   // Check if they are in the CompSoc leaderboard
-  if (!isUserInLeaderboard(parseInt(aoc_id))) {
-    session.flash("error", "You are not in any of the CompSoc leaderboards! Please see the Help and do that first.");
+  try {
+    if (!isUserInLeaderboard(parseInt(aoc_id))) {
+      session.flash("error", "You are not in any of the CompSoc leaderboards! Please see the Help and do that first.");
 
-    return redirect("/login", {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    });
+      return redirect("/login", {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      });
+    }
+  }
+  catch (err: unknown) {
+    if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+      session.flash("error", "There was an error retrieving CompSoc leaderboard data. If this instance of Adventure was launched within the last 15 minutes, there's a chance the first sync hasn't happened yet. Please retry after a wait. Otherwise, contact the deployment admin.");
+
+      return redirect("/login", {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      });
+    }
   }
 
   // Check if the user exists
