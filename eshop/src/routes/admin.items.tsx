@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, redirect, useLoaderData, useFetcher, useRevalidator } from "react-router";
+import { ActionFunctionArgs, LoaderFunctionArgs, redirect, useLoaderData, useFetcher } from "react-router";
 import { commitSession, requireUserSession } from "../sessions";
 import { createShopItem, getShopItems, getUserById, updateShopItem } from "../sqlite.server";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/Table";
@@ -8,7 +8,7 @@ import { Button } from "../components/Button";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 
 export default function Items() {
-  const { error, shopItems } = useLoaderData<typeof loader>();
+  const { error: loaderError, shopItems } = useLoaderData<typeof loader>();
   const [itemId, setItemId] = useState<number | undefined>(undefined);
 
   // Form item fields
@@ -36,20 +36,19 @@ export default function Items() {
   // Fetcher form allows submission without page load
   const fetcher = useFetcher();
 
-  // Use a revalidator to revalidate the loader data on demand
-  const revalidator = useRevalidator();
+  // Handler to move an item up or down by finding the item by an ID and only
+  // modifying its order by a certain relative amount.
+  const moveItem = useCallback((item_id: number, by: number) => {
+    const editingItem = shopItems.find(item => item.id == item_id);
+    if (!editingItem) return;
 
-  // Handler to move an item up or down by instantaneously changing the
-  // contents of the 'order' input box and submitting the form. Used for up/down
-  // arrows.
-  const moveItem = useCallback((e: React.MouseEvent<HTMLButtonElement>, by: number) => {
-    (document.getElementById("order") as HTMLInputElement).valueAsNumber += by;
-    fetcher.submit(e.currentTarget.form, {
+    editingItem.order += by;
+    fetcher.submit({ ...editingItem, _method: item_id.toString() }, {
       method: "POST",
-    }).then(() => {
-      revalidator.revalidate();
     });
-  }, [fetcher, revalidator]);
+  }, [fetcher, shopItems]);
+
+  const error = fetcher.data?.error || loaderError;
 
   return (
     <>
@@ -130,8 +129,8 @@ export default function Items() {
                 onChange={e => setOrder(e.target.value)}
               />
               <div className="flex gap-2 items-end">
-                <Button className="py-4 px-4" onClick={e => moveItem(e, -1)} disabled={order === "0"}><AiOutlineUp className="text-sm" /></Button>
-                <Button className="py-4 px-4" onClick={e => moveItem(e, 1)} disabled={order === (shopItems.length - 1).toString()}><AiOutlineDown className="text-sm" /></Button>
+                <Button type="button" className="py-4 px-4" onClick={() => moveItem(itemId, -1)} disabled={order === "0"}><AiOutlineUp className="text-sm" /></Button>
+                <Button type="button" className="py-4 px-4" onClick={() => moveItem(itemId, 1)} disabled={order === (shopItems.length - 1).toString()}><AiOutlineDown className="text-sm" /></Button>
               </div>
             </>
           )}
