@@ -73,7 +73,13 @@ export default function Items() {
           {shopItems.slice().sort((a, b) => a.order - b.order).map(item => (
             <TableRow key={item.id}>
               <TableCell>{item.id}</TableCell>
-              <TableCell>{item.order}</TableCell>
+              <TableCell className="flex items-center gap-4">
+                {item.order}
+                <div className="flex flex-col gap-2 items-end">
+                  <Button type="button" className="py-2 px-2" onClick={() => moveItem(item.id, -1)} disabled={item.order === 0}><AiOutlineUp className="text-sm" /></Button>
+                  <Button type="button" className="py-2 px-2" onClick={() => moveItem(item.id, 1)} disabled={item.order === shopItems.length - 1}><AiOutlineDown className="text-sm" /></Button>
+                </div>
+              </TableCell>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.image_url}</TableCell>
               <TableCell>{item.description}</TableCell>
