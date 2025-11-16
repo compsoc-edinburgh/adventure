@@ -39,6 +39,7 @@ export const Footer: React.FC<{}> = () => {
             <a href="https://comp-soc.com" className="text-christmasDark text-sm text-opacity-75 hover:underline">Homeage</a>
             <a href="https://comp-soc.com/team/" className="text-christmasDark text-sm text-opacity-75 hover:underline">Committee</a>
             <a href="https://github.com/compsoc-edinburgh/constitution" className="text-christmasDark text-sm text-opacity-75 hover:underline">Constitution</a>
+            <a href="https://comp-soc.com/discord" className="text-christmasDark text-sm text-opacity-75 hover:underline">Discord</a>
           </div>
           <div className="flex flex-col gap-2 w-40">
             <h2 className="font-bold mb-2">Services</h2>
