@@ -91,7 +91,7 @@ export default function App() {
             </a>
             <Link to="/">
               <h1 className="md:text-7xl text-4xl text-center font-display bg-clip-text text-transparent bg-gradient-to-t from-christmasRed to-christmasRedAccent">Advent of Code Rewards</h1>
-              <span className="text-right font-display block -mt-2">2025 Edition</span>
+              <span className="text-center sm:text-right font-display block -mt-2">2025 Edition</span>
             </Link>
             <Ornament1 className="w-56 -mt-3" />
           </div>
