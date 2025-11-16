@@ -12,6 +12,7 @@ import { getUserById, User } from "./sqlite.server";
 import { getNameForUser } from "./stars.server";
 import favicon from "./assets/favicon.ico";
 import appleTouchIcon from "./assets/apple-touch-icon.png";
+import { Footer } from "./components/Footer";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -96,6 +97,8 @@ export default function App() {
           <UserLogin user={user} className="absolute top-0 right-0" aoc_name={aoc_name} />
 
           <Outlet />
+
+          <Footer />
         </div>
 
         <SnowParticles
