@@ -25,7 +25,7 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
         <div className="w-full bg-christmasDark bg-opacity-80 backdrop-blur-md h-full absolute top-0 left-0 z-[-1] scale-110 -skew-x-12 -rotate-2 transform-gpu" />
         My Purchases
       </h2>
-      <div className="bg-white shadow-sm min-w-96 lg:max-w-md rounded-lg">
+      <div className="bg-white shadow-sm lg:max-w-md rounded-lg lg:min-w-96">
         <div className="p-6">
           <span className="text-sm opacity-50">
             Purchases
@@ -86,7 +86,7 @@ export const MyTransactions: FunctionComponent<MyTransactionsProps> = ({ user, r
         </div>
       </div>
 
-      <div className="bg-white shadow-sm rounded-lg group min-w-64 lg:max-w-md border-t-2 border-christmasGreenAccent">
+      <div className="bg-white shadow-sm rounded-lg group lg:max-w-md border-t-2 border-christmasGreenAccent">
         <div className="px-6 pb-3 pt-3">
           {user && (
             <div className="flex flex-row justify-between">
