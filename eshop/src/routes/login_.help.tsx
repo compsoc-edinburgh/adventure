@@ -75,7 +75,6 @@ export async function loader() {
       hint: match[2], // may be undefined if no hint
     };
   });
-  console.log(join_codes);
   return {
     join_codes,
   };
