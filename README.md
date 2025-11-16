@@ -46,6 +46,8 @@ The following environment variables need to be set for a successful run:
 | OAUTH_DISCORD_REDIRECT_URI | **eShop**: The Discord redirect URL, must be approved on Discord Developers Console prior to use |
 
 The following environment variables are optional:
+
+| Environment Variable | Explanation |
 |---|---|
 | ABS_DATA_DIR | **Core**: The in-container location of the data directory. Defaults to `/app/data` |
 
