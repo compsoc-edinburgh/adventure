@@ -4,7 +4,7 @@ import { AiFillHeart } from "react-icons/ai";
 
 export const Footer: React.FC<{}> = () => {
   return (
-    <div className="mx-6 lg:mx-10 mt-16 mb-16">
+    <div className="px-6 lg:px-10 pt-8 mt-8 pb-16 bg-christmasBeige">
       <hr className="border border-christmasBeigeAccent w-full mb-8" />
       <div className="flex lg:flex-row flex-col gap-2 justify-between lg:mx-24">
         <div className="flex flex-col gap-2">
