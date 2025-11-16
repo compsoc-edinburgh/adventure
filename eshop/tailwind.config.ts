@@ -25,7 +25,7 @@ export default {
     },
     fontFamily: {
       sans: ["\"Noto Sans\"", "sans-serif"],
-      display: ["\"Kavoon\"", "sans-serif"],
+      display: ["\"Berkshire Swash\"", "sans-serif"],
     },
   },
   plugins: [],
