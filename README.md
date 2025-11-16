@@ -12,9 +12,17 @@ Adventure has three main components:
 
 There's also some connection between Notifier and eShop, where if you use the `/link_aoc` slash command on Discord, you get both prettified mentions by the Notifier as well as a double-auth on eShop to prevent account impersonation.
 
-## Running
+## Running with Docker
 
 Adventure comes as a Docker image on `ghcr.io`. The recommended tag is `ghcr.io/compsoc-edinburgh/service-adventure:latest`.
+
+The following command maps host port 80 to container port 3000, mounts the data directory to host `./data` and specifies environment variables from a file called `.env`.
+
+```bash
+docker run --env-file .env -v ./data:/app/data -p 80:3000 -it ghcr.io/compsoc-edinburgh/service-adventure:latest
+```
+
+### Configuration
 
 The following environment variables need to be set for a successful run:
 
@@ -43,17 +51,36 @@ In addition, the following volume mount must be present:
 |---|---|
 | `/app/data` | Contains a JSON mapping of from AoC ID to Discord ID, AoC star data, and caches |
 
-## Running
+## Local Development from source
 
-### From image on ghcr.io
+### Without Docker (recommended for testing indvidual components)
 
-The example below is for Docker, but is easily adaptable to Kubernetes, Docker Compose, Helm, etc.
+Frontend. You may need to edit `eshop/.env.development` as necessary.
 
 ```bash
-docker run --env-file .env -v ./data:/app/data -p 80:3000 -it ghcr.io/compsoc-edinburgh/adventure:latest
+cd eshop
+yarn # Install dependencies
+yarn dev # Start the development server
 ```
 
-### Locally from source
+Notifier. You will need to provide arguments as necessary.
+
+```bash
+cd notifier
+poetry install # Install dependencies
+poetry run python3 -m aoc_bot [...] # Start the bot
+```
+
+Core. You will need to specify some environment variables, but it's just a shell script.
+
+```bash
+ABS_DATA_DIR=... [other_stuff....] ./core/fetch_stars.sh
+```
+
+### With Docker (recommended for end-to-end verification)
+
+The combined Docker image uses `supervisord` to schedule the core, notifier, and
+eshop as separate processes that all get started on launch.
 
 ```bash
 docker build --tag adventure:latest .
