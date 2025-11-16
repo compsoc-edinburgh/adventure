@@ -1,0 +1,26 @@
+# eShop
+node_modules
+build
+.cache
+data
+.DS_Store
+.env.production
+.env.development
+.react-router
+
+# notifier
+cache.json
+mapping.json
+*.backup
+*.cachebackup
+run.sh
+run_prod.sh
+.DS_Store
+notifier/.vscode/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Docker-Compose env file
+.env
