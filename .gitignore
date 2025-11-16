@@ -5,6 +5,7 @@ build
 data
 .DS_Store
 .env.production
+.env.development
 .react-router
 
 # notifier
