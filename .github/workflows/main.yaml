@@ -18,7 +18,6 @@ jobs:
 
       - name: Build image
         run: |
-          source .env
           docker build . --file Dockerfile --tag service-adventure
 
       - name: Log into registry
@@ -26,7 +25,6 @@ jobs:
 
       - name: Push image
         run: |
-          source .env
           IMAGE_ID=ghcr.io/compsoc-edinburgh/service-adventure
           docker tag service-adventure $IMAGE_ID:latest
           docker tag service-adventure $IMAGE_ID:${{ github.sha }}
