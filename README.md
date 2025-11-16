@@ -28,7 +28,7 @@ docker run --env-file .env -v ./data:/app/data -p 80:3000 -it ghcr.io/compsoc-ed
 
 ### Configuration
 
-The following environment variables need to be set for a successful run:
+The following environment variables need to be set for a successful run. You can find a sample file at `.env.sample` in the root of this repository.
 
 | Environment Variable | Explanation |
 |---|---|
