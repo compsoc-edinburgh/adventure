@@ -20,7 +20,7 @@ export default function LoginHelp() {
             <img className="w-full rounded-md mt-3" src={aoc_id} alt="Find your AoC ID on the Settings page within the AoC website, and it should say next to 'Anonymous User'." />
           </p>
         </div>
-        <div className240997-5="bg-christmasBeigeAccent rounded-lg p-4">
+        <div className="bg-christmasBeigeAccent rounded-lg p-4">
           <h3 className="text-2xl font-display mb-3">What is the Leaderboard?</h3>
           <p>
             It is necessary to join a 'CompSoc Private Leadeboard' on Advent of Code in order for us to track your progress and sync your stars with this website. Once you've created an account on Advent of Code, you can join a leaderboard through
