@@ -17,7 +17,7 @@ class HelpCommand:
     async def callback(self, ctx: crescent.Context) -> None:
         # Format the join codes with optional hint into a newline-delimited str
         join_codes = plugin.model.join_codes.split(",")
-        regex = re.compile(r"([0-9-]+) *(?:\((.+)\))?")
+        regex = re.compile(r"([[a-z0-9-]+) *(?:\((.+)\))?")
         formatted = "\n"
         for join_code in join_codes:
             match = regex.match(join_code.strip())
