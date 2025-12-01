@@ -340,7 +340,7 @@ async def give_role(
 
 
 @plugin.include
-@tasks.cronjob("*/15 * * * *")
+@tasks.cronjob("1,16,31,46 * * * *")
 async def on_schedule() -> None:
     old_leaderboard = retrieve_last_leaderboard(
         dir=plugin.model.data_dir, cache_filename=plugin.model.star_data_cache

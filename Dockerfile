@@ -56,7 +56,7 @@ RUN cd notifier && poetry install --no-cache -vv --without dev
 # Source files
 ## Core
 COPY core/fetch_stars.sh /app/core/fetch_stars.sh
-RUN echo -e "12,27,42,57 * * * * cd /app && sh ./core/fetch_stars.sh\n" >> /etc/crontabs/root
+RUN echo -e "*/15 * * * * cd /app && sh ./core/fetch_stars.sh\n" >> /etc/crontabs/root
 
 ## eShop
 COPY --from=eshop-build /app/build /app/eshop/build
