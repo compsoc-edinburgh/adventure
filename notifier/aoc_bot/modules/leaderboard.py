@@ -11,6 +11,7 @@
 import json
 import os
 from datetime import date, datetime
+import time
 from typing import Any, Optional, Set, Tuple
 import typing
 
@@ -38,6 +39,14 @@ def get_default_year() -> int:
         return today.year - 1
 
     return today.year
+
+
+def get_last_updated_leaderboard(dir: str, cache_filename: str):
+    try:
+        result = os.path.getmtime(os.path.join(dir, cache_filename))
+        return datetime.fromtimestamp(result)
+    except FileNotFoundError:
+        return None
 
 
 def retrieve_last_leaderboard(dir: str, cache_filename: str) -> Any:
@@ -175,10 +184,10 @@ async def send_webhook_notification(
     await bot.rest.execute_webhook(
         webhook=webhook_id,
         token=webhook_token,
-        username="CompSoc AoC",
-        avatar_url="https://i.imgur.com/LDnEjzh.png",
+        username="Advent of Code",
+        avatar_url="https://f.monomorphic.party/u/IgY6u5.png",
         mentions_everyone=False,
-        user_mentions=False,
+        user_mentions=True,
         role_mentions=False,
         content=content,
     )
@@ -340,8 +349,21 @@ async def give_role(
 
 
 @plugin.include
-@tasks.cronjob("1,16,31,46 * * * *")
+@tasks.cronjob("*/15 * * * *")
 async def on_schedule() -> None:
+    # Wait until the file has been updated by this run
+    current_run_minute = datetime.now().minute
+    limit = 12  # up to a minute
+    while limit > 0:
+        last_updated = get_last_updated_leaderboard(
+            dir=plugin.model.data_dir, cache_filename=plugin.model.star_data_input
+        )
+        if last_updated is not None and last_updated.minute == current_run_minute:
+            break
+
+        time.sleep(5)
+        limit -= 1
+
     old_leaderboard = retrieve_last_leaderboard(
         dir=plugin.model.data_dir, cache_filename=plugin.model.star_data_cache
     )
