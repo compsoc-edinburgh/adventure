@@ -9,7 +9,7 @@ import { Tree } from "./components/Tree";
 import UserLogin from "./components/UserLogin";
 import { getSession } from "./sessions";
 import { getUserById, User } from "./sqlite.server";
-import { getNameForUser } from "./stars.server";
+import { getNameForUser, starsLastUpdated } from "./stars.server";
 import favicon from "./assets/favicon.ico";
 import appleTouchIcon from "./assets/apple-touch-icon.png";
 import { Footer } from "./components/Footer";
@@ -51,9 +51,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     request.headers.get("Cookie"),
   );
 
-  const response: { user: User | undefined; aoc_name: string | undefined } = {
+  const response: { user: User | undefined; aoc_name: string | undefined; next_run: number | undefined; last_updated: number } = {
     user: undefined,
     aoc_name: "",
+    next_run: undefined,
+    last_updated: 0,
   };
 
   if (session.has("user_id")) {
@@ -64,11 +66,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
     };
   }
 
+  // Set last star update time
+  const lastUpdated = starsLastUpdated();
+  response.last_updated = lastUpdated.getTime();
+
+  // Get the next run
+  const currentTime = new Date();
+  let currentMinutes = currentTime.getMinutes();
+  if ([0, 15, 30, 45].includes(currentMinutes) && lastUpdated.getMinutes() !== currentMinutes) {
+    // There should be a run right now but last updated doesn't match; it's likely currently running
+    response.next_run = undefined;
+  }
+  else {
+    response.next_run = (Math.floor(currentTime.getTime() / (15 * 60 * 1000)) + 1) * (15 * 60 * 1000);
+  };
+
   return response;
 };
 
 export default function App() {
-  const { user, aoc_name } = useLoaderData<typeof loader>();
+  const { user, aoc_name, next_run, last_updated } = useLoaderData<typeof loader>();
   return (
     <html lang="en-us">
       <head>
@@ -95,7 +112,27 @@ export default function App() {
             </Link>
             <Ornament1 className="w-56 -mt-3" />
           </div>
-          <UserLogin user={user} className="absolute top-0 right-0" aoc_name={aoc_name} />
+          <div className="absolute top-0 right-0 flex-row gap-1 items-center justify-end hidden sm:flex">
+            <div className="flex flex-col items-end gap-0 text-xs opacity-75">
+              <span>
+                {
+                  next_run === undefined
+                    ? "Refresh for latest synced data"
+                    : `Next sync with AoC is at ${new Date(next_run).toLocaleTimeString([], {
+                      hour: "2-digit", minute: "2-digit", second: "2-digit", fractionalSecondDigits: 3,
+                      timeZone: "Europe/London",
+                    })}`
+                }
+              </span>
+              <span>
+                {`Last sync at ${new Date(last_updated).toLocaleTimeString([], {
+                  hour: "2-digit", minute: "2-digit", second: "2-digit", fractionalSecondDigits: 3,
+                  timeZone: "Europe/London",
+                })}`}
+              </span>
+            </div>
+            <UserLogin user={user} aoc_name={aoc_name} />
+          </div>
 
           <Outlet />
 

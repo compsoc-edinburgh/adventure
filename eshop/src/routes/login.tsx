@@ -32,7 +32,7 @@ export default function LoginForm() {
           </label>
         </div>
         <Button type="submit" className="w-full mt-3 px-6 py-2" bg="red">Access Shop</Button>
-        {error && <p className="text-christmasRedAccent text-sm mt-3 min-w-full w-0">{error}</p>}
+        {error && <p className="text-christmasRedAccent text-sm mt-3 min-w-full w-0 whitespace-pre-line text-center">{error}</p>}
       </Form>
 
       <div className="mt-8">
@@ -126,7 +126,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   // Check if they are in the CompSoc leaderboard
   try {
     if (!isUserInLeaderboard(parseInt(aoc_id))) {
-      session.flash("error", "You are not in any of the CompSoc leaderboards! Please see the Help and do that first.");
+      session.flash("error", "You are not in any of the CompSoc leaderboards! Please see the Help and do that first.\nIf you joined the leadboard in the last 15 minutes, you may have to wait for the next data sync at the quarter of every hour (:00, :15, :30, :45) to be able to log in.");
 
       return redirect("/login", {
         headers: {

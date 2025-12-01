@@ -8,6 +8,11 @@ import { env } from "process";
 // guaranteed to exist in the merged file is "members"
 const leaderboard_file = path.join(env.ABS_DATA_DIR as string, "aoc_star_data.json");
 
+export function starsLastUpdated(): Date {
+  const stats = fs.statSync(leaderboard_file);
+  return stats.mtime;
+}
+
 export function getStarsForUser(aoc_user_id: number): number {
   const data = JSON.parse(fs.readFileSync(leaderboard_file, "utf-8"));
   if (data.members[aoc_user_id.toString()]) {

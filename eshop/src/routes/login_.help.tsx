@@ -38,6 +38,9 @@ export default function LoginHelp() {
             ))}
             If any of the above is full, please try another one. If all verified leaderboards are full, please contact CompSoc via any method available to you and we can create a new one.
           </p>
+          <p>
+            Note also that, due to Advent of Code API limitations, we only synchronise your star data at every quarter of an hour (:00, :15, :30, :45). If you joined the leaderboard newly, you may have to wait until the next sync to be able to log in.
+          </p>
         </div>
         <div className="bg-christmasBeigeAccent rounded-lg p-4">
           <h3 className="text-2xl font-display mb-3">How secure is this?</h3>
