@@ -119,6 +119,12 @@ class LinkCommand:
                 )
                 return
 
+            if self.aoc_id <= 0:
+                await ctx.respond(
+                    "Invalid AoC ID.", ephemeral=True
+                )
+                return
+            
             aoc_username = get_aoc_name_from_aoc_id(self.aoc_id)
             for k, v in mapping.items():
                 if k == self.aoc_id and v == ctx.user.id:
