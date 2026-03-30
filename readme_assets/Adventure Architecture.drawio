@@ -1,0 +1,116 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0" version="28.2.9">
+  <diagram name="Page-1" id="OPuG_tiW2fvnZ9LpAg0L">
+    <mxGraphModel dx="785" dy="532" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="PkJDtoKms5unn_8qTMvV-1" value="Adventure&lt;br&gt;(supervisord)" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="230" y="280" width="350" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-2" value="eshop process&lt;div&gt;(React Router / express.js)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="240" y="300" width="100" height="92.5" as="geometry" />
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-3" value="notifier process&lt;div&gt;(hikari / hikari-crescent)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="470" y="300" width="100" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PkJDtoKms5unn_8qTMvV-5" target="PkJDtoKms5unn_8qTMvV-6" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-9" value="Write stars&lt;br&gt;every */15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PkJDtoKms5unn_8qTMvV-8" vertex="1" connectable="0">
+          <mxGeometry x="0.1062" relative="1" as="geometry">
+            <mxPoint y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-5" value="crond process" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="350" y="332.5" width="110" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-6" value="PVC, Docker Volume, etc&lt;br&gt;/app/data" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="240" y="460" width="330" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-10" value="" style="endArrow=none;html=1;rounded=0;exitX=0.337;exitY=1.023;exitDx=0;exitDy=0;entryX=0.801;entryY=0.012;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;endFill=0;exitPerimeter=0;" parent="1" source="PkJDtoKms5unn_8qTMvV-3" target="PkJDtoKms5unn_8qTMvV-6" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="504.69" y="390" as="sourcePoint" />
+            <mxPoint x="505.31" y="461.89" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-11" value="Read stars" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PkJDtoKms5unn_8qTMvV-10" vertex="1" connectable="0">
+          <mxGeometry x="-0.072" relative="1" as="geometry">
+            <mxPoint y="-13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;startArrow=classic;startFill=1;" parent="1" source="PkJDtoKms5unn_8qTMvV-2" target="PkJDtoKms5unn_8qTMvV-6" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="290" y="440" />
+              <mxPoint x="290" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-14" value="Read stars &amp;amp;&lt;br&gt;mapping" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PkJDtoKms5unn_8qTMvV-13" vertex="1" connectable="0">
+          <mxGeometry x="-0.3306" y="-1" relative="1" as="geometry">
+            <mxPoint x="1" y="5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-15" value="Web handler" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="247.5" y="352.5" width="85" height="32.5" as="geometry" />
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-16" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="PkJDtoKms5unn_8qTMvV-18" target="PkJDtoKms5unn_8qTMvV-15" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="100" y="370" as="sourcePoint" />
+            <mxPoint x="410" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-18" value="Service" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="120" y="352.5" width="80" height="32.5" as="geometry" />
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-20" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" target="PkJDtoKms5unn_8qTMvV-18" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="30" y="369" as="sourcePoint" />
+            <mxPoint x="320" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-21" value="Web Request" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PkJDtoKms5unn_8qTMvV-20" vertex="1" connectable="0">
+          <mxGeometry x="-0.5509" relative="1" as="geometry">
+            <mxPoint x="20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-22" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="680" y="374" as="sourcePoint" />
+            <mxPoint x="570" y="374" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-23" value="Slash Command" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PkJDtoKms5unn_8qTMvV-22" vertex="1" connectable="0">
+          <mxGeometry x="-0.5509" relative="1" as="geometry">
+            <mxPoint x="-25" y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-26" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.643;exitY=1.003;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.892;entryY=-0.029;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="PkJDtoKms5unn_8qTMvV-3" target="PkJDtoKms5unn_8qTMvV-6" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="534.69" y="390" as="sourcePoint" />
+            <mxPoint x="580" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PkJDtoKms5unn_8qTMvV-27" value="Write mapping" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PkJDtoKms5unn_8qTMvV-26" vertex="1" connectable="0">
+          <mxGeometry x="-0.072" relative="1" as="geometry">
+            <mxPoint y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C7vcd4fODviItCBilZF9-2" value="fetch AoC stars" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="357" y="360" width="95" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="C7vcd4fODviItCBilZF9-4" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="570" y="332.5" as="sourcePoint" />
+            <mxPoint x="680" y="333" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C7vcd4fODviItCBilZF9-5" value="Discord&lt;br&gt;Webhook" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="C7vcd4fODviItCBilZF9-4">
+          <mxGeometry x="-0.5509" relative="1" as="geometry">
+            <mxPoint x="20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
