@@ -32,7 +32,7 @@ The following environment variables need to be set for a successful run. You can
 
 | Environment Variable | Explanation |
 |---|---|
-| AOC_SESSION_ID | **Core**: The session cookie contents from AoC. (Note! Expiry is ~1 month) |
+| AOC_SESSION_ID | **Core**: The session cookie contents from AoC. (Note! Expiry is ~1 month). The account we use here must have access to read all the leaderboards adventure is configured for. |
 | AOC_LEADERBOARD_IDS | **Core**: Comma-separated list of AoC leaderboard IDs to fetch data from |
 | AOC_LEADERBOARD_JOIN_CODES | **eShop, Notifier**: Comma-separated list of AoC leaderboard join codes, with optional part in brackets to tag it. This is used for the Help screen in eShop and in the notifier's help menu. |
 | DISCORD_TOKEN | **Notifier**: Discord bot token. Bot **must** be given Member intent permission in the Discord developer console |
